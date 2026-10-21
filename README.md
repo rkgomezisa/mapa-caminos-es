@@ -14,6 +14,8 @@ Equipo: Antonella Caro, Patricia Farjatt, Andrea Vitali y Karim (comisiones Mayr
 | `datos.js` | Todo el contenido: cifras, fechas, preguntas, vías, fichas, fuentes y personajes de ejemplo | **Sí, solo este** |
 | `index.html` | El diseño y la lógica del árbol | No |
 | `README.md` | Estas instrucciones | No |
+| `verificar.js` | Revisión automática del contenido (ver más abajo) | No |
+| `CLAUDE.md` | Contexto y reglas para trabajar con Claude Code | No |
 
 ## Cómo actualizar una cifra o un texto (desde la web, sin instalar nada)
 
@@ -58,6 +60,13 @@ Para volver a la versión anterior:
 3. Editá `datos.js` como en los pasos de arriba, pegá ese contenido y guardá.
 
 También pueden corregir directamente la línea que indica el aviso.
+
+### Verificación automática
+
+Cada vez que alguien guarda un cambio, GitHub revisa `datos.js` solo. Comprueba que el formato sea válido, que todo esté conectado (preguntas, respuestas, condiciones, cifras) y que los tres recorridos de ejemplo sigan mostrando lo que tienen que mostrar.
+
+- Una **tilde verde ✓** al lado del cambio (en la pestaña *Commits* o *Actions*) quiere decir que todo está bien.
+- Una **cruz roja ✕** quiere decir que algo se rompió. Tocala para ver el detalle: dice qué falla y dónde.
 
 ## Publicación
 

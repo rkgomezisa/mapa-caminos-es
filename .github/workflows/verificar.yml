@@ -1,0 +1,23 @@
+name: Verificar contenido
+
+# Corre node verificar.js en cada cambio a main y en cada pull request.
+# Si datos.js tiene un error de formato o algún recorrido de ejemplo deja
+# de dar lo esperado, GitHub marca el cambio con una cruz roja.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node verificar.js

@@ -1,0 +1,53 @@
+# Mapa de caminos a España
+
+Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacional y Ocupacional, Facultad de Psicología, UNC, 2026). Es una página web con un árbol de decisión sobre las vías legales para trabajar en España. Grupo: Antonella Caro, Patricia Farjatt, Andrea Vitali y Karim. Karim es el único que programa; el resto del grupo edita contenido desde la web de GitHub.
+
+## Para quién y para qué
+
+- **Población:** jóvenes de Córdoba (Argentina) de 22 a 35 años, con título universitario o técnico superior, que evalúan emigrar a España.
+- **Nivel general de información:** muestra el panorama y dónde profundizar. No da asesoramiento legal ni dicta un destino.
+- **Los visados funcionan como indicador** de los caminos legales posibles.
+- **Tres usos:**
+  1. cada persona lo recorre sola desde el celular (link o QR);
+  2. se graba la pantalla para un video de unos 14 minutos que simula un taller (los "recorridos de ejemplo");
+  3. se proyecta en una jornada (el "modo proyección").
+
+## Enfoque (no negociable)
+
+- **Orientación crítica e interseccional.** Cuando una vía se cierra, se nombra la **condición del entorno** que la cierra (ascendencia europea, capital económico, informalidad laboral, tipo de formación, edad o tiempo desde el egreso, cargas de cuidado, redes, mercado laboral de destino). Nunca se presenta como un déficit de la persona.
+- **Mapa, no embudo.** La persona ve todas las vías: abiertas, "se abren si…", cerradas (y por qué), y "Siempre disponible". Quedarse en Córdoba se presenta como un proyecto de vida legítimo.
+- **Tono:** cálido, no culpabiliza. Voseo rioplatense ("tenés", "podés", "mirá"), lenguaje claro, frases cortas.
+- **Vacaciones y Trabajo** se presenta como una estancia para explorar, no como una vía para quedarse.
+
+## Arquitectura
+
+| Archivo | Rol |
+|---|---|
+| `datos.js` | Todo el contenido en `const DATOS = {...}`: cifras, textos, condiciones, preguntas, vías (con reglas y ficha), hoja final y personajes. Lo edita gente no técnica. |
+| `index.html` | Estilos y lógica, sin contenido. Carga `datos.js` con `<script src>`; si falla, muestra un aviso con la línea del error. |
+| `verificar.js` | Valida `datos.js` y comprueba los tres recorridos de ejemplo. También corre en GitHub Actions. |
+| `README.md` | Guía para el grupo: editar desde la web de GitHub. |
+
+- **Reglas de las vías** (en `datos.js`): `{ si, resultado, condicion, motivo }`. `si` puede ser una condición o una lista de condiciones (todas tienen que cumplirse). Los resultados posibles son `cierra`, `depende`, `noInteresa`, `nota` y `oculta`. Prioridad: oculta > cerrada > noInteresa > depende > abierta.
+- **Cifras:** `{nombre}` dentro de cualquier texto se reemplaza por `DATOS.cifras.nombre`.
+- **Lógica duplicada:** `cumple()` y `evaluar()` existen en `index.html` y copiadas en `verificar.js`. Si cambiás la lógica, actualizá las dos.
+
+## Reglas al hacer cambios
+
+1. **El contenido va en `datos.js`, nunca escrito en `index.html`.** Si un texto nuevo aparece en pantalla, agregalo a `DATOS.textos` o donde corresponda.
+2. **Corré `node verificar.js` antes de cada commit.** Si un cambio altera a propósito lo que muestra un personaje, actualizá `ESPERADO` en `verificar.js` y explicalo en el PR.
+3. **Mantené `datos.js` fácil de editar a mano:** comentarios en español, una cifra por línea, nada de lógica ni funciones adentro.
+4. **Sin dependencias ni analítica.** Nada de librerías, frameworks, trackers ni llamadas a servidores. La única carga externa permitida son las fuentes de Google Fonts, y siempre con una fuente de respaldo. Las respuestas de la persona no salen del navegador.
+5. **Tiene que funcionar:**
+   - publicado en GitHub Pages y abriendo `index.html` desde la compu, sin servidor (por eso `datos.js` es un script y no un JSON con `fetch`);
+   - en un celular vertical de unos 375 px (sin scroll horizontal, áreas de toque de al menos 44 px);
+   - proyectado y grabado.
+6. **Accesibilidad:** contraste adecuado en tema claro y oscuro, todo navegable con teclado, foco visible, y el estado nunca se comunica solo con color (siempre ícono + texto).
+7. **Mostrá el cambio:** si el cambio es visual, revisalo en ancho de celular (375 px) y de escritorio antes de abrir el PR. Chromium y Playwright están disponibles en el entorno.
+8. **Contenido legal o de cifras:** no inventes requisitos, montos ni fechas. Si falta un dato, marcá la ficha con `verificar: true` o dejá `relleno: true` y avisá en el PR. Las decisiones de contenido las toma el grupo.
+
+## Flujo de trabajo
+
+- **Un cambio = una rama = un pull request** contra `main`. GitHub Pages publica desde `main` (`/ (root)`), así que el PR es la revisión del grupo antes de publicar.
+- **Mensajes de commit y descripción del PR en español**, explicando qué cambia para quien usa la página.
+- **No hagas push directo a `main`**, salvo que Karim lo pida.
