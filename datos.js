@@ -50,7 +50,7 @@ const DATOS = {
   textos: {
     marca: "Mapa de caminos a España",
     autoria: "Recurso elaborado por estudiantes de Psicología · UNC · Cátedra de Orientación Vocacional y Ocupacional",
-    pie: "Información general, vigente a {fecha_vigencia}. No reemplaza el asesoramiento profesional. Verificá siempre en la fuente oficial.",
+    pie: "Información general, vigente a {fecha_vigencia}. No reemplaza el asesoramiento profesional. Verificá siempre en la fuente oficial. Este recurso interactivo fue pensado para jóvenes de 22 a 35 años que viven en Córdoba, tienen título universitario o terciario de nivel superior y evalúan emigrar a España. Si no es tu caso, tomá la información con cautela.",
     inicioTitulo: "¿Qué caminos hay para trabajar en España?",
     inicioBajada: "Un mapa para ver qué vías legales te quedan abiertas, cuáles cierra el entorno y por qué. Es información general: muestra el panorama y dónde profundizar. No reemplaza el asesoramiento profesional ni decide por vos.",
     inicioPuntos: [
