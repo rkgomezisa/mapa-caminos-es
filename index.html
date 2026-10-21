@@ -121,6 +121,17 @@ main { padding-block: 28px 32px; display: block; }
 .persona-letra { font-family: var(--f-mono); font-size: 0.8rem; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
 .persona-nombre { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; }
 .persona-desc { color: var(--muted); font-size: 0.95rem; }
+.caminos { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
+.camino {
+  width: 100%; height: 100%; text-align: left; font: inherit; color: var(--ink); cursor: pointer;
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 16px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.camino:hover { border-color: var(--accent); }
+.camino-principal { border: 2.5px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); }
+.camino-titulo { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; display: flex; justify-content: space-between; gap: 10px; }
+.camino-texto { color: var(--muted); font-size: 0.95rem; }
+.camino-ir { color: var(--accent); }
 
 /* pregunta */
 .progreso { display: flex; flex-direction: column; gap: 6px; }
@@ -154,6 +165,7 @@ main { padding-block: 28px 32px; display: block; }
 .st-depende    { --c: var(--dep);    --cbg: var(--dep-bg); }
 .st-cerrada    { --c: var(--closed); --cbg: var(--closed-bg); }
 .st-noInteresa { --c: var(--off);    --cbg: var(--off-bg); }
+.st-neutra     { --c: var(--accent); --cbg: var(--bg); }
 .pill { color: var(--c); background: var(--cbg); }
 
 /* mapa en vivo (recorridos de ejemplo) */
@@ -191,6 +203,8 @@ html.proyeccion .paso-grid, .paso-grid.ancho { grid-template-columns: minmax(0, 
 .motivo { background: var(--cbg); border-radius: 6px; padding: 8px 10px; }
 .motivo strong { color: var(--c); }
 .nota { font-size: 0.9rem; color: var(--muted); }
+.tarjeta-conds { font-size: 0.9rem; }
+.tarjeta-conds .ayuda { display: block; font-size: 0.8rem; }
 .ver-ficha { margin-top: auto; font-size: 0.88rem; font-weight: 700; color: var(--accent); }
 .avisos { display: flex; flex-wrap: wrap; gap: 6px; }
 .aviso { font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: var(--warn-bg); color: var(--warn); border: 1px dashed var(--warn); }
@@ -263,6 +277,8 @@ h2 { scroll-margin-top: 12px; }
   .opciones.atenuar .opcion { padding: 9px 12px; }
   .chip { font-size: 0.8rem; padding: 3px 8px; }
   .panel { padding: 12px; }
+  .caminos { gap: 10px; }
+  .camino { padding: 14px; }
   /* tarjetas compactas: el detalle completo está en la ficha */
   .tarjeta { padding: 12px; gap: 6px; }
   .tarjeta-resumen, .tarjeta .motivo-texto, .tarjeta .nota { display: none; }
@@ -274,7 +290,7 @@ h2 { scroll-margin-top: 12px; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .opcion, .tarjeta, .btn, .persona-btn { transition: border-color 0.12s, background-color 0.12s; }
+  .opcion, .tarjeta, .btn, .persona-btn, .camino { transition: border-color 0.12s, background-color 0.12s; }
 }
 </style>
 
@@ -367,8 +383,32 @@ h2 { scroll-margin-top: 12px; }
   }
 
   /* ---------- inicio ---------- */
+  function reiniciar(modo) {
+    estado.modo = modo; estado.resp = {}; estado.idx = 0; estado.volver = false; estado.persona = null; estado.modificado = false;
+  }
   function inicio() {
-    estado.modo = "propio"; estado.resp = {}; estado.idx = 0; estado.volver = false; estado.persona = null; estado.modificado = false;
+    reiniciar("propio");
+    const op = D.textos.inicioOpciones;
+    const camino = (id, principal) => `
+      <li><button class="camino${principal ? " camino-principal" : ""}" type="button" data-camino="${id}">
+        <span class="camino-titulo">${tx(op[id].titulo)}<span class="camino-ir" aria-hidden="true">→</span></span>
+        <span class="camino-texto">${tx(op[id].texto)}</span>
+      </button></li>`;
+    render(`
+      <div class="pila">
+        <h1>${tx(D.textos.inicioTitulo)}</h1>
+        <p class="bajada">${tx(D.textos.inicioBajada)}</p>
+        <ul class="puntos">${D.textos.inicioPuntos.map(x => `<li>${tx(x)}</li>`).join("")}</ul>
+        <nav aria-label="Qué querés hacer"><ul class="caminos">${camino("cuestionario", true)}${camino("ejemplos")}${camino("explorar")}</ul></nav>
+        <p class="autoria">${tx(D.textos.autoria)}</p>
+      </div>`);
+    const ir = { cuestionario: () => preguntaPropia(), ejemplos, explorar };
+    main.querySelectorAll("[data-camino]").forEach(b => b.onclick = () => ir[b.dataset.camino]());
+  }
+
+  /* ---------- ver recorridos de ejemplo ---------- */
+  function ejemplos() {
+    reiniciar("propio");
     const personas = D.personas.map(p => `
       <button class="persona-btn" type="button" data-persona="${esc(p.id)}">
         <span class="persona-letra">Recorrido ${esc(p.id)}</span>
@@ -377,19 +417,49 @@ h2 { scroll-margin-top: 12px; }
       </button>`).join("");
     render(`
       <div class="pila">
-        <h1>${tx(D.textos.inicioTitulo)}</h1>
-        <p class="bajada">${tx(D.textos.inicioBajada)}</p>
-        <ul class="puntos">${D.textos.inicioPuntos.map(x => `<li>${tx(x)}</li>`).join("")}</ul>
-        <div class="fila"><button class="btn btn-primario" type="button" id="empezar">Hacer mi recorrido</button></div>
-        <section class="seccion" aria-labelledby="t-ej">
-          <h2 id="t-ej">Recorridos de ejemplo</h2>
-          <p class="ayuda">Tres personajes ficticios. Cada recorrido avanza paso a paso y muestra qué abre y qué cierra cada respuesta.</p>
-          <div class="personas">${personas}</div>
-        </section>
-        <p class="autoria">${tx(D.textos.autoria)}</p>
+        <h1>${tx(D.textos.ejemplosTitulo)}</h1>
+        <p class="bajada">${tx(D.textos.ejemplosBajada)}</p>
+        <div class="personas">${personas}</div>
+        <div class="fila"><button class="btn" type="button" id="e-volver">Volver al inicio</button></div>
       </div>`);
-    main.querySelector("#empezar").onclick = () => { estado.idx = 0; preguntaPropia(); };
     main.querySelectorAll("[data-persona]").forEach(b => b.onclick = () => iniciarPersona(b.dataset.persona));
+    main.querySelector("#e-volver").onclick = inicio;
+  }
+
+  /* ---------- explorar el mapa ---------- */
+  // Condiciones del entorno que nombran las reglas de una vía, sin repetir
+  function condicionesVia(via, resultado) {
+    return [...new Set((via.reglas || []).filter(g => g.resultado === resultado).flatMap(g => lista(g.condicion)))];
+  }
+  function explorar() {
+    reiniciar("explorar");
+    const tarjetas = D.vias.map(v => {
+      const conds = [...new Set([...condicionesVia(v, "cierra"), ...condicionesVia(v, "depende")])];
+      return `<li><button class="tarjeta st-neutra" type="button" data-via="${esc(v.id)}" aria-haspopup="dialog">
+        <span class="tarjeta-cab"><span class="tarjeta-nombre">${esc(v.nombre)}</span></span>
+        <span class="tarjeta-resumen">${tx(v.resumen)}</span>
+        ${conds.length ? `<span class="tarjeta-conds"><span class="ayuda">${tx(D.textos.explorarPesan)}:</span> ${conds.map(c => esc(nombreCond(c))).join(" · ")}</span>` : ""}
+        ${avisosHTML(v.ficha)}
+        <span class="ver-ficha">Ver ficha →</span>
+      </button></li>`;
+    }).join("");
+    render(`
+      <div class="pila">
+        <h1>${tx(D.textos.explorarTitulo)}</h1>
+        <p class="bajada">${tx(D.textos.explorarBajada)}</p>
+        <section class="seccion" aria-labelledby="t-todas">
+          <div class="seccion-titulo"><h2 id="t-todas">${tx(D.textos.explorarTituloVias)}</h2><span class="cuenta">${D.vias.length}</span></div>
+          <ul class="tarjetas">${tarjetas}</ul>
+        </section>
+        ${siempreHTML()}
+        <div class="fila">
+          <button class="btn btn-primario" type="button" id="x-recorrido">${tx(D.textos.inicioOpciones.cuestionario.titulo)}</button>
+          <button class="btn" type="button" id="x-volver">Volver al inicio</button>
+        </div>
+      </div>`);
+    main.querySelectorAll("[data-via]").forEach(b => b.onclick = () => abrirFicha(b.dataset.via, b));
+    main.querySelector("#x-recorrido").onclick = () => { reiniciar("propio"); preguntaPropia(); };
+    main.querySelector("#x-volver").onclick = inicio;
   }
 
   /* ---------- recorrido propio ---------- */
@@ -496,7 +566,7 @@ h2 { scroll-margin-top: 12px; }
         </div>`;
       render(`<div class="pila">${cabecera}<div class="paso-grid">${cuerpo}${mapaPanel(previo)}</div>${navPersona(k, total)}</div>`);
     }
-    main.querySelector("#p-ant").onclick = () => { if (estado.paso > 0) { estado.paso--; pasoPersona(); } else inicio(); };
+    main.querySelector("#p-ant").onclick = () => { if (estado.paso > 0) { estado.paso--; pasoPersona(); } else ejemplos(); };
     main.querySelector("#p-sig").onclick = () => {
       if (estado.paso < total) { estado.paso++; pasoPersona(); }
       else { estado.resp = { ...p.resp }; estado.modificado = false; resultados(); }
@@ -504,7 +574,7 @@ h2 { scroll-margin-top: 12px; }
   }
   function navPersona(k, total) {
     return `<div class="nav-pregunta">
-      <button class="btn" type="button" id="p-ant">${k === 0 ? "Volver al inicio" : "Anterior"}</button>
+      <button class="btn" type="button" id="p-ant">${k === 0 ? "Volver a los ejemplos" : "Anterior"}</button>
       <button class="btn btn-primario" type="button" id="p-sig">${k === total ? `Ver el mapa de ${esc(estado.persona.nombre)}` : k === 0 ? "Empezar recorrido" : "Siguiente"}</button>
     </div>`;
   }
@@ -522,6 +592,14 @@ h2 { scroll-margin-top: 12px; }
       ${avisosHTML(r.via.ficha)}
       <span class="ver-ficha">Ver ficha →</span>
     </button></li>`;
+  }
+
+  function siempreHTML() {
+    return `
+      <section class="seccion" aria-labelledby="t-si">
+        <h2 id="t-si">${tx(D.textos.tituloSiempre)}</h2>
+        <ul class="siempre">${D.siempre.map(s => `<li><h3>${tx(s.titulo)}</h3><p>${tx(s.texto)}</p>${s.relleno ? `<div class="avisos"><span class="aviso relleno">Contenido provisorio</span></div>` : ""}</li>`).join("")}</ul>
+      </section>`;
   }
 
   function resultados() {
@@ -575,10 +653,7 @@ h2 { scroll-margin-top: 12px; }
         ${!abiertas.length && depende.length ? `<p class="vacio">${tx(D.textos.sinAbiertas)}</p>` : ""}
         ${depende.length ? grupo("t-dep", D.textos.tituloDepende, depende) : ""}
         ${grupo("t-ce", D.textos.tituloCerradas, cerradas, "Ninguna vía se cerró con estas respuestas.")}
-        <section class="seccion" aria-labelledby="t-si">
-          <h2 id="t-si">${tx(D.textos.tituloSiempre)}</h2>
-          <ul class="siempre">${D.siempre.map(s => `<li><h3>${tx(s.titulo)}</h3><p>${tx(s.texto)}</p>${s.relleno ? `<div class="avisos"><span class="aviso relleno">Contenido provisorio</span></div>` : ""}</li>`).join("")}</ul>
-        </section>
+        ${siempreHTML()}
         ${noInt.length ? `<details><summary>${tx(D.textos.tituloNoInteresa)} · ${noInt.length}</summary><ul class="tarjetas">${noInt.map(tarjetaHTML).join("")}</ul></details>` : ""}
         <div class="fila">
           <button class="btn btn-primario" type="button" id="r-reiniciar">Volver a empezar</button>
@@ -606,15 +681,26 @@ h2 { scroll-margin-top: 12px; }
   /* ---------- ficha ---------- */
   function abrirFicha(id, disparador) {
     const via = D.vias.find(v => v.id === id), f = via.ficha;
-    const r = evaluar(via, estado.resp);
     estado.ultimoDisparador = disparador;
-    let est = "";
-    if (r.estado === "cerrada") est = `<ul class="motivos">${r.cierres.map(g => motivoHTML(g, "Se cierra por")).join("")}</ul>`;
-    else if (r.estado === "depende") est = `<ul class="motivos">${r.depende.map(g => motivoHTML(g, "Depende de")).join("")}</ul>`;
+    let estadoHTML;
+    if (estado.modo === "explorar") {
+      // sin respuestas no hay estado: se nombran las condiciones del entorno que pesan en la vía
+      const grupo = (titulo, conds) => conds.length ? `<div><strong>${tx(titulo)}</strong><ul class="motivos">${conds.map(c =>
+        `<li class="motivo"><strong>${esc(nombreCond(c))}</strong>. ${tx(D.condiciones[c]?.texto || "")}</li>`).join("")}</ul></div>` : "";
+      const cierran = condicionesVia(via, "cierra");
+      const cuerpo = grupo(D.textos.explorarCierran, cierran) + grupo(D.textos.explorarDependen, condicionesVia(via, "depende").filter(c => !cierran.includes(c)));
+      estadoHTML = cuerpo ? `<div class="ficha-estado st-neutra">${cuerpo}</div>` : "";
+    } else {
+      const r = evaluar(via, estado.resp);
+      let est = "";
+      if (r.estado === "cerrada") est = `<ul class="motivos">${r.cierres.map(g => motivoHTML(g, "Se cierra por")).join("")}</ul>`;
+      else if (r.estado === "depende") est = `<ul class="motivos">${r.depende.map(g => motivoHTML(g, "Depende de")).join("")}</ul>`;
+      estadoHTML = `<div class="ficha-estado st-${r.estado}"><div>En tu mapa: ${pillHTML(r.estado)}</div>${est}</div>`;
+    }
     dialogo.innerHTML = `
       <div class="ficha">
         <div class="ficha-cab"><h2 id="ficha-titulo">${esc(via.nombre)}</h2><button class="btn btn-chico" type="button" id="cerrar-ficha">Cerrar</button></div>
-        <div class="ficha-estado st-${r.estado}"><div>En tu mapa: ${pillHTML(r.estado)}</div>${est}</div>
+        ${estadoHTML}
         ${avisosHTML(f)}
         <dl>
           <div><dt>Qué es</dt><dd>${tx(f.que)}</dd></div>

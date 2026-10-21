@@ -58,6 +58,22 @@ const DATOS = {
       "Al final ves el mapa completo, no una única respuesta.",
       "Tus respuestas no se guardan ni se envían a ningún lado."
     ],
+    // Las tres opciones de la portada (tarjetas grandes debajo de la bajada)
+    inicioOpciones: {
+      cuestionario: { titulo: "Hacer mi recorrido",        texto: "Respondés preguntas cortas y ves qué vías te quedan abiertas, cuáles cierra el entorno y por qué." },
+      ejemplos:     { titulo: "Ver recorridos de ejemplo", texto: "Tres personajes ficticios. Paso a paso, se ve qué abre y qué cierra cada respuesta." },
+      explorar:     { titulo: "Explorar el mapa",          texto: "Todas las vías con su ficha, sin responder nada. Para mirar el panorama completo." }
+    },
+    // Pantalla "Ver recorridos de ejemplo"
+    ejemplosTitulo: "Recorridos de ejemplo",
+    ejemplosBajada: "Tres personajes ficticios. Cada recorrido avanza paso a paso y muestra qué abre y qué cierra cada respuesta.",
+    // Pantalla "Explorar el mapa"
+    explorarTitulo: "Explorar el mapa",
+    explorarBajada: "Estas son todas las vías del mapa, sin responder nada. Cada ficha cuenta qué es, qué pide y qué condiciones del entorno pesan. Para ver cuáles te quedan abiertas a vos, hacé tu recorrido.",
+    explorarTituloVias: "Todas las vías",
+    explorarPesan: "Condiciones del entorno que pesan",
+    explorarCierran: "Condiciones del entorno que pueden cerrarla",
+    explorarDependen: "Puede depender de",
     bloques: { perfil: "Tu situación", puertas: "Puertas posibles" },
     estados: {
       abierta:    { simbolo: "✓", etiqueta: "Abierta" },
