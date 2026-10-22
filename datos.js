@@ -276,9 +276,9 @@ const DATOS = {
     { id: "cuenta_ajena", nombre: "Trabajo por cuenta ajena", corto: "Cuenta ajena",
       resumen: "Trabajar en relación de dependencia para un empleador en España.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no"] }, resultado: "depende", condicion: "mercado",
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
           motivo: "Se abre con una oferta de un empleador en España. Es más simple si tu ocupación está en el Catálogo de Ocupaciones de Difícil Cobertura." },
-        { si: { pregunta: "oferta", es: ["oferta", "multinacional"] }, resultado: "nota",
+        { si: { pregunta: "oferta", es: ["oferta"] }, resultado: "nota",
           motivo: "Si tu ocupación no está en el Catálogo de Difícil Cobertura, el empleador tiene que acreditar que no encontró candidatos disponibles." } ],
       ficha: {
         que: "La autorización de residencia y trabajo para una persona contratada por un empleador en España.",
@@ -292,7 +292,7 @@ const DATOS = {
     { id: "tarjeta_azul", nombre: "Tarjeta Azul UE", corto: "Tarjeta Azul",
       resumen: "Para empleos cualificados con un salario mínimo fijado.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no"] }, resultado: "depende", condicion: "mercado",
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
           motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {ta_salario}." },
         { si: { pregunta: "formacion", es: ["tecnico", "universidad2"] }, resultado: "depende", condicion: "formacion",
           motivo: "Pide título universitario o experiencia profesional equivalente: se abre si podés acreditarla." },
@@ -312,7 +312,7 @@ const DATOS = {
     { id: "hq", nombre: "Profesional altamente cualificado", corto: "Altamente cualificado",
       resumen: "Vía nacional para puestos cualificados, sin umbral reducido.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no"] }, resultado: "depende", condicion: "mercado",
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
           motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {hq_salario}." },
         { si: { pregunta: "formacion", es: ["tecnico", "universidad2"] }, resultado: "depende", condicion: "formacion",
           motivo: "Pide formación superior o experiencia equivalente: se abre si podés acreditarla." },
@@ -331,7 +331,9 @@ const DATOS = {
       resumen: "Para quien ya trabaja en una empresa con filial en España.",
       reglas: [
         { si: { pregunta: "oferta", es: ["oferta", "no"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre si trabajás hace 3 meses o más en una empresa o grupo con filial en España." } ],
+          motivo: "Se abre si trabajás hace 3 meses o más en una empresa o grupo con filial en España." },
+        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide título o experiencia profesional: se abre si podés acreditarla." } ],
       ficha: {
         que: "Un permiso para quienes su propia empresa traslada a una filial en España.",
         requisitos: ["3 meses o más trabajando en el grupo empresarial", "Título o experiencia profesional"],
@@ -456,7 +458,7 @@ const DATOS = {
         { si: { pregunta: "edad", es: ["mas35"] }, resultado: "cierra", condicion: "edad_egreso",
           motivo: "Es para personas de 18 a 35 años." },
         { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
-          motivo: "Pide título universitario o de educación superior, o 2 años aprobados de universidad." },
+          motivo: "Pide título universitario o de educación superior, o al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)." },
         { si: { pregunta: "cuidados", es: ["si"] }, resultado: "cierra", condicion: "cuidados",
           motivo: "No se extiende a familiares: no contempla que viaje con vos alguien a tu cargo." },
         { si: { pregunta: "ahorros", es: ["no"] }, resultado: "cierra", condicion: "capital_economico",
@@ -465,12 +467,14 @@ const DATOS = {
           motivo: "Hay {vyt_cupo} lugares por año en todo el país. Al terminar, hay que regresar." } ],
       ficha: {
         que: "El Programa de Movilidad de Jóvenes entre Argentina y España: una estancia para explorar, no una vía para quedarse.",
-        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior, o 2 años aprobados de universidad", "Fondos de {vyt_fondos} (o el SMI por mes de estancia, con billete de regreso)", "Seguro con cobertura de {vyt_seguro}"],
+        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} (o el SMI por mes de estancia, con billete de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
         sirve: "Pasar hasta 12 meses en España y trabajar hasta 6 meses en total.",
-        noPermite: "No se extiende a familiares. Hay que regresar al terminar.",
-        tramite: "Consulado General de España en Córdoba (cupo de {vyt_cupo} por año, repartido entre consulados).",
-        fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es" },
-        vigencia: "Abril de 2026", verificar: false, relleno: false } }
+        noPermite: "No se extiende a familiares. Se hace una sola vez. Hay que regresar al terminar.",
+        // Octubre 2026: la sección de visados del Consulado de Córdoba no lista este programa
+        // y su página del programa (2023) tiene montos viejos. Confirmar por mail antes de publicar.
+        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
+        fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
+        vigencia: "Abril de 2026", verificar: true, relleno: false } }
   ],
 
   /* Hoja final: siempre visible */
