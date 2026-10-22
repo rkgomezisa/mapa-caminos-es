@@ -266,8 +266,11 @@ const DATOS = {
         requisitos: ["Padre o madre español/a de origen", "Documentación que acredite el vínculo"],
         sirve: "Residir y trabajar en España.",
         noPermite: "Contenido provisorio.",
-        // Consulado de Córdoba (oct. 2026): el visado se pide en el consulado, es gratuito y vale 365 días;
-        // en España se saca la TIE. No menciona la oficina de extranjería.
+        // Desde Argentina, la solicitud se presenta en el consulado, que le pide a la oficina de extranjería
+        // que resuelva la autorización (RD 1155/2024, art. 41.3). El visado es gratuito y vale 365 días
+        // (Consulado de Córdoba, oct. 2026). La autorización dura 5 años y permite trabajar en cualquier
+        // sector y lugar de España (art. 95). Los hijos de españoles de origen no necesitan convivir (art. 93).
+        // Texto sugerido: «Consulado General de España en Córdoba (la autorización la resuelve la oficina de extranjería).»
         tramite: "Oficina de extranjería en España. [verificar]",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
@@ -398,13 +401,16 @@ const DATOS = {
         { si: { pregunta: "propia", es: ["negocio"] }, resultado: "depende", condicion: "innovacion",
           motivo: "Es para proyectos innovadores o escalables. Para un negocio tradicional, mirá la vía de cuenta propia." } ],
       ficha: {
-        // Consulado de Córdoba (oct. 2026): el visado vale 1 año. No dice nada de 3 años.
-        que: "Un permiso de 3 años [verificar] para desarrollar un proyecto emprendedor en España.",
+        // «3 años»: la autorización dura 3 años y se renueva por 2 (Ley 14/2013, art. 69.1).
+        // El visado del consulado dura 1 año. Informe de ENISA: Ley 14/2013, art. 70.1.
+        que: "Un permiso de 3 años para desarrollar un proyecto emprendedor en España.",
         requisitos: ["Proyecto innovador o escalable", "Informe favorable de ENISA"],
-        sirve: "Emprender en España durante 3 años [verificar].",
+        sirve: "Emprender en España durante 3 años.",
         noPermite: "Contenido provisorio.",
-        // Consulado de Córdoba (oct. 2026): la autorización la da siempre la Unidad de Grandes Empresas;
-        // el consulado pide una copia y después emite el visado. No aparece como alternativa.
+        // No es una cosa o la otra: la autorización se pide en la Unidad de Grandes Empresas (que pide el
+        // informe a ENISA) y, ya concedida, el visado en el consulado (Ley 14/2013, art. 70.1; Consulado
+        // de Córdoba, oct. 2026). Texto sugerido: «Se pide en la Unidad de Grandes Empresas; con la
+        // autorización, visado en el Consulado General de España en Córdoba.»
         tramite: "Unidad de Grandes Empresas o consulado. [verificar]",
         fuente: { texto: "ENISA, Gobierno de España", url: "https://www.enisa.es" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
@@ -413,21 +419,24 @@ const DATOS = {
       resumen: "Para trabajar de forma autónoma con un plan de negocio.",
       reglas: [
         { si: { pregunta: "propia", es: ["no"] }, resultado: "noInteresa" },
-        // Consulado de Córdoba (oct. 2026): pide medios suficientes para la inversión, sin monto fijo ni IPREM
+        // Ni el Consulado de Córdoba (oct. 2026) ni el RD 1155/2024 (art. 84) fijan un monto: piden que la
+        // inversión prevista sea suficiente. El IPREM no aparece para esta vía.
         { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
           motivo: "Pide inversión y medios de vida (alrededor de {iprem_anual} por año [verificar]) además del plan de negocio." },
         { si: [ { pregunta: "ahorros", es: ["medio", "alto"] }, { pregunta: "propia", es: ["innovador", "negocio"] } ], resultado: "nota",
           motivo: "Además de los medios de vida, pide una inversión que depende de tu plan de negocio." },
         { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "nota",
-          motivo: "Dura 1 año y queda limitada a una región y un sector [verificar]." } ],
+          motivo: "Dura 1 año y queda limitada a una región y un sector." } ],
       ficha: {
         que: "Una autorización para trabajar de forma autónoma en España.",
-        // Consulado de Córdoba (oct. 2026): pide la capacitación o cualificación profesional exigida
-        // para la actividad (no habla de experiencia) y medios suficientes para la inversión (sin monto).
+        // RD 1155/2024, art. 84: pide «la cualificación profesional legalmente exigida o experiencia
+        // acreditada suficiente», y que la inversión prevista sea suficiente (sin monto ni IPREM).
+        // Texto sugerido: «Cualificación profesional o experiencia en la actividad, si la actividad lo pide».
         requisitos: ["Plan de negocio viable", "Inversión", "Experiencia [verificar]", "Medios de vida: aproximadamente {iprem_anual}, el IPREM anual [verificar]"],
         sirve: "Trabajar por tu cuenta.",
-        // Consulado de Córdoba (oct. 2026): el visado vale 365 días; no menciona límites de región ni de sector.
-        noPermite: "Dura 1 año y se limita a una región y un sector [verificar].",
+        // RD 1155/2024, art. 83: la autorización inicial dura 1 año y se limita a una comunidad autónoma
+        // y a un sector de actividad. La renovación dura 4 años (art. 86).
+        noPermite: "Dura 1 año y se limita a una región y un sector.",
         tramite: "Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
@@ -439,8 +448,10 @@ const DATOS = {
         { si: { pregunta: "investigar", es: ["interes"] }, resultado: "depende", condicion: ["capital_academico", "redes"],
           motivo: "Se abre si una universidad, un centro de I+D o una empresa te acepta para investigar." } ],
       ficha: {
-        // «3 años»: no figura en la página del consulado (dice: visado de 1 año o lo que dure la autorización). Verificar.
-        que: "Un permiso de 3 años [verificar] para investigar, doctorado incluido, con trabajo pleno.",
+        // «3 años»: la autorización dura 3 años o lo que dure el convenio o contrato, si es menos
+        // (Ley 14/2013, art. 72.3). El visado del consulado dura 1 año; en España se sigue con la autorización.
+        // Doctorado como investigador: Consulado de Buenos Aires, noticia del 4/10/2026.
+        que: "Un permiso de 3 años para investigar, doctorado incluido, con trabajo pleno.",
         requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante"],
         sirve: "Investigar y trabajar en España.",
         noPermite: "Contenido provisorio.",
@@ -460,13 +471,17 @@ const DATOS = {
           motivo: "Si las prácticas no son pagas, vas a necesitar cómo sostenerte." } ],
       ficha: {
         que: "Un permiso para hacer prácticas con un convenio de una entidad española. Después se puede pasar a trabajo sin salir de España.",
-        // Consulado de Córdoba (oct. 2026): sirve un convenio de prácticas (hasta 6 meses) o un contrato
-        // de trabajo en prácticas (hasta 1 año).
+        // Ley 14/2013, disposición adicional 18.ª, y Consulado de Córdoba (oct. 2026): sirve un convenio
+        // de prácticas o un contrato de trabajo en prácticas. Además, las prácticas tienen que ser del
+        // mismo campo y nivel que tu título o tus estudios, y hay que tener seguro y recursos suficientes.
+        // Texto sugerido: «Convenio o contrato de prácticas con una entidad española, en el campo de tu título».
         requisitos: ["Recibido/a hace menos de 2 años, o estudiando", "Convenio de prácticas con una entidad española [verificar]"],
         sirve: "Hacer una primera experiencia laboral en España.",
         noPermite: "Contenido provisorio.",
-        // Consulado de Córdoba (oct. 2026): antes del visado hace falta la autorización de residencia de la
-        // Delegación o Subdelegación del Gobierno de la provincia donde se hacen las prácticas.
+        // Ley 14/2013, DA 18.ª: la entidad española pide la autorización en la Delegación o Subdelegación
+        // del Gobierno de la provincia de las prácticas (resuelve en 30 días); después, visado en el consulado.
+        // Texto sugerido: «La entidad española pide la autorización en España; después, visado en el
+        // Consulado General de España en Córdoba.»
         tramite: "Consulado General de España en Córdoba. [verificar]",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
@@ -503,12 +518,17 @@ const DATOS = {
           motivo: "Hay {vyt_cupo} lugares por año en todo el país. Al terminar, hay que regresar." } ],
       ficha: {
         que: "El Programa de Movilidad de Jóvenes entre Argentina y España: una estancia para explorar, no una vía para quedarse.",
-        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} [verificar] (o el SMI por mes de estancia, con billete de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
+        // Fondos: 1.221 €/mes (SMI 2026) por 12 meses = 14.652 €. Hoja del Consulado de Buenos Aires
+        // V.22-04-2026, que reemplazó a la V.05-03-2026 en el mismo enlace.
+        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} (o el SMI por mes de estancia, con billete de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
         sirve: "Pasar hasta 12 meses en España y trabajar hasta 6 meses en total.",
         noPermite: "No se extiende a familiares. Se hace una sola vez. Hay que regresar al terminar.",
         // Octubre 2026: la sección de visados del Consulado de Córdoba no lista este programa
-        // y su página del programa (2023) tiene montos viejos (1.080 €/mes). YoMeAnimo (oct. 2026)
-        // dice que Córdoba pediría 15.120 €. Se usa la hoja de Buenos Aires (abril 2026) hasta confirmar.
+        // y su página del programa (10/03/2023) tiene montos viejos (SMI 2023: 1.080 €/mes). Los 15.120 €
+        // que cita YoMeAnimo salen de 1.080 × 14 pagas: es la cifra vieja. Se usa la hoja de Buenos Aires.
+        // Correo: la página de Córdoba de 2023 pide enviar todo en PDF a cog.cordoba.vis@maec.es. Hoy las
+        // demás páginas de visados de Córdoba usan ese correo para pedir cita y la presentación es en
+        // persona: falta confirmar si para este programa sigue siendo por correo.
         tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es [verificar]. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
         fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
         vigencia: "Abril de 2026", verificar: false, relleno: false } }
