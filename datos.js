@@ -34,11 +34,14 @@ const DATOS = {
     // Fecha que aparece en el pie de todas las pantallas
     fecha_vigencia:        "21/10/2026",
     // Tarjeta Azul UE: salario mínimo general y reducido
+    // Nota informativa de la UGE «Umbral salarial 2026» (junio de 2026)
     ta_salario:            "41.356,36 €/año",
     ta_reducido:           "33.085,09 €/año",
-    // Profesional altamente cualificado (vía nacional)
+    // Profesional altamente cualificado (vía nacional): umbral único, sin reducido.
+    // Misma nota de la UGE (junio de 2026)
     hq_salario:            "41.356,36 €/año",
-    // Nómada digital: ingreso mínimo y suplementos por familiar
+    // Nómada digital: ingreso mínimo y suplementos por familiar.
+    // 200 % del SMI = 2.442 € × 14 pagas ÷ 12 (Consulado de Buenos Aires y UGE, 2026)
     nomada_ingreso:        "2.849 €/mes",
     nomada_familiar1:      "75 % del SMI",
     nomada_familiar_extra: "25 % del SMI",
@@ -266,6 +269,8 @@ const DATOS = {
         requisitos: ["Padre o madre español/a de origen", "Documentación que acredite el vínculo"],
         sirve: "Residir y trabajar en España.",
         noPermite: "Contenido provisorio.",
+        // Hoja 18 de Inclusión (abril de 2026): si la persona y su familiar español están fuera de España,
+        // la solicitud la presenta la persona en el consulado; es gratuita.
         // Desde Argentina, la solicitud se presenta en el consulado, que le pide a la oficina de extranjería
         // que resuelva la autorización (RD 1155/2024, art. 41.3). El visado es gratuito y vale 365 días
         // (Consulado de Córdoba, oct. 2026). La autorización dura 5 años y permite trabajar en cualquier
@@ -273,7 +278,7 @@ const DATOS = {
         // Texto sugerido: «Consulado General de España en Córdoba (la autorización la resuelve la oficina de extranjería).»
         tramite: "Oficina de extranjería en España. [verificar]",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "nietos", nombre: "Búsqueda de empleo para hijos y nietos de españoles", corto: "Búsqueda de empleo",
       resumen: "Visado de 12 meses para buscar trabajo, si la orden anual abre cupo.",
@@ -295,7 +300,7 @@ const DATOS = {
         // Octubre 2026: el Consulado de Córdoba no lista este visado entre sus visados nacionales.
         tramite: "Consulado de España, cuando hay convocatoria.",
         fuente: { texto: "Ministerio de Asuntos Exteriores de España", url: "https://www.exteriores.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "cuenta_ajena", nombre: "Trabajo por cuenta ajena", corto: "Cuenta ajena",
       resumen: "Trabajar en relación de dependencia para un empleador en España.",
@@ -384,7 +389,11 @@ const DATOS = {
           motivo: "Pide título universitario o de formación profesional, o 3 años de experiencia: se abre si podés acreditarlos." } ],
       ficha: {
         que: "Un permiso para residir en España trabajando en remoto para empresas o clientes del exterior.",
-        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "No más del 20 % de ingresos de origen español", "Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
+        // 20 %: solo para quien trabaja por su cuenta (Consulados de Córdoba y Buenos Aires, oct. 2026).
+        // En relación de dependencia, solo se puede trabajar para empresas de fuera de España.
+        // Texto sugerido: «Si trabajás por tu cuenta, no más del 20 % de tu actividad para empresas españolas».
+        // Título o 3 años de experiencia y seguro sin copagos: documentación de la UGE para teletrabajadores.
+        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "No más del 20 % de ingresos de origen español [verificar]","Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
         sirve: "Vivir en España sin depender del mercado laboral español.",
         noPermite: "Contenido provisorio.",
         // En Córdoba se presenta en persona en el consulado (en Buenos Aires, en cambio, por BLS)
@@ -439,7 +448,7 @@ const DATOS = {
         noPermite: "Dura 1 año y se limita a una región y un sector.",
         tramite: "Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "investigador", nombre: "Investigador/a", corto: "Investigación",
       resumen: "Para investigar en una universidad, centro de I+D o empresa.",
@@ -451,7 +460,10 @@ const DATOS = {
         // «3 años»: la autorización dura 3 años o lo que dure el convenio o contrato, si es menos
         // (Ley 14/2013, art. 72.3). El visado del consulado dura 1 año; en España se sigue con la autorización.
         // Doctorado como investigador: Consulado de Buenos Aires, noticia del 4/10/2026.
-        que: "Un permiso de 3 años para investigar, doctorado incluido, con trabajo pleno.",
+        // «con trabajo pleno»: ni la Ley 14/2013 (art. 72) ni el consulado lo dicen así. La autorización
+        // es para la actividad de investigación (y docencia relacionada). Al terminar, hasta 12 meses
+        // para buscar empleo o emprender (art. 72.9).
+        que: "Un permiso de 3 años para investigar, doctorado incluido, con trabajo pleno [verificar].",
         requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante"],
         sirve: "Investigar y trabajar en España.",
         noPermite: "Contenido provisorio.",
@@ -470,7 +482,13 @@ const DATOS = {
         { si: [ { pregunta: "practicas", es: ["si", "interes"] }, { pregunta: "ahorros", es: ["bajo"] } ], resultado: "depende", condicion: "capital_economico",
           motivo: "Si las prácticas no son pagas, vas a necesitar cómo sostenerte." } ],
       ficha: {
-        que: "Un permiso para hacer prácticas con un convenio de una entidad española. Después se puede pasar a trabajo sin salir de España.",
+        // «pasar a trabajo»: el RD 1155/2024 (art. 191) permite cambiar de residencia a residencia y trabajo
+        // sin visado, pero con una oferta y los requisitos de cuenta ajena. Ni la Hoja 21 ni la Ley 14/2013
+        // lo prevén para prácticas en particular.
+        // Hoja 21 de Inclusión (sept. 2025): «título de educación superior» incluye la formación profesional
+        // de grado superior; con convenio (sin contrato) pide el 100 % del IPREM por mes; no permite
+        // reagrupar familiares.
+        que: "Un permiso para hacer prácticas con un convenio de una entidad española. Después se puede pasar a trabajo sin salir de España [verificar].",
         // Ley 14/2013, disposición adicional 18.ª, y Consulado de Córdoba (oct. 2026): sirve un convenio
         // de prácticas o un contrato de trabajo en prácticas. Además, las prácticas tienen que ser del
         // mismo campo y nivel que tu título o tus estudios, y hay que tener seguro y recursos suficientes.
@@ -484,7 +502,7 @@ const DATOS = {
         // Consulado General de España en Córdoba.»
         tramite: "Consulado General de España en Córdoba. [verificar]",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "estudiante", nombre: "Estudiante", corto: "Estudios",
       resumen: "Para estudiar un máster u otro estudio superior.",
