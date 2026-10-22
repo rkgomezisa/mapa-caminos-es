@@ -44,7 +44,11 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
    - proyectado y grabado.
 6. **Accesibilidad:** contraste adecuado en tema claro y oscuro, todo navegable con teclado, foco visible, y el estado nunca se comunica solo con color (siempre ícono + texto).
 7. **Mostrá el cambio:** si el cambio es visual, revisalo en ancho de celular (375 px) y de escritorio antes de abrir el PR. Chromium y Playwright están disponibles en el entorno.
-8. **Contenido legal o de cifras:** no inventes requisitos, montos ni fechas. Si falta un dato, marcá la ficha con `verificar: true` o dejá `relleno: true` y avisá en el PR. Las decisiones de contenido las toma el grupo.
+8. **Contenido legal o de cifras:** no inventes requisitos, montos ni fechas.
+   - **Si una fuente oficial confirma que un dato está mal y dice cuál es el correcto**, corregilo y citá la fuente en un comentario arriba.
+   - **Si no se pudo confirmar**, escribí `[verificar]` al lado de ese dato (por ejemplo, `"Fondos de {vyt_fondos} [verificar]"`). No marques con `[verificar]` un dato que ya sabés que está mal.
+   - `verificar: true` marca la ficha entera: usalo solo si no se sabe qué dato hay que revisar. `relleno: true` marca contenido provisorio.
+   - Avisá en el PR qué corregiste y qué quedó marcado. Las decisiones de contenido (qué mostrar, cómo se abre o se cierra una vía) las toma el grupo.
 
 ## Flujo de trabajo
 
