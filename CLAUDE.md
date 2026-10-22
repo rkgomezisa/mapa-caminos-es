@@ -48,6 +48,11 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
 
 ## Flujo de trabajo
 
-- **Un cambio = una rama = un pull request** contra `main`. GitHub Pages publica desde `main` (`/ (root)`), así que el PR es la revisión del grupo antes de publicar.
+- **Todo cambio pasa por un pull request** contra `main`. GitHub Pages publica desde `main` (`/ (root)`), así que el PR es la revisión del grupo antes de publicar. Un cambio = un commit con su propio mensaje.
+- **Un solo PR abierto a la vez.** Antes de abrir un PR, revisá si ya hay uno abierto desde una rama `claude/`:
+  ```bash
+  gh api repos/rkgomezisa/mapa-caminos-es/pulls --jq '.[] | select(.head.ref | startswith("claude/")) | "#\(.number) \(.title)"'
+  ```
+  Si hay uno, no abras otro: sumá el cambio como commit en esa rama y actualizá la descripción del PR, o esperá a que el grupo lo mergee o lo cierre. Si el cambio no tiene relación con el PR abierto, preguntale a Karim antes. Esto vale también entre conversaciones: una conversación nueva no sabe qué PR abrió la anterior, por eso se mira GitHub y no la memoria.
 - **Mensajes de commit y descripción del PR en español**, explicando qué cambia para quien usa la página.
 - **No hagas push directo a `main`**, salvo que Karim lo pida.
