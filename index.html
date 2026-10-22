@@ -202,6 +202,11 @@ html.proyeccion .paso-grid, .paso-grid.ancho { grid-template-columns: minmax(0, 
 .motivo { background: var(--cbg); border-radius: 6px; padding: 8px 10px; }
 .motivo strong { color: var(--c); }
 .nota { font-size: 0.9rem; color: var(--muted); }
+/* advertencias: algo que la persona tiene que revisar antes de avanzar (no cambia el estado de la vía) */
+.advertencia-corta { margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--warn); }
+.advertencias { padding: 10px 12px; border-radius: 6px; background: var(--warn-bg); border-left: 4px solid var(--warn); }
+.advertencias strong { color: var(--warn); }
+.advertencias ul { margin: 6px 0 0; padding-left: 1.2rem; }
 .tarjeta-conds { font-size: 0.9rem; }
 .tarjeta-conds .ayuda { display: block; font-size: 0.8rem; }
 .ver-ficha { margin-top: auto; font-size: 0.88rem; font-weight: 700; color: var(--accent); }
@@ -369,7 +374,7 @@ h2 { scroll-margin-top: 12px; }
     return lista(si).every(c => resp[c.pregunta] !== undefined && c.es.includes(resp[c.pregunta]));
   }
   function evaluar(via, resp) {
-    const r = { via, cierres: [], depende: [], notas: [] };
+    const r = { via, cierres: [], depende: [], notas: [], advertencias: [] };
     let oculta = false, noInt = false;
     for (const g of via.reglas || []) {
       if (!cumple(g.si, resp)) continue;
@@ -378,6 +383,7 @@ h2 { scroll-margin-top: 12px; }
       else if (g.resultado === "depende") r.depende.push(g);
       else if (g.resultado === "noInteresa") noInt = true;
       else if (g.resultado === "nota") r.notas.push(g);
+      else if (g.resultado === "advierte") r.advertencias.push(g);
     }
     r.estado = oculta ? "oculta" : r.cierres.length ? "cerrada" : noInt ? "noInteresa" : r.depende.length ? "depende" : "abierta";
     return r;
@@ -575,11 +581,18 @@ h2 { scroll-margin-top: 12px; }
         <li><button class="opcion" type="button" disabled aria-pressed="${p.resp[q.id] === o.valor}">
           <span class="marca-op" aria-hidden="true"></span><span>${tx(o.texto)}</span>
         </button></li>`).join("");
-      const listaCambios = cambios.length
+      // vías que no cambian de estado pero suman una advertencia con esta respuesta
+      const nuevasAdv = actual.filter(r => !cambios.includes(r) && r.estado !== "cerrada" && r.estado !== "noInteresa"
+        && r.advertencias.length > (prevE[r.via.id]?.advertencias.length || 0));
+      const listaCambios = cambios.length || nuevasAdv.length
         ? `<ul class="cambios">${cambios.map(r => {
             const g = r.cierres[0] || r.depende[0];
             const porque = g ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
             return `<li>${pillHTML(r.estado)} <span><strong>${esc(r.via.nombre)}</strong>${porque}</span></li>`;
+          }).join("")}${nuevasAdv.map(r => {
+            const g = r.advertencias[r.advertencias.length - 1];
+            const porque = lista(g.condicion).length ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
+            return `<li><span class="aviso"><span aria-hidden="true">⚠ </span>${esc(D.textos.advertenciaEtiqueta)}</span> <span><strong>${esc(r.via.nombre)}</strong>${porque}</span></li>`;
           }).join("")}</ul>`
         : `<p class="ayuda">Esta respuesta no cambia el mapa.</p>`;
       const nota = p.notas && p.notas[q.id] ? `<p>${tx(p.notas[q.id])}</p>` : "";
@@ -610,10 +623,12 @@ h2 { scroll-margin-top: 12px; }
     if (r.estado === "cerrada") detalle = `<ul class="motivos">${r.cierres.map(g => motivoHTML(g, "Se cierra por")).join("")}</ul>`;
     else if (r.estado === "depende") detalle = `<ul class="motivos">${r.depende.map(g => motivoHTML(g, "Depende de")).join("")}</ul>`;
     const notas = r.estado !== "cerrada" && r.notas.length ? r.notas.map(n => `<p class="nota">${tx(n.motivo)}</p>`).join("") : "";
+    const advierte = (r.estado === "abierta" || r.estado === "depende") && r.advertencias.length
+      ? `<p class="advertencia-corta"><span aria-hidden="true">⚠ </span>${tx(D.textos.advertenciaCorta)}</p>` : "";
     return `<li class="tarjeta st-${r.estado}">
       <div class="tarjeta-cab"><h3 class="tarjeta-nombre"><button class="tarjeta-btn" type="button" data-via="${esc(r.via.id)}" aria-haspopup="dialog">${esc(r.via.nombre)}</button></h3>${pillHTML(r.estado)}</div>
       <p class="tarjeta-resumen">${tx(r.via.resumen)}</p>
-      ${detalle}${notas}
+      ${detalle}${notas}${advierte}
       ${avisosHTML(r.via.ficha)}
       <span class="ver-ficha" aria-hidden="true">Ver ficha</span>
     </li>`;
@@ -707,8 +722,9 @@ h2 { scroll-margin-top: 12px; }
   function abrirFicha(id, disparador) {
     const via = D.vias.find(v => v.id === id), f = via.ficha;
     estado.ultimoDisparador = disparador;
-    let estadoHTML;
+    let estadoHTML, advs;
     if (estado.modo === "explorar") {
+      advs = (via.reglas || []).filter(g => g.resultado === "advierte");
       // sin respuestas no hay estado: se nombran las condiciones del entorno que pesan en la vía
       const grupo = (titulo, conds) => conds.length ? `<div><strong>${tx(titulo)}</strong><ul class="motivos">${conds.map(c =>
         `<li class="motivo"><strong>${esc(nombreCond(c))}</strong>. ${tx(D.condiciones[c]?.texto || "")}</li>`).join("")}</ul></div>` : "";
@@ -717,6 +733,7 @@ h2 { scroll-margin-top: 12px; }
       estadoHTML = cuerpo ? `<div class="ficha-estado st-neutra">${cuerpo}</div>` : "";
     } else {
       const r = evaluar(via, estado.resp);
+      advs = r.advertencias;
       let est = "";
       if (r.estado === "cerrada") est = `<ul class="motivos">${r.cierres.map(g => motivoHTML(g, "Se cierra por")).join("")}</ul>`;
       else if (r.estado === "depende") est = `<ul class="motivos">${r.depende.map(g => motivoHTML(g, "Depende de")).join("")}</ul>`;
@@ -726,6 +743,7 @@ h2 { scroll-margin-top: 12px; }
       <div class="ficha">
         <div class="ficha-cab"><h2 id="ficha-titulo">${esc(via.nombre)}</h2><button class="btn btn-chico" type="button" id="cerrar-ficha">Cerrar</button></div>
         ${estadoHTML}
+        ${advs.length ? `<div class="advertencias"><strong><span aria-hidden="true">⚠ </span>${tx(D.textos.advertenciaTitulo)}</strong><ul>${advs.map(g => `<li>${tx(g.motivo)}</li>`).join("")}</ul></div>` : ""}
         ${avisosHTML(f)}
         <dl>
           <div><dt>Qué es</dt><dd>${tx(f.que)}</dd></div>
