@@ -552,7 +552,10 @@ const DATOS = {
         // cog.cordoba.vis@maec.es, después dan turno para el NIE y luego la cita presencial del visado.
         // YoMeAnimo advierte, por comentarios de lectores, que Córdoba podría no estar recibiendo
         // solicitudes: conviene preguntarle al consulado.
-        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
+        // Suspensión: YoMeAnimo, «Suspenden la Working Holiday España en Córdoba» (17/03/2026, act. 20/04/2026),
+        // sin fuente oficial ni fecha de reactivación; su nota del 15/10/2026 lo repite por comentarios de lectores.
+        // El consulado no publicó nada. Confirmar por mail antes de sacar la marca.
+        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Según fuentes no oficiales, desde marzo de 2026 el consulado no estaría recibiendo solicitudes: escribiles antes de empezar [verificar]. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
         fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
         vigencia: "Abril de 2026", verificar: false, relleno: false } }
   ],
