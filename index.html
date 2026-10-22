@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0}
-img{max-width:100%}
-[hidden]{display:none!important}
-</style>
 <title>Mapa de Caminos a España</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Recurso de información ocupacional de nivel general: vías legales para trabajar en España.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17252B" media="(prefers-color-scheme: dark)">
+<!-- vista previa al compartir el link (WhatsApp, redes) -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_AR">
+<meta property="og:title" content="Mapa de Caminos a España">
+<meta property="og:description" content="Recurso de información ocupacional de nivel general: vías legales para trabajar en España.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D5A6E'/%3E%3Cpath d='M7 25c4-1 5-6 9-8s8-1 9-10' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='25' cy='7' r='3' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Atkinson+Hyperlegible+Mono:wght@400;600&display=swap">
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap">
 
 <style>
 /* Layout: una columna de lectura que se ensancha en modo proyección; tarjetas de estado agrupadas por resultado */
@@ -36,10 +36,10 @@ img{max-width:100%}
   --focus: #C2410C;
   --f-display: "Bricolage Grotesque", "Atkinson Hyperlegible Next", system-ui, sans-serif;
   --f-body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mono: "Atkinson Hyperlegible Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --w: 46rem;
 }
-@media (prefers-color-scheme: dark) {
+/* solo en pantalla: al imprimir siempre se usa el tema claro */
+@media screen and (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0F1A1E; --surface: #17252B; --ink: #E6EEEE; --muted: #A6B5B8; --line: #2E4148;
     --accent: #7CC3D6; --accent-ink: #0D1B20;
@@ -61,6 +61,7 @@ html.proyeccion { font-size: 125%; }
 html.proyeccion { --w: 64rem; }
 
 body {
+  margin: 0;
   background: var(--bg); color: var(--ink);
   font-family: var(--f-body); font-size: 1.0625rem; line-height: 1.55;
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -78,11 +79,14 @@ p { margin: 0; max-width: 65ch; }
 a { color: var(--accent); }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
 h1:focus { outline: none; }
-.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+.mono { font-variant-numeric: tabular-nums; }
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.detalle-error { font-size: 0.85rem; color: var(--muted); }
 
 /* barra superior */
-.top { border-bottom: 1px solid var(--line); background: var(--surface); }
+.top { border-bottom: 1px solid var(--line); background: var(--surface); padding-top: env(safe-area-inset-top, 0px); }
 .top .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding-block: 10px; }
 .marca { font-family: var(--f-display); font-weight: 700; font-size: 1rem; color: var(--ink); background: none; border: 0; padding: 4px 0; cursor: pointer; text-align: left; }
 .top-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -93,10 +97,8 @@ h1:focus { outline: none; }
   border-radius: 6px; padding: 0.55em 0.95em; border: 1.5px solid var(--line);
   background: var(--surface); color: var(--ink); line-height: 1.2;
 }
-.btn:hover { border-color: var(--accent); }
 .top .btn { white-space: nowrap; }
 .btn-primario { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-.btn-primario:hover { filter: brightness(1.08); }
 .btn-chico { font-size: 0.85rem; padding: 0.4em 0.7em; }
 .btn[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .btn-link { background: none; border: 0; color: var(--accent); text-decoration: underline; padding: 0; font: inherit; font-weight: 600; cursor: pointer; }
@@ -114,8 +116,7 @@ main { padding-block: 28px 32px; display: block; }
   background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 14px;
   display: flex; flex-direction: column; gap: 4px;
 }
-.persona-btn:hover { border-color: var(--accent); }
-.persona-letra { font-family: var(--f-mono); font-size: 0.8rem; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
+.persona-letra { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
 .persona-nombre { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; }
 .persona-desc { color: var(--muted); font-size: 0.95rem; }
 .caminos { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); }
@@ -124,15 +125,13 @@ main { padding-block: 28px 32px; display: block; }
   background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 16px;
   display: flex; flex-direction: column; gap: 6px;
 }
-.camino:hover { border-color: var(--accent); }
-.camino-titulo { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; display: flex; justify-content: space-between; gap: 10px; }
+.camino-titulo { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; }
 .camino-texto { color: var(--muted); font-size: 0.95rem; }
-.camino-ir { color: var(--accent); }
 
 /* pregunta */
 .progreso { display: flex; flex-direction: column; gap: 6px; }
 .progreso-texto { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 0.85rem; color: var(--muted); }
-.etiqueta-bloque { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--accent); }
+.etiqueta-bloque { font-size: 0.95rem; font-weight: 700; color: var(--accent); }
 .barra { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
 .barra > span { display: block; height: 100%; background: var(--accent); }
 .ayuda { color: var(--muted); }
@@ -142,14 +141,14 @@ main { padding-block: 28px 32px; display: block; }
   background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px;
   padding: 14px 16px; display: grid; grid-template-columns: 1.6rem 1fr; gap: 10px; align-items: start;
 }
-.opcion:hover { border-color: var(--accent); }
 .opcion .marca-op { width: 1.25rem; height: 1.25rem; border: 2px solid var(--muted); border-radius: 50%; margin-top: 0.15rem; display: grid; place-items: center; font-size: 0.75rem; }
 .opcion[aria-pressed="true"] { border-color: var(--accent); border-width: 2.5px; background: color-mix(in srgb, var(--accent) 9%, var(--surface)); }
 .opcion[aria-pressed="true"] .marca-op { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
 .opcion[aria-pressed="true"] .marca-op::after { content: "✓"; }
 .opcion:disabled { cursor: default; }
-.opciones.atenuar .opcion[aria-pressed="false"] { opacity: 0.55; }
+.opciones.atenuar .opcion[aria-pressed="false"] { opacity: 0.7; }
 .contador { font-size: 0.9rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.contador .cuenta-estado { color: var(--c); }
 .nav-pregunta { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 
 /* estados */
@@ -171,10 +170,10 @@ main { padding-block: 28px 32px; display: block; }
   border-radius: 6px; color: var(--c); background: var(--cbg); border: 1px solid transparent; font-weight: 600;
 }
 .chip.cambio { border-color: var(--c); box-shadow: 0 0 0 2px var(--cbg); }
-.chip .nuevo { font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; }
+.chip .nuevo { font-size: 0.75rem; font-style: italic; }
 .paso-grid { display: grid; gap: 24px; }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-.panel h2 { font-size: 1rem; font-family: var(--f-body); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.panel h2 { font-size: 1rem; font-family: var(--f-body); color: var(--muted); }
 .narracion { border-left: 3px solid var(--accent); padding-left: 12px; display: flex; flex-direction: column; gap: 6px; }
 .cambios { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: 0.95rem; }
 .cambios li { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; }
@@ -184,16 +183,20 @@ html.proyeccion .paso-grid, .paso-grid.ancho { grid-template-columns: minmax(0, 
 /* resultados */
 .seccion { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
 .seccion-titulo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.seccion-titulo .cuenta { font-family: var(--f-mono); font-size: 0.9rem; color: var(--muted); }
+.seccion-titulo .cuenta { font-size: 0.95rem; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
 .tarjetas { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+/* la tarjeta es un ítem de lista; el botón del nombre se estira (::after) para que toda la tarjeta abra la ficha */
 .tarjeta {
-  width: 100%; height: 100%; text-align: left; font: inherit; color: var(--ink); cursor: pointer;
+  position: relative; cursor: pointer;
   background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 14px;
   display: flex; flex-direction: column; gap: 8px;
 }
-.tarjeta:hover { border-color: var(--c); }
-.tarjeta-cab { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-.tarjeta-nombre { font-weight: 700; font-size: 1.05rem; line-height: 1.25; }
+.tarjeta-cab { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.tarjeta-nombre { font-family: var(--f-body); font-weight: 700; font-size: 1.05rem; line-height: 1.25; }
+.tarjeta-btn { font: inherit; color: inherit; background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+.tarjeta-btn::after { content: ""; position: absolute; inset: -1.5px; border-radius: 8px; }
+.tarjeta-btn:focus-visible { outline: none; }
+.tarjeta-btn:focus-visible::after { outline: 3px solid var(--focus); outline-offset: 2px; }
 .tarjeta-resumen { color: var(--muted); font-size: 0.95rem; }
 .motivos { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; font-size: 0.93rem; }
 .motivo { background: var(--cbg); border-radius: 6px; padding: 8px 10px; }
@@ -212,7 +215,7 @@ html.proyeccion .paso-grid, .paso-grid.ancho { grid-template-columns: minmax(0, 
 .banner h2 { color: var(--always); }
 .condiciones { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .condiciones li { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; }
-.condiciones .n { font-family: var(--f-mono); color: var(--muted); }
+.condiciones .n { font-variant-numeric: tabular-nums; color: var(--muted); }
 .siempre { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
 .siempre li { background: var(--always-bg); border: 1.5px solid var(--always); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
 .siempre h3 { color: var(--always); }
@@ -231,10 +234,16 @@ dialog {
   border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink);
 }
 dialog::backdrop { background: rgb(10 20 24 / 0.55); }
+/* con la ficha abierta, la página de fondo no se mueve */
+html:has(dialog[open]) { overflow: hidden; }
 .ficha { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-.ficha-cab { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+/* encabezado fijo dentro del panel */
+.ficha-cab {
+  display: flex; justify-content: space-between; gap: 12px; align-items: flex-start;
+  position: sticky; top: 0; background: var(--surface); margin: -20px -20px 0; padding: 16px 20px 12px; border-bottom: 1px solid var(--line); z-index: 1;
+}
 .ficha dl { margin: 0; display: grid; gap: 12px; }
-.ficha dt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--muted); }
+.ficha dt { font-size: 0.9rem; font-weight: 700; color: var(--muted); }
 .ficha dd { margin: 2px 0 0; }
 .ficha ul { margin: 2px 0 0; padding-left: 1.2rem; }
 .ficha-estado { padding: 10px 12px; border-radius: 6px; background: var(--cbg); display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem; }
@@ -249,15 +258,19 @@ dialog::backdrop { background: rgb(10 20 24 / 0.55); }
 h2[tabindex="-1"]:focus { outline: none; }
 h2 { scroll-margin-top: 12px; }
 
-/* ficha: encabezado fijo dentro del panel */
-.ficha-cab { position: sticky; top: 0; background: var(--surface); margin: -20px -20px 0; padding: 16px 20px 12px; border-bottom: 1px solid var(--line); z-index: 1; }
 .ficha .motivos { padding-left: 0; }
 .ficha-estado .motivo { background: transparent; padding: 0; }
-.tarjeta-cab { flex-wrap: wrap; }
+
+/* hover solo con mouse: en el celular el borde no queda marcado después de tocar */
+@media (hover: hover) {
+  .btn:hover, .persona-btn:hover, .camino:hover, .opcion:hover:not(:disabled) { border-color: var(--accent); }
+  .btn-primario:hover { filter: brightness(1.08); }
+  .tarjeta:hover { border-color: var(--c); }
+}
 
 /* pantallas táctiles: áreas de toque de al menos 44px */
 @media (pointer: coarse) {
-  .btn, .btn-chico { min-height: 44px; }
+  .btn, .btn-chico, .marca { min-height: 44px; }
   .indice a { min-height: 44px; display: inline-flex; align-items: center; }
 }
 
@@ -290,6 +303,15 @@ h2 { scroll-margin-top: 12px; }
 @media (prefers-reduced-motion: no-preference) {
   .opcion, .tarjeta, .btn, .persona-btn, .camino { transition: border-color 0.12s, background-color 0.12s; }
 }
+
+/* impresión: el mapa en papel, sin botones ni navegación */
+@media print {
+  body { background: #fff; }
+  .top, .fila, .nav-pregunta, .indice, .ver-ficha, .respuestas .btn, dialog { display: none !important; }
+  .tarjeta, .siempre li, .panel, .banner { break-inside: avoid; }
+  .pill, .chip, .motivo, .aviso { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.8em; word-break: break-all; }
+}
 </style>
 
 </head>
@@ -303,7 +325,7 @@ h2 { scroll-margin-top: 12px; }
     </div>
   </div>
 </header>
-<main id="main" class="wrap" aria-live="polite"></main>
+<main id="main" class="wrap"></main>
 <footer class="pie"><div class="wrap"><p id="pie-texto"></p></div></footer>
 <dialog id="ficha" aria-labelledby="ficha-titulo"></dialog>
 
@@ -320,7 +342,7 @@ h2 { scroll-margin-top: 12px; }
     main.innerHTML = `<div class="pila"><h1>No se pudo cargar el contenido</h1>
       <p class="bajada">Hay un problema en el archivo <strong>datos.js</strong>, probablemente en el último cambio: una coma, una comilla o una llave que falta o sobra.</p>
       <p>Para arreglarlo, volvé a la versión anterior desde el historial de GitHub o revisá la última línea que se editó.</p>
-      ${detalle ? `<p class="mono" style="font-size:0.85rem;color:var(--muted)">Detalle técnico: ${String(detalle).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]))}</p>` : ""}</div>`;
+      ${detalle ? `<p class="detalle-error">Detalle técnico: ${String(detalle).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]))}</p>` : ""}</div>`;
     document.getElementById("pie-texto").textContent = "Información general. No reemplaza el asesoramiento profesional. Verificá siempre en la fuente oficial.";
   }
   if (typeof DATOS === "undefined") { mostrarError(window.__errorDatos || "datos.js no se cargó o tiene un error de formato."); return; }
@@ -394,7 +416,7 @@ h2 { scroll-margin-top: 12px; }
     const op = D.textos.inicioOpciones;
     const camino = id => `
       <li><button class="camino" type="button" data-camino="${id}">
-        <span class="camino-titulo">${tx(op[id].titulo)}<span class="camino-ir" aria-hidden="true">→</span></span>
+        <span class="camino-titulo">${tx(op[id].titulo)}</span>
         <span class="camino-texto">${tx(op[id].texto)}</span>
       </button></li>`;
     render(`
@@ -438,13 +460,13 @@ h2 { scroll-margin-top: 12px; }
     reiniciar("explorar");
     const tarjetas = D.vias.map(v => {
       const conds = [...new Set([...condicionesVia(v, "cierra"), ...condicionesVia(v, "depende")])];
-      return `<li><button class="tarjeta st-neutra" type="button" data-via="${esc(v.id)}" aria-haspopup="dialog">
-        <span class="tarjeta-cab"><span class="tarjeta-nombre">${esc(v.nombre)}</span></span>
-        <span class="tarjeta-resumen">${tx(v.resumen)}</span>
-        ${conds.length ? `<span class="tarjeta-conds"><span class="ayuda">${tx(D.textos.explorarPesan)}:</span> ${conds.map(c => esc(nombreCond(c))).join(" · ")}</span>` : ""}
+      return `<li class="tarjeta st-neutra">
+        <div class="tarjeta-cab"><h3 class="tarjeta-nombre"><button class="tarjeta-btn" type="button" data-via="${esc(v.id)}" aria-haspopup="dialog">${esc(v.nombre)}</button></h3></div>
+        <p class="tarjeta-resumen">${tx(v.resumen)}</p>
+        ${conds.length ? `<p class="tarjeta-conds"><span class="ayuda">${tx(D.textos.explorarPesan)}:</span> ${conds.map(c => esc(nombreCond(c))).join(", ")}</p>` : ""}
         ${avisosHTML(v.ficha)}
-        <span class="ver-ficha">Ver ficha →</span>
-      </button></li>`;
+        <span class="ver-ficha" aria-hidden="true">Ver ficha</span>
+      </li>`;
     }).join("");
     render(`
       <div class="pila">
@@ -470,7 +492,7 @@ h2 { scroll-margin-top: 12px; }
     const m = mapa(resp), c = {};
     m.forEach(r => c[r.estado] = (c[r.estado] || 0) + 1);
     return `<p class="contador"><span>Tu mapa hasta ahora:</span>${ORDEN.filter(k => c[k]).map(k =>
-      `<span class="st-${k}" style="color:var(--c)"><span aria-hidden="true">${D.textos.estados[k].simbolo}</span> ${c[k]} ${esc(D.textos.estados[k].etiqueta.toLowerCase())}</span>`).join("")}</p>`;
+      `<span class="cuenta-estado st-${k}"><span aria-hidden="true">${D.textos.estados[k].simbolo}</span> ${c[k]} ${esc(D.textos.estados[k].etiqueta.toLowerCase())}</span>`).join("")}</p>`;
   }
 
   function preguntaPropia() {
@@ -533,7 +555,7 @@ h2 { scroll-margin-top: 12px; }
   function pasoPersona() {
     const p = estado.persona, total = D.preguntas.length, k = estado.paso;
     const actual = mapa(respHasta(p, k));
-    const cabecera = `<p class="progreso-texto"><span class="etiqueta-bloque">Recorrido ${esc(p.id)} · ${esc(p.nombre)}, ${esc(p.edad)}</span><span class="mono">${k === 0 ? "Inicio" : `Paso ${k} de ${total}`}</span></p>`;
+    const cabecera = `<p class="progreso-texto"><span class="etiqueta-bloque">Recorrido ${esc(p.id)}: ${esc(p.nombre)}, ${esc(p.edad)}</span><span class="mono">${k === 0 ? "Inicio" : `Paso ${k} de ${total}`}</span></p>`;
     const mapaPanel = prev => `<section class="panel" aria-labelledby="t-mm"><h2 id="t-mm">El mapa de ${esc(p.nombre)}</h2>${miniMapaHTML(actual, prev)}</section>`;
     let cuerpo;
     if (k === 0) {
@@ -556,7 +578,7 @@ h2 { scroll-margin-top: 12px; }
       const listaCambios = cambios.length
         ? `<ul class="cambios">${cambios.map(r => {
             const g = r.cierres[0] || r.depende[0];
-            const porque = g ? ` · ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
+            const porque = g ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
             return `<li>${pillHTML(r.estado)} <span><strong>${esc(r.via.nombre)}</strong>${porque}</span></li>`;
           }).join("")}</ul>`
         : `<p class="ayuda">Esta respuesta no cambia el mapa.</p>`;
@@ -588,13 +610,13 @@ h2 { scroll-margin-top: 12px; }
     if (r.estado === "cerrada") detalle = `<ul class="motivos">${r.cierres.map(g => motivoHTML(g, "Se cierra por")).join("")}</ul>`;
     else if (r.estado === "depende") detalle = `<ul class="motivos">${r.depende.map(g => motivoHTML(g, "Depende de")).join("")}</ul>`;
     const notas = r.estado !== "cerrada" && r.notas.length ? r.notas.map(n => `<p class="nota">${tx(n.motivo)}</p>`).join("") : "";
-    return `<li><button class="tarjeta st-${r.estado}" type="button" data-via="${esc(r.via.id)}" aria-haspopup="dialog">
-      <span class="tarjeta-cab"><span class="tarjeta-nombre">${esc(r.via.nombre)}</span>${pillHTML(r.estado)}</span>
-      <span class="tarjeta-resumen">${tx(r.via.resumen)}</span>
+    return `<li class="tarjeta st-${r.estado}">
+      <div class="tarjeta-cab"><h3 class="tarjeta-nombre"><button class="tarjeta-btn" type="button" data-via="${esc(r.via.id)}" aria-haspopup="dialog">${esc(r.via.nombre)}</button></h3>${pillHTML(r.estado)}</div>
+      <p class="tarjeta-resumen">${tx(r.via.resumen)}</p>
       ${detalle}${notas}
       ${avisosHTML(r.via.ficha)}
-      <span class="ver-ficha">Ver ficha →</span>
-    </button></li>`;
+      <span class="ver-ficha" aria-hidden="true">Ver ficha</span>
+    </li>`;
   }
 
   function siempreHTML() {
@@ -657,7 +679,7 @@ h2 { scroll-margin-top: 12px; }
         ${depende.length ? grupo("t-dep", D.textos.tituloDepende, depende) : ""}
         ${grupo("t-ce", D.textos.tituloCerradas, cerradas, "Ninguna vía se cerró con estas respuestas.")}
         ${siempreHTML()}
-        ${noInt.length ? `<details><summary>${tx(D.textos.tituloNoInteresa)} · ${noInt.length}</summary><ul class="tarjetas">${noInt.map(tarjetaHTML).join("")}</ul></details>` : ""}
+        ${noInt.length ? `<details><summary>${tx(D.textos.tituloNoInteresa)} (${noInt.length})</summary><ul class="tarjetas">${noInt.map(tarjetaHTML).join("")}</ul></details>` : ""}
         <div class="fila">
           <button class="btn btn-primario" type="button" id="r-reiniciar">Volver a empezar</button>
           ${p ? `<button class="btn" type="button" id="r-repetir">Ver el recorrido de ${esc(p.nombre)} otra vez</button>` : ""}
@@ -721,6 +743,8 @@ h2 { scroll-margin-top: 12px; }
   }
   dialogo.addEventListener("close", () => { if (estado.ultimoDisparador) estado.ultimoDisparador.focus(); });
   dialogo.addEventListener("click", e => { if (e.target === dialogo) dialogo.close(); });
+  // al imprimir, las secciones plegadas (respuestas, vías que no interesan) salen abiertas
+  window.addEventListener("beforeprint", () => main.querySelectorAll("details").forEach(d => d.open = true));
 
   /* ---------- arranque ---------- */
   document.getElementById("marca").textContent = D.textos.marca;
