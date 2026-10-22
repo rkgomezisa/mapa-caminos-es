@@ -44,7 +44,9 @@ const DATOS = {
     vyt_seguro:            "30.000 €",
     vyt_cupo:              "500",
     // Estudiante: horas de trabajo permitidas
-    estudiante_horas:      "30 horas por semana"
+    estudiante_horas:      "30 horas por semana",
+    // Estudiante: medios económicos (100 % del IPREM). Consulado de Buenos Aires, 2026
+    estudiante_medios:     "600 € por mes"
   },
 
   textos: {
@@ -242,7 +244,10 @@ const DATOS = {
         { si: { pregunta: "ascendencia", es: ["abuelo"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Es para hijos e hijas. Por abuelo o abuela, mirá la vía de búsqueda de empleo." },
         { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "cierra", condicion: "ascendencia",
-          motivo: "Si no lo sabés, vale la pena preguntar en tu familia: esta vía depende de documentos que a veces nadie buscó." } ],
+          motivo: "Si no lo sabés, vale la pena preguntar en tu familia: esta vía depende de documentos que a veces nadie buscó." },
+        // Fuente: Consulado de Córdoba, «Nacionalidad española - Opción» (octubre 2026)
+        { si: { pregunta: "ascendencia", es: ["padre"] }, resultado: "nota",
+          motivo: "Si tu padre o tu madre es español/a de origen y nació en España, también podés pedir la nacionalidad española por opción, a cualquier edad. Se inicia en el Consulado General de España en Córdoba." } ],
       ficha: {
         que: "Una autorización de residencia para familiares de personas con nacionalidad española, prevista en el nuevo reglamento de extranjería (Real Decreto 1155/2024).",
         requisitos: ["Padre o madre español/a de origen", "Documentación que acredite el vínculo"],
@@ -269,7 +274,8 @@ const DATOS = {
         requisitos: ["Padre, madre, abuelo o abuela español/a de origen", "Que la orden anual de gestión colectiva abra cupo"],
         sirve: "Entrar a España y buscar trabajo durante un año.",
         noPermite: "No sirve si ese año no hay convocatoria.",
-        tramite: "Consulado de España.",
+        // Octubre 2026: el Consulado de Córdoba no lista este visado entre sus visados nacionales.
+        tramite: "Consulado de España, cuando hay convocatoria.",
         fuente: { texto: "Ministerio de Asuntos Exteriores de España", url: "https://www.exteriores.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
 
@@ -285,7 +291,7 @@ const DATOS = {
         requisitos: ["Oferta de trabajo de un empleador en España", "Vía simplificada si la ocupación está en el Catálogo de Difícil Cobertura", "Si no, vía general: el empleador acredita que no hay candidatos disponibles"],
         sirve: "Trabajar en relación de dependencia.",
         noPermite: "Contenido provisorio.",
-        tramite: "El empleador inicia el trámite en España; después, visado en el consulado.",
+        tramite: "El empleador inicia el trámite en España; después, visado en el Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
 
@@ -360,11 +366,12 @@ const DATOS = {
           motivo: "Pide título universitario o de formación profesional, o 3 años de experiencia: se abre si podés acreditarlos." } ],
       ficha: {
         que: "Un permiso para residir en España trabajando en remoto para empresas o clientes del exterior.",
-        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "No más del 20 % de ingresos de origen español", "Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso}, más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
+        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "No más del 20 % de ingresos de origen español", "Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
         sirve: "Vivir en España sin depender del mercado laboral español.",
         noPermite: "Contenido provisorio.",
-        tramite: "Consulado de España o Unidad de Grandes Empresas.",
-        fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
+        // En Córdoba se presenta en persona en el consulado (en Buenos Aires, en cambio, por BLS)
+        tramite: "Consulado General de España en Córdoba, en persona (Bv. Chacabuco 875). Si ya estás en España de forma legal, se pide en la Unidad de Grandes Empresas.",
+        fuente: { texto: "Consulado General de España en Córdoba, visado para teletrabajo (octubre de 2026)", url: "https://www.exteriores.gob.es/Consulados/cordoba/es/ServiciosConsulares/Paginas/index.aspx?scca=Visados&scco=Argentina&scd=129&scs=Visados+Nacionales+-+Visado+de+residencia+para+teletrabajo+%28n%C3%B3mada+digital%29" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "emprendedor", nombre: "Emprendedor/a", corto: "Emprendedor",
@@ -397,7 +404,7 @@ const DATOS = {
         requisitos: ["Plan de negocio viable", "Inversión", "Experiencia", "Medios de vida: aproximadamente {cp_medios}, el IPREM anual"],
         sirve: "Trabajar por tu cuenta.",
         noPermite: "Dura 1 año y se limita a una región y un sector.",
-        tramite: "Consulado de España.",
+        tramite: "Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
 
@@ -408,13 +415,14 @@ const DATOS = {
         { si: { pregunta: "investigar", es: ["interes"] }, resultado: "depende", condicion: ["capital_academico", "redes"],
           motivo: "Se abre si una universidad, un centro de I+D o una empresa te acepta para investigar." } ],
       ficha: {
+        // «3 años»: no figura en la página del consulado (dice: visado de 1 año o lo que dure la autorización). Verificar.
         que: "Un permiso de 3 años para investigar, doctorado incluido, con trabajo pleno.",
-        requisitos: ["Aceptación de una universidad, centro de I+D o empresa"],
+        requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante"],
         sirve: "Investigar y trabajar en España.",
         noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas o consulado.",
+        tramite: "La entidad que te recibe pide la autorización en la Unidad de Grandes Empresas; después, visado en el Consulado General de España en Córdoba. Pueden viajar familiares.",
         fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        vigencia: "21/10/2026", verificar: true, relleno: true } },
 
     { id: "practicas", nombre: "Prácticas", corto: "Prácticas",
       resumen: "Para recién recibidos con un convenio de prácticas en España.",
@@ -431,7 +439,7 @@ const DATOS = {
         requisitos: ["Recibido/a hace menos de 2 años, o estudiando", "Convenio de prácticas con una entidad española"],
         sirve: "Hacer una primera experiencia laboral en España.",
         noPermite: "Contenido provisorio.",
-        tramite: "Consulado de España.",
+        tramite: "Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
 
@@ -445,10 +453,10 @@ const DATOS = {
           motivo: "Te permite trabajar hasta {estudiante_horas} y pasar a residencia y trabajo sin salir de España." } ],
       ficha: {
         que: "Una estancia por estudios superiores (Real Decreto 1155/2024).",
-        requisitos: ["Admisión en un estudio superior", "Medios económicos para el período de estudios"],
+        requisitos: ["Admisión en un estudio superior", "Medios económicos para el período de estudios: al menos {estudiante_medios} (hasta 12 meses), más un extra por cada familiar", "Seguro médico completo, sin copagos"],
         sirve: "Estudiar y trabajar hasta {estudiante_horas}, y después pasar a residencia y trabajo sin salir de España.",
         noPermite: "No permite trabajar a tiempo completo mientras estudiás.",
-        tramite: "Consulado de España.",
+        tramite: "Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
 
@@ -471,8 +479,9 @@ const DATOS = {
         sirve: "Pasar hasta 12 meses en España y trabajar hasta 6 meses en total.",
         noPermite: "No se extiende a familiares. Se hace una sola vez. Hay que regresar al terminar.",
         // Octubre 2026: la sección de visados del Consulado de Córdoba no lista este programa
-        // y su página del programa (2023) tiene montos viejos. Confirmar por mail antes de publicar.
-        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
+        // y su página del programa (2023) tiene montos viejos (1.080 €/mes). YoMeAnimo (oct. 2026)
+        // dice que Córdoba pediría 15.120 €. Se usa la hoja de Buenos Aires (abril 2026) hasta confirmar.
+        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
         fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
         vigencia: "Abril de 2026", verificar: true, relleno: false } }
   ],
