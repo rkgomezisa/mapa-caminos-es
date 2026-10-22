@@ -275,8 +275,7 @@ const DATOS = {
         // que resuelva la autorización (RD 1155/2024, art. 41.3). El visado es gratuito y vale 365 días
         // (Consulado de Córdoba, oct. 2026). La autorización dura 5 años y permite trabajar en cualquier
         // sector y lugar de España (art. 95). Los hijos de españoles de origen no necesitan convivir (art. 93).
-        // Texto sugerido: «Consulado General de España en Córdoba (la autorización la resuelve la oficina de extranjería).»
-        tramite: "Oficina de extranjería en España. [verificar]",
+        tramite: "Consulado General de España en Córdoba. La solicitud es gratuita y la autorización la resuelve la oficina de extranjería en España.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
 
@@ -394,9 +393,8 @@ const DATOS = {
         que: "Un permiso para residir en España trabajando en remoto para empresas o clientes del exterior.",
         // 20 %: solo para quien trabaja por su cuenta (Consulados de Córdoba y Buenos Aires, oct. 2026).
         // En relación de dependencia, solo se puede trabajar para empresas de fuera de España.
-        // Texto sugerido: «Si trabajás por tu cuenta, no más del 20 % de tu actividad para empresas españolas».
         // Título o 3 años de experiencia y seguro sin copagos: documentación de la UGE para teletrabajadores.
-        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "No más del 20 % de ingresos de origen español [verificar]","Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
+        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "Si trabajás en relación de dependencia, solo para empresas de fuera de España. Si trabajás por tu cuenta, no más del 20 % de tu actividad para empresas españolas", "Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
         sirve: "Vivir en España sin depender del mercado laboral español.",
         noPermite: "Contenido provisorio.",
         // En Córdoba se presenta en persona en el consulado (en Buenos Aires, en cambio, por BLS)
@@ -421,9 +419,8 @@ const DATOS = {
         noPermite: "Contenido provisorio.",
         // No es una cosa o la otra: la autorización se pide en la Unidad de Grandes Empresas (que pide el
         // informe a ENISA) y, ya concedida, el visado en el consulado (Ley 14/2013, art. 70.1; Consulado
-        // de Córdoba, oct. 2026). Texto sugerido: «Se pide en la Unidad de Grandes Empresas; con la
-        // autorización, visado en el Consulado General de España en Córdoba.»
-        tramite: "Unidad de Grandes Empresas o consulado. [verificar]",
+        // de Córdoba, oct. 2026).
+        tramite: "Primero se pide la autorización en la Unidad de Grandes Empresas, que le pide el informe a ENISA. Con la autorización, visado en el Consulado General de España en Córdoba.",
         fuente: { texto: "ENISA, Gobierno de España", url: "https://www.enisa.es" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
 
@@ -443,8 +440,7 @@ const DATOS = {
         que: "Una autorización para trabajar de forma autónoma en España.",
         // RD 1155/2024, art. 84: pide «la cualificación profesional legalmente exigida o experiencia
         // acreditada suficiente», y que la inversión prevista sea suficiente (sin monto ni IPREM).
-        // Texto sugerido: «Cualificación profesional o experiencia en la actividad, si la actividad lo pide».
-        requisitos: ["Plan de negocio viable", "Inversión", "Experiencia [verificar]", "Medios de vida: aproximadamente {iprem_anual}, el IPREM anual [verificar]"],
+        requisitos: ["Plan de negocio viable", "Inversión suficiente para el proyecto (no hay un monto fijo)", "La cualificación profesional que pida la actividad, o experiencia suficiente en ella"],
         sirve: "Trabajar por tu cuenta.",
         // RD 1155/2024, art. 83: la autorización inicial dura 1 año y se limita a una comunidad autónoma
         // y a un sector de actividad. La renovación dura 4 años (art. 86).
@@ -465,13 +461,12 @@ const DATOS = {
         // Doctorado como investigador: Consulado de Buenos Aires, noticia del 4/10/2026.
         // «con trabajo pleno»: la Hoja 68 de Inclusión (agosto de 2026) dice que habilita a «residir y
         // trabajar» para hacer actividades de investigación, desarrollo e innovación; no habla de cualquier
-        // trabajo. Texto sugerido: «Un permiso de 3 años para investigar o hacer un doctorado, con permiso
-        // de trabajo para esa actividad». Al terminar, hasta 12 meses para buscar empleo o emprender (art. 72.9).
+        // trabajo. Al terminar, hasta 12 meses para buscar empleo o emprender (art. 72.9).
         // Doctorado sin contrato: la Hoja 68 pide medios de al menos el 50 % del SMI anual (unos 8.547 € en
         // 2026; 100 % si viaja un familiar). Y el propio estudiante puede presentar la solicitud.
-        que: "Un permiso de 3 años para investigar, doctorado incluido, con trabajo pleno [verificar].",
+        que: "Un permiso de 3 años para investigar o hacer un doctorado, con permiso de trabajo para esa actividad.",
         requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante"],
-        sirve: "Investigar y trabajar en España.",
+        sirve: "Investigar en España y trabajar en esa actividad.",
         noPermite: "Contenido provisorio.",
         tramite: "La entidad que te recibe pide la autorización en la Unidad de Grandes Empresas; después, visado en el Consulado General de España en Córdoba. Pueden viajar familiares.",
         fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
@@ -482,6 +477,10 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "egreso", es: ["medio", "mas3"] }, resultado: "cierra", condicion: "edad_egreso",
           motivo: "Es para quienes se recibieron hace menos de 2 años o están estudiando." },
+        // Hoja 21 de Inclusión (sept. 2025): título de educación superior (incluye FP de grado superior)
+        // de los 2 años anteriores, o estar estudiando para obtenerlo.
+        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
+          motivo: "Pide un título de educación superior (incluye el técnico superior) o estar estudiando para obtenerlo." },
         { si: { pregunta: "practicas", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "practicas", es: ["interes"] }, resultado: "depende", condicion: "redes",
           motivo: "Se abre con un convenio de prácticas de una entidad española." },
@@ -494,19 +493,16 @@ const DATOS = {
         // Hoja 21 de Inclusión (sept. 2025): «título de educación superior» incluye la formación profesional
         // de grado superior; con convenio (sin contrato) pide el 100 % del IPREM por mes; no permite
         // reagrupar familiares.
-        que: "Un permiso para hacer prácticas con un convenio de una entidad española. Después se puede pasar a trabajo sin salir de España [verificar].",
+        que: "Un permiso para hacer prácticas con una entidad española. Al terminar, para quedarte a trabajar hace falta una oferta y cumplir los requisitos de cuenta ajena.",
         // Ley 14/2013, disposición adicional 18.ª, y Consulado de Córdoba (oct. 2026): sirve un convenio
         // de prácticas o un contrato de trabajo en prácticas. Además, las prácticas tienen que ser del
         // mismo campo y nivel que tu título o tus estudios, y hay que tener seguro y recursos suficientes.
-        // Texto sugerido: «Convenio o contrato de prácticas con una entidad española, en el campo de tu título».
-        requisitos: ["Recibido/a hace menos de 2 años, o estudiando", "Convenio de prácticas con una entidad española [verificar]"],
+        requisitos: ["Título de educación superior (incluye el técnico superior) obtenido hace menos de 2 años, o estar estudiando para obtenerlo", "Convenio o contrato de prácticas con una entidad española, en el mismo campo y nivel que tu título", "Si no hay contrato: medios de vida ({estudiante_medios}) y seguro médico"],
         sirve: "Hacer una primera experiencia laboral en España.",
-        noPermite: "Contenido provisorio.",
+        noPermite: "No permite reagrupar familiares.",
         // Ley 14/2013, DA 18.ª: la entidad española pide la autorización en la Delegación o Subdelegación
         // del Gobierno de la provincia de las prácticas (resuelve en 30 días); después, visado en el consulado.
-        // Texto sugerido: «La entidad española pide la autorización en España; después, visado en el
-        // Consulado General de España en Córdoba.»
-        tramite: "Consulado General de España en Córdoba. [verificar]",
+        tramite: "La entidad española pide la autorización en España; después, visado en el Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
 
