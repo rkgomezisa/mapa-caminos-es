@@ -53,17 +53,14 @@ const DATOS = {
     pie: "Información general, vigente a {fecha_vigencia}. No reemplaza el asesoramiento profesional. Verificá siempre en la fuente oficial. Este recurso interactivo fue pensado para jóvenes de 22 a 35 años que viven en Córdoba, tienen título universitario o terciario de nivel superior y evalúan emigrar a España. Si no es tu caso, tomá la información con cautela.",
     inicioTitulo: "¿Qué caminos hay para trabajar en España?",
     inicioBajada: "Un mapa para ver qué vías legales te quedan abiertas, cuáles cierra el entorno y por qué. Es información general: muestra el panorama y dónde profundizar. No reemplaza el asesoramiento profesional ni decide por vos.",
-    inicioPuntos: [
-      "Respondés 13 preguntas cortas, de a una.",
-      "Al final ves el mapa completo, no una única respuesta.",
-      "Tus respuestas no se guardan ni se envían a ningún lado."
-    ],
     // Las tres opciones de la portada (tarjetas grandes debajo de la bajada)
     inicioOpciones: {
-      cuestionario: { titulo: "Hacer mi recorrido",        texto: "Respondés preguntas cortas y ves qué vías te quedan abiertas, cuáles cierra el entorno y por qué." },
+      cuestionario: { titulo: "Hacer mi recorrido",        texto: "Respondés 13 preguntas cortas, de a una. Al final ves tu mapa completo, no una única respuesta." },
       ejemplos:     { titulo: "Ver recorridos de ejemplo", texto: "Tres personajes ficticios. Paso a paso, se ve qué abre y qué cierra cada respuesta." },
       explorar:     { titulo: "Explorar el mapa",          texto: "Todas las vías con su ficha, sin responder nada. Para mirar el panorama completo." }
     },
+    // Línea chica debajo de las tres opciones
+    inicioPrivacidad: "Tus respuestas no se guardan ni se envían a ningún lado.",
     // Pantalla "Ver recorridos de ejemplo"
     ejemplosTitulo: "Recorridos de ejemplo",
     ejemplosBajada: "Tres personajes ficticios. Cada recorrido avanza paso a paso y muestra qué abre y qué cierra cada respuesta.",

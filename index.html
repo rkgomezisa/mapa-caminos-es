@@ -107,9 +107,6 @@ main { padding-block: 28px 32px; display: block; }
 .fila { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 
 /* inicio */
-.puntos { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-.puntos li { display: grid; grid-template-columns: 1.4rem 1fr; gap: 6px; }
-.puntos li::before { content: "→"; color: var(--accent); font-weight: 700; }
 .autoria { color: var(--muted); font-size: 0.85rem; }
 .personas { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
 .persona-btn {
@@ -398,8 +395,8 @@ h2 { scroll-margin-top: 12px; }
       <div class="pila">
         <h1>${tx(D.textos.inicioTitulo)}</h1>
         <p class="bajada">${tx(D.textos.inicioBajada)}</p>
-        <ul class="puntos">${D.textos.inicioPuntos.map(x => `<li>${tx(x)}</li>`).join("")}</ul>
         <nav aria-label="Qué querés hacer"><ul class="caminos">${camino("cuestionario", true)}${camino("ejemplos")}${camino("explorar")}</ul></nav>
+        <p class="ayuda">${tx(D.textos.inicioPrivacidad)}</p>
         <p class="autoria">${tx(D.textos.autoria)}</p>
       </div>`);
     const ir = { cuestionario: () => preguntaPropia(), ejemplos, explorar };
