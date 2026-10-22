@@ -52,6 +52,9 @@ const DATOS = {
     vyt_fondos:            "14.652 €",
     vyt_seguro:            "30.000 €",
     vyt_cupo:              "500",
+    // Vacaciones y Trabajo: fondos por mes si tenés pasaje de regreso (SMI 2026, RD 126/2026;
+    // hoja del Consulado de Buenos Aires V.22-04-2026)
+    vyt_mes:               "1.221 €",
     // Estudiante: horas de trabajo permitidas
     estudiante_horas:      "30 horas por semana",
     // Estudiante: medios económicos (100 % del IPREM). Consulado de Buenos Aires, 2026
@@ -99,6 +102,10 @@ const DATOS = {
     tituloNoInteresa: "Otras vías del mapa (dijiste que no te interesan por ahora)",
     tituloCondiciones: "Condiciones del entorno que pesaron en este recorrido",
     // Avisos de las fichas (el # se reemplaza por la cantidad)
+    // Advertencias: algo para revisar antes de avanzar (no abren ni cierran la vía)
+    advertenciaTitulo: "Antes de avanzar, revisá",
+    advertenciaCorta: "Hay algo para revisar: mirá la ficha",
+    advertenciaEtiqueta: "Revisá",
     avisoDato: "a verificar",
     avisoDatos1: "1 dato a verificar",
     avisoDatosN: "# datos a verificar",
@@ -234,7 +241,9 @@ const DATOS = {
        resultado "depende"    → la vía se abre si aparece algo
        resultado "noInteresa" → la persona dijo que no le interesa
        resultado "oculta"     → no se muestra
-       resultado "nota"       → aclaración que se suma a la tarjeta */
+       resultado "nota"       → aclaración que se suma a la tarjeta
+       resultado "advierte"   → algo que la persona tiene que revisar antes de avanzar.
+                                No abre ni cierra la vía. Sin "si", se muestra siempre. */
   vias: [
     { id: "ue", nombre: "Registro como ciudadano/a de la UE", corto: "Ciudadanía UE",
       resumen: "Con pasaporte de otro país de la UE, te registrás como ciudadano/a comunitario/a.",
@@ -430,10 +439,9 @@ const DATOS = {
         { si: { pregunta: "propia", es: ["no"] }, resultado: "noInteresa" },
         // Ni el Consulado de Córdoba (oct. 2026) ni el RD 1155/2024 (art. 84) fijan un monto: piden que la
         // inversión prevista sea suficiente. El IPREM no aparece para esta vía.
-        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide inversión y medios de vida (alrededor de {iprem_anual} por año [verificar]) además del plan de negocio." },
-        { si: [ { pregunta: "ahorros", es: ["medio", "alto"] }, { pregunta: "propia", es: ["innovador", "negocio"] } ], resultado: "nota",
-          motivo: "Además de los medios de vida, pide una inversión que depende de tu plan de negocio." },
+        // Hoja 14 de Inclusión (mayo de 2025): «que la inversión prevista sea suficiente», sin monto fijo.
+        { resultado: "advierte", condicion: "capital_economico",
+          motivo: "Pide demostrar que la inversión alcanza para tu proyecto. No hay un monto fijo: depende de tu plan de negocio." },
         { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "nota",
           motivo: "Dura 1 año y queda limitada a una región y un sector." } ],
       ficha: {
@@ -482,6 +490,9 @@ const DATOS = {
         { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
           motivo: "Pide un título de educación superior (incluye el técnico superior) o estar estudiando para obtenerlo." },
         { si: { pregunta: "practicas", es: ["no"] }, resultado: "noInteresa" },
+        // Hoja 21 de Inclusión (sept. 2025): «Esta autorización no prevé la reagrupación familiar».
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
+          motivo: "No permite reagrupar familiares: no podrías llevar a las personas a tu cargo." },
         { si: { pregunta: "practicas", es: ["interes"] }, resultado: "depende", condicion: "redes",
           motivo: "Se abre con un convenio de prácticas de una entidad española." },
         { si: [ { pregunta: "practicas", es: ["si", "interes"] }, { pregunta: "ahorros", es: ["bajo"] } ], resultado: "depende", condicion: "capital_economico",
@@ -530,17 +541,26 @@ const DATOS = {
           motivo: "Es para personas de 18 a 35 años." },
         { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
           motivo: "Pide título universitario o de educación superior, o al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)." },
-        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "cierra", condicion: "cuidados",
-          motivo: "No se extiende a familiares: no contempla que viaje con vos alguien a tu cargo." },
-        { si: { pregunta: "ahorros", es: ["bajo", "medio"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide demostrar fondos de {vyt_fondos} y un seguro con cobertura de {vyt_seguro}." },
+        // Acuerdo (BOE-A-2023-2097, art. 2.e): «En ningún caso los beneficiarios podrán viajar acompañados
+        // por familiares a su cargo». No prohíbe tenerlos: se puede ir sin ellos.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
+          motivo: "El programa no permite viajar con hijos u otras personas a tu cargo. Si vas, es sin ellas, y su cuidado acá tiene que quedar resuelto." },
+        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
+          motivo: "Pide demostrar fondos de {vyt_fondos}, o {vyt_mes} por cada mes de estancia si tenés pasaje de regreso, y un seguro con cobertura de {vyt_seguro}." },
+        // Hoja de Buenos Aires (V.22-04-2026): con pasaje de regreso, fondos por los meses de estancia.
+        { si: { pregunta: "ahorros", es: ["medio"] }, resultado: "advierte", condicion: "capital_economico",
+          motivo: "Con menos de {vyt_fondos} podés ir si tenés pasaje de regreso, pero solo por los meses que cubras: {vyt_mes} por cada mes de estancia." },
+        // Suspensión en Córdoba: YoMeAnimo (17/03/2026, act. 20/04/2026; y 15/10/2026), sin fuente oficial.
+        // No tenemos respuesta del consulado: queda como tarea para quien usa el mapa.
+        { resultado: "advierte",
+          motivo: "Según fuentes no oficiales, desde marzo de 2026 el Consulado de Córdoba no estaría recibiendo solicitudes. Antes de empezar, escribiles a cog.cordoba.vis@maec.es para confirmarlo." },
         { si: { pregunta: "edad", es: ["hasta35"] }, resultado: "nota",
           motivo: "Hay {vyt_cupo} lugares por año en todo el país. Al terminar, hay que regresar." } ],
       ficha: {
         que: "El Programa de Movilidad de Jóvenes entre Argentina y España: una estancia para explorar, no una vía para quedarse.",
         // Fondos: 1.221 €/mes (SMI 2026) por 12 meses = 14.652 €. Hoja del Consulado de Buenos Aires
         // V.22-04-2026, que reemplazó a la V.05-03-2026 en el mismo enlace.
-        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} (o el SMI por mes de estancia, con billete de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
+        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} (o {vyt_mes} por cada mes de estancia, con pasaje de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
         sirve: "Pasar hasta 12 meses en España y trabajar hasta 6 meses en total.",
         noPermite: "No se extiende a familiares. Se hace una sola vez. Hay que regresar al terminar.",
         // Octubre 2026: la sección de visados del Consulado de Córdoba no lista este programa
@@ -552,10 +572,7 @@ const DATOS = {
         // cog.cordoba.vis@maec.es, después dan turno para el NIE y luego la cita presencial del visado.
         // YoMeAnimo advierte, por comentarios de lectores, que Córdoba podría no estar recibiendo
         // solicitudes: conviene preguntarle al consulado.
-        // Suspensión: YoMeAnimo, «Suspenden la Working Holiday España en Córdoba» (17/03/2026, act. 20/04/2026),
-        // sin fuente oficial ni fecha de reactivación; su nota del 15/10/2026 lo repite por comentarios de lectores.
-        // El consulado no publicó nada. Confirmar por mail antes de sacar la marca.
-        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Según fuentes no oficiales, desde marzo de 2026 el consulado no estaría recibiendo solicitudes: escribiles antes de empezar [verificar]. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
+        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
         fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
         vigencia: "Abril de 2026", verificar: false, relleno: false } }
   ],
@@ -596,7 +613,7 @@ const DATOS = {
       clave: "Muestra cómo varias condiciones se cruzan y cierran casi todo a la vez.",
       resp: { pasaporte: "no", ascendencia: "no", edad: "hasta35", formacion: "universitario", egreso: "mas3", cuidados: "si", ahorros: "bajo", oferta: "no", remoto: "no", propia: "no", investigar: "interes", practicas: "no", estudiar: "si" },
       notas: {
-        cuidados: "Tener a su hijo a cargo cierra vías que no contemplan a quienes cuidan.",
+        cuidados: "Tener a su hijo a cargo pesa en las vías que no contemplan a quienes cuidan: Vacaciones y Trabajo no le permite viajar con él.",
         estudiar: "Le interesa estudiar, pero la vía pide capital económico." } }
   ]
 };
