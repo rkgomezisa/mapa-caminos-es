@@ -34,7 +34,7 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
 
 ## Reglas al hacer cambios
 
-1. **El contenido va en `datos.js`, nunca escrito en `index.html`.** Si un texto nuevo aparece en pantalla, agregalo a `DATOS.textos` o donde corresponda.
+1. **El contenido sobre visados y trabajo va en `datos.js`, nunca escrito en `index.html`:** vías, fichas, condiciones, cifras, preguntas, personajes y los textos que explican el mapa. Los rótulos de interfaz sin contenido propio ("Volver al inicio", "Ver ficha", "Cambiar", los títulos de la ficha) pueden quedar en `index.html`.
 2. **Corré `node verificar.js` antes de cada commit.** Si un cambio altera a propósito lo que muestra un personaje, actualizá `ESPERADO` en `verificar.js` y explicalo en el PR.
 3. **Mantené `datos.js` fácil de editar a mano:** comentarios en español, una cifra por línea, nada de lógica ni funciones adentro.
 4. **Sin dependencias ni analítica.** Nada de librerías, frameworks, trackers ni llamadas a servidores. La única carga externa permitida son las fuentes de Google Fonts, y siempre con una fuente de respaldo. Las respuestas de la persona no salen del navegador.
