@@ -44,9 +44,19 @@ Los montos y fechas que aparecen en varias pantallas están juntos al principio 
 
 ### Completar una ficha
 
-Cada vía tiene un bloque `ficha:` con: qué es, requisitos, para qué sirve, qué no permite, dónde se tramita, fuente (texto y `url`) y `vigencia`. Hay dos interruptores:
+Cada vía tiene un bloque `ficha:` con: qué es, requisitos, para qué sirve, qué no permite, dónde se tramita, fuente (texto y `url`) y `vigencia`.
 
-- `verificar: true` muestra el aviso **⚠ Dato a verificar**.
+**Para marcar un dato puntual que falta confirmar**, escribí `[verificar]` justo al lado de ese dato, dentro de las comillas:
+
+```js
+"Fondos de {vyt_fondos} [verificar] (o el SMI por mes de estancia)",
+```
+
+En la ficha aparece **⚠ a verificar** al lado de ese dato, y en la tarjeta **⚠ 1 dato a verificar**. Así queda claro que el resto de la ficha sí está confirmado. Cuando lo confirmen, borren `[verificar]`.
+
+Además hay dos interruptores para la ficha entera:
+
+- `verificar: true` muestra **⚠ Ficha a verificar**. Usalo solo si no se sabe qué dato puntual hay que revisar.
 - `relleno: true` muestra el aviso **Contenido provisorio**. Cuando la ficha tenga datos reales, cámbienlo a `relleno: false`.
 
 ## Si algo se rompe

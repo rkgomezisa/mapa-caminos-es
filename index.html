@@ -206,6 +206,8 @@ html.proyeccion .paso-grid, .paso-grid.ancho { grid-template-columns: minmax(0, 
 .avisos { display: flex; flex-wrap: wrap; gap: 6px; }
 .aviso { font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: var(--warn-bg); color: var(--warn); border: 1px dashed var(--warn); }
 .aviso.relleno { background: var(--off-bg); color: var(--off); border-color: var(--off); }
+/* marca de un dato puntual a verificar, dentro del texto de la ficha */
+.aviso-dato { display: inline-block; margin-left: 4px; padding: 0 6px; white-space: nowrap; vertical-align: baseline; }
 .vacio { background: var(--surface); border: 1.5px dashed var(--line); border-radius: 8px; padding: 14px; color: var(--muted); }
 .banner { background: var(--always-bg); color: var(--ink); border: 1.5px solid var(--always); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
 .banner h2 { color: var(--always); }
@@ -333,7 +335,10 @@ h2 { scroll-margin-top: 12px; }
   /* utilidades */
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const t = s => String(s ?? "").replace(/\{(\w+)\}/g, (m, k) => (k in D.cifras ? D.cifras[k] : m));
-  const tx = s => esc(t(s));
+  // [verificar] dentro de un texto marca ese dato puntual (ver datos.js)
+  const MARCA = /\[verificar\]/gi;
+  const tx = s => esc(t(s)).replace(MARCA, () => `<span class="aviso aviso-dato"><span aria-hidden="true">⚠ </span>${esc(D.textos.avisoDato)}</span>`);
+  const contarMarcas = f => (JSON.stringify(f || {}).match(MARCA) || []).length;
   const lista = x => (Array.isArray(x) ? x : x ? [x] : []);
   const pregunta = id => D.preguntas.find(p => p.id === id);
   const textoOpcion = (pid, valor) => { const o = (pregunta(pid)?.opciones || []).find(o => o.valor === valor); return o ? t(o.texto) : "—"; };
@@ -364,8 +369,10 @@ h2 { scroll-margin-top: 12px; }
   }
   function avisosHTML(f) {
     const a = [];
-    if (f.verificar) a.push(`<span class="aviso">⚠ Dato a verificar</span>`);
-    if (f.relleno) a.push(`<span class="aviso relleno">Contenido provisorio</span>`);
+    const n = contarMarcas(f);
+    if (n) a.push(`<span class="aviso">⚠ ${esc((n === 1 ? D.textos.avisoDatos1 : D.textos.avisoDatosN).replace("#", n))}</span>`);
+    if (f.verificar) a.push(`<span class="aviso">⚠ ${esc(D.textos.avisoFicha)}</span>`);
+    if (f.relleno) a.push(`<span class="aviso relleno">${esc(D.textos.avisoRelleno)}</span>`);
     return a.length ? `<div class="avisos">${a.join("")}</div>` : "";
   }
   function motivoHTML(g, prefijo) {
@@ -595,7 +602,7 @@ h2 { scroll-margin-top: 12px; }
     return `
       <section class="seccion" aria-labelledby="t-si">
         <h2 id="t-si">${tx(D.textos.tituloSiempre)}</h2>
-        <ul class="siempre">${D.siempre.map(s => `<li><h3>${tx(s.titulo)}</h3><p>${tx(s.texto)}</p>${s.relleno ? `<div class="avisos"><span class="aviso relleno">Contenido provisorio</span></div>` : ""}</li>`).join("")}</ul>
+        <ul class="siempre">${D.siempre.map(s => `<li><h3>${tx(s.titulo)}</h3><p>${tx(s.texto)}</p>${s.relleno ? `<div class="avisos"><span class="aviso relleno">${esc(D.textos.avisoRelleno)}</span></div>` : ""}</li>`).join("")}</ul>
       </section>`;
   }
 

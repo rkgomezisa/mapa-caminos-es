@@ -67,7 +67,7 @@ for (const k of ["cifras", "textos", "condiciones", "preguntas", "vias", "siempr
 if (errores.length) terminar();
 
 // textos de las pantallas de inicio, ejemplos y explorar
-for (const k of ["inicioTitulo", "inicioBajada", "inicioPrivacidad", "ejemplosTitulo", "ejemplosBajada", "explorarTitulo", "explorarBajada", "explorarTituloVias", "explorarPesan", "explorarCierran", "explorarDependen"]) {
+for (const k of ["avisoDato", "avisoDatos1", "avisoDatosN", "avisoFicha", "avisoRelleno", "inicioTitulo", "inicioBajada", "inicioPrivacidad", "ejemplosTitulo", "ejemplosBajada", "explorarTitulo", "explorarBajada", "explorarTituloVias", "explorarPesan", "explorarCierran", "explorarDependen"]) {
   if (!D.textos[k]) error(`Falta el texto "${k}" en textos.`);
 }
 for (const k of ["cuestionario", "ejemplos", "explorar"]) {
@@ -114,8 +114,19 @@ D.vias.forEach(v => {
 });
 const provisorias = D.vias.filter(v => v.ficha?.relleno).map(v => v.id);
 if (provisorias.length) aviso(`${provisorias.length} fichas todavía tienen contenido provisorio: ${provisorias.join(", ")}.`);
+// [verificar] marca un dato puntual; verificar: true marca la ficha entera
+const MARCA = /\[verificar\]/gi;
+const marcas = D.vias.map(v => [v.id, (JSON.stringify(v.ficha || {}).match(MARCA) || []).length]).filter(([, n]) => n);
+if (marcas.length) aviso(`Datos puntuales a verificar: ${marcas.map(([id, n]) => `${id} (${n})`).join(", ")}.`);
 const aVerificar = D.vias.filter(v => v.ficha?.verificar).map(v => v.id);
-if (aVerificar.length) aviso(`${aVerificar.length} fichas tienen datos marcados para verificar: ${aVerificar.join(", ")}.`);
+if (aVerificar.length) aviso(`${aVerificar.length} fichas están marcadas enteras como "a verificar": ${aVerificar.join(", ")}. Si saben qué dato es, márquenlo con [verificar] y pongan verificar: false.`);
+// marcas mal escritas: [Verificar ], [ verificar], [verificar
+(function buscar(x, donde) {
+  if (typeof x === "string") {
+    const raras = (x.match(/\[\s*verific[^\]]*\]?/gi) || []).filter(m => m.toLowerCase() !== "[verificar]");
+    raras.forEach(m => error(`${donde}: la marca "${m}" está mal escrita. Tiene que ser exactamente [verificar].`));
+  } else if (x && typeof x === "object") Object.entries(x).forEach(([k, v]) => buscar(v, v && v.id ? `vía "${v.id}"` : `${donde} › ${k}`));
+})(D, "datos.js");
 
 // {cifras} usadas en cualquier texto
 const usadas = new Set();

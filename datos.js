@@ -19,7 +19,12 @@
      Cambiás la cifra en un solo lugar y se actualiza en todas partes.
 
    AVISOS EN LAS FICHAS
-   - verificar: true  → muestra "⚠ Dato a verificar"
+   - [verificar] escrito al lado de un dato marca SOLO ese dato:
+       "Fondos de {vyt_fondos} [verificar]"
+     En la ficha aparece "⚠ a verificar" junto al dato, y en la tarjeta
+     "⚠ 1 dato a verificar". Cuando lo confirmen, borren [verificar].
+   - verificar: true  → "⚠ Ficha a verificar": toda la ficha está en duda.
+     Usarlo solo si no se sabe qué dato puntual hay que revisar.
    - relleno: true    → muestra "Contenido provisorio"
      (cuando completen una ficha con datos reales, pongan relleno: false)
    ===================================================================== */
@@ -88,7 +93,13 @@ const DATOS = {
     tituloCerradas: "Vías que se cerraron (y por qué)",
     tituloSiempre: "Siempre disponible",
     tituloNoInteresa: "Otras vías del mapa (dijiste que no te interesan por ahora)",
-    tituloCondiciones: "Condiciones del entorno que pesaron en este recorrido"
+    tituloCondiciones: "Condiciones del entorno que pesaron en este recorrido",
+    // Avisos de las fichas (el # se reemplaza por la cantidad)
+    avisoDato: "a verificar",
+    avisoDatos1: "1 dato a verificar",
+    avisoDatosN: "# datos a verificar",
+    avisoFicha: "Ficha a verificar",
+    avisoRelleno: "Contenido provisorio"
   },
 
   /* Condiciones del entorno: se nombran así en cada vía que se cierra */
@@ -416,13 +427,13 @@ const DATOS = {
           motivo: "Se abre si una universidad, un centro de I+D o una empresa te acepta para investigar." } ],
       ficha: {
         // «3 años»: no figura en la página del consulado (dice: visado de 1 año o lo que dure la autorización). Verificar.
-        que: "Un permiso de 3 años para investigar, doctorado incluido, con trabajo pleno.",
+        que: "Un permiso de 3 años [verificar] para investigar, doctorado incluido, con trabajo pleno.",
         requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante"],
         sirve: "Investigar y trabajar en España.",
         noPermite: "Contenido provisorio.",
         tramite: "La entidad que te recibe pide la autorización en la Unidad de Grandes Empresas; después, visado en el Consulado General de España en Córdoba. Pueden viajar familiares.",
         fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "practicas", nombre: "Prácticas", corto: "Prácticas",
       resumen: "Para recién recibidos con un convenio de prácticas en España.",
@@ -475,15 +486,15 @@ const DATOS = {
           motivo: "Hay {vyt_cupo} lugares por año en todo el país. Al terminar, hay que regresar." } ],
       ficha: {
         que: "El Programa de Movilidad de Jóvenes entre Argentina y España: una estancia para explorar, no una vía para quedarse.",
-        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} (o el SMI por mes de estancia, con billete de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
+        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} [verificar] (o el SMI por mes de estancia, con billete de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
         sirve: "Pasar hasta 12 meses en España y trabajar hasta 6 meses en total.",
         noPermite: "No se extiende a familiares. Se hace una sola vez. Hay que regresar al terminar.",
         // Octubre 2026: la sección de visados del Consulado de Córdoba no lista este programa
         // y su página del programa (2023) tiene montos viejos (1.080 €/mes). YoMeAnimo (oct. 2026)
         // dice que Córdoba pediría 15.120 €. Se usa la hoja de Buenos Aires (abril 2026) hasta confirmar.
-        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
+        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es [verificar]. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
         fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
-        vigencia: "Abril de 2026", verificar: true, relleno: false } }
+        vigencia: "Abril de 2026", verificar: false, relleno: false } }
   ],
 
   /* Hoja final: siempre visible */
