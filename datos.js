@@ -58,7 +58,11 @@ const DATOS = {
     // Estudiante: horas de trabajo permitidas
     estudiante_horas:      "30 horas por semana",
     // Estudiante: medios económicos (100 % del IPREM). Consulado de Buenos Aires, 2026
-    estudiante_medios:     "600 € por mes"
+    estudiante_medios:     "600 € por mes",
+    // Doctorado sin contrato: 50 % del SMI anual (100 % si viaja un familiar).
+    // SMI 2026: 1.221 € × 14 pagas (RD 126/2026). Hoja 68 de Inclusión, agosto de 2026
+    doctorado_medios:      "8.547 €",
+    doctorado_medios_familia: "17.094 €"
   },
 
   textos: {
@@ -334,15 +338,15 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
           motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {ta_salario}." },
-        { si: { pregunta: "formacion", es: ["tecnico", "universidad2"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide título universitario o experiencia profesional equivalente: se abre si podés acreditarla." },
-        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
-          motivo: "Pide título universitario o experiencia profesional equivalente." },
+        // Hoja 66 de Inclusión (mayo de 2025): título superior de al menos 3 años, o 5 años de experiencia
+        // profesional (3 años, dentro de los últimos 7, para informática y telecomunicaciones).
+        { si: { pregunta: "formacion", es: ["tecnico", "universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide un título superior de al menos 3 años o 5 años de experiencia profesional en el área (3 en informática): se abre si podés acreditarlos." },
         { si: { pregunta: "egreso", es: ["reciente", "medio"] }, resultado: "nota",
           motivo: "Como te recibiste hace 3 años o menos, el salario mínimo exigido baja a {ta_reducido}." } ],
       ficha: {
         que: "Un permiso europeo para trabajos cualificados.",
-        requisitos: ["Título universitario o experiencia equivalente", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos o si la ocupación es de difícil cobertura"],
+        requisitos: ["Título superior de al menos 3 años, o 5 años de experiencia profesional (3 en informática)", "Contrato u oferta de al menos 6 meses", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos o si la ocupación es de difícil cobertura"],
         sirve: "Trabajar en un puesto cualificado, con facilidades de movilidad dentro de la UE.",
         noPermite: "Contenido provisorio.",
         tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
@@ -354,13 +358,12 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
           motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {hq_salario}." },
-        { si: { pregunta: "formacion", es: ["tecnico", "universidad2"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide formación superior o experiencia equivalente: se abre si podés acreditarla." },
-        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
-          motivo: "Pide formación superior o experiencia equivalente." } ],
+        // Hoja 66 de Inclusión (mayo de 2025): titulación de nivel superior o 3 años de experiencia equiparable.
+        { si: { pregunta: "formacion", es: ["tecnico", "universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide formación superior o 3 años de experiencia profesional equiparable: se abre si podés acreditarlos." } ],
       ficha: {
         que: "La vía nacional española para profesionales en puestos cualificados.",
-        requisitos: ["Oferta de un puesto cualificado", "Salario de al menos {hq_salario}", "Sin umbral reducido"],
+        requisitos: ["Oferta de un puesto cualificado", "Formación superior o 3 años de experiencia profesional", "Salario de al menos {hq_salario}", "Sin umbral reducido"],
         sirve: "Trabajar en un puesto cualificado.",
         noPermite: "Contenido provisorio.",
         tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
@@ -462,7 +465,10 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "investigar", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "investigar", es: ["interes"] }, resultado: "depende", condicion: ["capital_academico", "redes"],
-          motivo: "Se abre si una universidad, un centro de I+D o una empresa te acepta para investigar." } ],
+          motivo: "Se abre si una universidad, un centro de I+D o una empresa te acepta para investigar." },
+        // Hoja 68 de Inclusión (agosto de 2026): doctorandos sin contrato, 50 % del SMI anual.
+        { si: { pregunta: "investigar", es: ["si", "interes"] }, resultado: "advierte", condicion: "capital_economico",
+          motivo: "Si vas a hacer un doctorado sin contrato, pide demostrar al menos {doctorado_medios} por año ({doctorado_medios_familia} si viaja un familiar)." } ],
       ficha: {
         // «3 años»: la autorización dura 3 años o lo que dure el convenio o contrato, si es menos
         // (Ley 14/2013, art. 72.3). El visado del consulado dura 1 año; en España se sigue con la autorización.
@@ -473,7 +479,7 @@ const DATOS = {
         // Doctorado sin contrato: la Hoja 68 pide medios de al menos el 50 % del SMI anual (unos 8.547 € en
         // 2026; 100 % si viaja un familiar). Y el propio estudiante puede presentar la solicitud.
         que: "Un permiso de 3 años para investigar o hacer un doctorado, con permiso de trabajo para esa actividad.",
-        requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante"],
+        requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante", "Doctorado sin contrato: medios de al menos {doctorado_medios} por año"],
         sirve: "Investigar en España y trabajar en esa actividad.",
         noPermite: "Contenido provisorio.",
         tramite: "La entidad que te recibe pide la autorización en la Unidad de Grandes Empresas; después, visado en el Consulado General de España en Córdoba. Pueden viajar familiares.",
@@ -520,8 +526,10 @@ const DATOS = {
     { id: "estudiante", nombre: "Estudiante", corto: "Estudios",
       resumen: "Para estudiar un máster u otro estudio superior.",
       reglas: [
-        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide demostrar medios económicos para todo el período de estudios (unos {iprem_anual} por año), además del costo de la matrícula." },
+        // Consulado de Buenos Aires y RD 1155/2024 (art. 35): 100 % del IPREM por mes de estudio, hasta 12
+        // meses. Se acredita con ahorros, beca o ingresos regulares. Un programa corto pide menos de 7.200 €.
+        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "depende", condicion: "capital_economico",
+          motivo: "Se abre si podés demostrar {estudiante_medios} de estudio (hasta 12 meses), con ahorros, una beca o ingresos regulares. Aparte está el costo de la matrícula." },
         { si: { pregunta: "estudiar", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "estudiar", es: ["si"] }, resultado: "nota",
           motivo: "Te permite trabajar hasta {estudiante_horas} y pasar a residencia y trabajo sin salir de España." } ],
