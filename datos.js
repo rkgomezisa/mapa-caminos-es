@@ -266,7 +266,9 @@ const DATOS = {
         requisitos: ["Padre o madre español/a de origen", "Documentación que acredite el vínculo"],
         sirve: "Residir y trabajar en España.",
         noPermite: "Contenido provisorio.",
-        tramite: "Oficina de extranjería en España.",
+        // Consulado de Córdoba (oct. 2026): el visado se pide en el consulado, es gratuito y vale 365 días;
+        // en España se saca la TIE. No menciona la oficina de extranjería.
+        tramite: "Oficina de extranjería en España. [verificar]",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
 
@@ -396,11 +398,14 @@ const DATOS = {
         { si: { pregunta: "propia", es: ["negocio"] }, resultado: "depende", condicion: "innovacion",
           motivo: "Es para proyectos innovadores o escalables. Para un negocio tradicional, mirá la vía de cuenta propia." } ],
       ficha: {
-        que: "Un permiso de 3 años para desarrollar un proyecto emprendedor en España.",
+        // Consulado de Córdoba (oct. 2026): el visado vale 1 año. No dice nada de 3 años.
+        que: "Un permiso de 3 años [verificar] para desarrollar un proyecto emprendedor en España.",
         requisitos: ["Proyecto innovador o escalable", "Informe favorable de ENISA"],
-        sirve: "Emprender en España durante 3 años.",
+        sirve: "Emprender en España durante 3 años [verificar].",
         noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas o consulado.",
+        // Consulado de Córdoba (oct. 2026): la autorización la da siempre la Unidad de Grandes Empresas;
+        // el consulado pide una copia y después emite el visado. No aparece como alternativa.
+        tramite: "Unidad de Grandes Empresas o consulado. [verificar]",
         fuente: { texto: "ENISA, Gobierno de España", url: "https://www.enisa.es" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
 
@@ -408,17 +413,21 @@ const DATOS = {
       resumen: "Para trabajar de forma autónoma con un plan de negocio.",
       reglas: [
         { si: { pregunta: "propia", es: ["no"] }, resultado: "noInteresa" },
+        // Consulado de Córdoba (oct. 2026): pide medios suficientes para la inversión, sin monto fijo ni IPREM
         { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide inversión y medios de vida (alrededor de {iprem_anual} por año) además del plan de negocio." },
+          motivo: "Pide inversión y medios de vida (alrededor de {iprem_anual} por año [verificar]) además del plan de negocio." },
         { si: [ { pregunta: "ahorros", es: ["medio", "alto"] }, { pregunta: "propia", es: ["innovador", "negocio"] } ], resultado: "nota",
           motivo: "Además de los medios de vida, pide una inversión que depende de tu plan de negocio." },
         { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "nota",
-          motivo: "Dura 1 año y queda limitada a una región y un sector." } ],
+          motivo: "Dura 1 año y queda limitada a una región y un sector [verificar]." } ],
       ficha: {
         que: "Una autorización para trabajar de forma autónoma en España.",
-        requisitos: ["Plan de negocio viable", "Inversión", "Experiencia", "Medios de vida: aproximadamente {iprem_anual}, el IPREM anual"],
+        // Consulado de Córdoba (oct. 2026): pide la capacitación o cualificación profesional exigida
+        // para la actividad (no habla de experiencia) y medios suficientes para la inversión (sin monto).
+        requisitos: ["Plan de negocio viable", "Inversión", "Experiencia [verificar]", "Medios de vida: aproximadamente {iprem_anual}, el IPREM anual [verificar]"],
         sirve: "Trabajar por tu cuenta.",
-        noPermite: "Dura 1 año y se limita a una región y un sector.",
+        // Consulado de Córdoba (oct. 2026): el visado vale 365 días; no menciona límites de región ni de sector.
+        noPermite: "Dura 1 año y se limita a una región y un sector [verificar].",
         tramite: "Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
@@ -451,10 +460,14 @@ const DATOS = {
           motivo: "Si las prácticas no son pagas, vas a necesitar cómo sostenerte." } ],
       ficha: {
         que: "Un permiso para hacer prácticas con un convenio de una entidad española. Después se puede pasar a trabajo sin salir de España.",
-        requisitos: ["Recibido/a hace menos de 2 años, o estudiando", "Convenio de prácticas con una entidad española"],
+        // Consulado de Córdoba (oct. 2026): sirve un convenio de prácticas (hasta 6 meses) o un contrato
+        // de trabajo en prácticas (hasta 1 año).
+        requisitos: ["Recibido/a hace menos de 2 años, o estudiando", "Convenio de prácticas con una entidad española [verificar]"],
         sirve: "Hacer una primera experiencia laboral en España.",
         noPermite: "Contenido provisorio.",
-        tramite: "Consulado General de España en Córdoba.",
+        // Consulado de Córdoba (oct. 2026): antes del visado hace falta la autorización de residencia de la
+        // Delegación o Subdelegación del Gobierno de la provincia donde se hacen las prácticas.
+        tramite: "Consulado General de España en Córdoba. [verificar]",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
         vigencia: "21/10/2026", verificar: true, relleno: true } },
 
