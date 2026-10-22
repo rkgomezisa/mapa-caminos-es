@@ -288,6 +288,9 @@ const DATOS = {
           motivo: "Es para hijos, hijas, nietos y nietas de españoles de origen." },
         { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Si no lo sabés, vale la pena preguntar en tu familia." },
+        // La orden de 2026 (Orden ISM/1547/2025, BOE 30/12/2025) solo dice que se «podrá establecer» un
+        // número de visados para hijos y nietos: no fija ninguno. 1 año para la nacionalidad: Código Civil,
+        // art. 22.2.f. Para el resto de las personas argentinas son 2 años de residencia legal (art. 22.1).
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "depende", condicion: "convocatoria",
           motivo: "Se abre si España publica la convocatoria anual con cupo. Según fuentes secundarias, en 2026 no hubo convocatoria." },
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "nota",
@@ -460,9 +463,12 @@ const DATOS = {
         // «3 años»: la autorización dura 3 años o lo que dure el convenio o contrato, si es menos
         // (Ley 14/2013, art. 72.3). El visado del consulado dura 1 año; en España se sigue con la autorización.
         // Doctorado como investigador: Consulado de Buenos Aires, noticia del 4/10/2026.
-        // «con trabajo pleno»: ni la Ley 14/2013 (art. 72) ni el consulado lo dicen así. La autorización
-        // es para la actividad de investigación (y docencia relacionada). Al terminar, hasta 12 meses
-        // para buscar empleo o emprender (art. 72.9).
+        // «con trabajo pleno»: la Hoja 68 de Inclusión (agosto de 2026) dice que habilita a «residir y
+        // trabajar» para hacer actividades de investigación, desarrollo e innovación; no habla de cualquier
+        // trabajo. Texto sugerido: «Un permiso de 3 años para investigar o hacer un doctorado, con permiso
+        // de trabajo para esa actividad». Al terminar, hasta 12 meses para buscar empleo o emprender (art. 72.9).
+        // Doctorado sin contrato: la Hoja 68 pide medios de al menos el 50 % del SMI anual (unos 8.547 € en
+        // 2026; 100 % si viaja un familiar). Y el propio estudiante puede presentar la solicitud.
         que: "Un permiso de 3 años para investigar, doctorado incluido, con trabajo pleno [verificar].",
         requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante"],
         sirve: "Investigar y trabajar en España.",
@@ -543,11 +549,14 @@ const DATOS = {
         noPermite: "No se extiende a familiares. Se hace una sola vez. Hay que regresar al terminar.",
         // Octubre 2026: la sección de visados del Consulado de Córdoba no lista este programa
         // y su página del programa (10/03/2023) tiene montos viejos (SMI 2023: 1.080 €/mes). Los 15.120 €
-        // que cita YoMeAnimo salen de 1.080 × 14 pagas: es la cifra vieja. Se usa la hoja de Buenos Aires.
-        // Correo: la página de Córdoba de 2023 pide enviar todo en PDF a cog.cordoba.vis@maec.es. Hoy las
-        // demás páginas de visados de Córdoba usan ese correo para pedir cita y la presentación es en
-        // persona: falta confirmar si para este programa sigue siendo por correo.
-        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es [verificar]. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
+        // que cita YoMeAnimo (15/10/2026) no cierran con su propio cálculo (1.134 €/mes) y parecen
+        // 1.080 × 14 pagas, la cifra vieja. La regla del convenio es el SMI vigente por mes de estancia:
+        // se usa la hoja de Buenos Aires (SMI 2026: 1.221 €/mes, RD 126/2026).
+        // Correo: lo dicen la página de Córdoba (2023) y YoMeAnimo (15/10/2026): se manda todo en PDF a
+        // cog.cordoba.vis@maec.es, después dan turno para el NIE y luego la cita presencial del visado.
+        // YoMeAnimo advierte, por comentarios de lectores, que Córdoba podría no estar recibiendo
+        // solicitudes: conviene preguntarle al consulado.
+        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
         fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
         vigencia: "Abril de 2026", verificar: false, relleno: false } }
   ],
