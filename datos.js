@@ -42,8 +42,9 @@ const DATOS = {
     nomada_ingreso:        "2.849 €/mes",
     nomada_familiar1:      "75 % del SMI",
     nomada_familiar_extra: "25 % del SMI",
-    // Cuenta propia: medios de vida (IPREM anual)
-    cp_medios:             "7.200 €",
+    // IPREM anual: medios de vida de cuenta propia y de un año de estudios.
+    // Es también el primer corte de la pregunta de ahorros.
+    iprem_anual:           "7.200 €",
     // Vacaciones y Trabajo: fondos, seguro y cupo anual
     vyt_fondos:            "14.652 €",
     vyt_seguro:            "30.000 €",
@@ -166,11 +167,12 @@ const DATOS = {
         { valor: "no", texto: "No" } ] },
 
     { id: "ahorros", bloque: "perfil",
-      texto: "¿Contás con ahorros que puedas demostrar, de unos {vyt_fondos}?",
-      ayuda: "Es la cifra que pide el programa de Vacaciones y Trabajo. La usamos como referencia para otras vías.",
+      texto: "¿Cuántos ahorros podrías demostrar?",
+      ayuda: "Cada vía pide un monto distinto. Contá lo que tenés o podrías reunir: es una referencia, no hace falta el número exacto.",
       opciones: [
-        { valor: "si", texto: "Sí, o podría reunirlos" },
-        { valor: "no", texto: "No" } ] },
+        { valor: "bajo",  texto: "Menos de {iprem_anual}" },
+        { valor: "medio", texto: "Entre {iprem_anual} y {vyt_fondos}" },
+        { valor: "alto",  texto: "{vyt_fondos} o más" } ] },
 
     { id: "oferta", bloque: "puertas",
       texto: "¿Tenés una oferta de trabajo en España, o trabajás en una empresa con filial allá?",
@@ -406,13 +408,15 @@ const DATOS = {
       resumen: "Para trabajar de forma autónoma con un plan de negocio.",
       reglas: [
         { si: { pregunta: "propia", es: ["no"] }, resultado: "noInteresa" },
-        { si: { pregunta: "ahorros", es: ["no"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide inversión y medios de vida (alrededor de {cp_medios} por año) además del plan de negocio." },
+        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
+          motivo: "Pide inversión y medios de vida (alrededor de {iprem_anual} por año) además del plan de negocio." },
+        { si: [ { pregunta: "ahorros", es: ["medio", "alto"] }, { pregunta: "propia", es: ["innovador", "negocio"] } ], resultado: "nota",
+          motivo: "Además de los medios de vida, pide una inversión que depende de tu plan de negocio." },
         { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "nota",
           motivo: "Dura 1 año y queda limitada a una región y un sector." } ],
       ficha: {
         que: "Una autorización para trabajar de forma autónoma en España.",
-        requisitos: ["Plan de negocio viable", "Inversión", "Experiencia", "Medios de vida: aproximadamente {cp_medios}, el IPREM anual"],
+        requisitos: ["Plan de negocio viable", "Inversión", "Experiencia", "Medios de vida: aproximadamente {iprem_anual}, el IPREM anual"],
         sirve: "Trabajar por tu cuenta.",
         noPermite: "Dura 1 año y se limita a una región y un sector.",
         tramite: "Consulado General de España en Córdoba.",
@@ -443,7 +447,7 @@ const DATOS = {
         { si: { pregunta: "practicas", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "practicas", es: ["interes"] }, resultado: "depende", condicion: "redes",
           motivo: "Se abre con un convenio de prácticas de una entidad española." },
-        { si: [ { pregunta: "practicas", es: ["si", "interes"] }, { pregunta: "ahorros", es: ["no"] } ], resultado: "depende", condicion: "capital_economico",
+        { si: [ { pregunta: "practicas", es: ["si", "interes"] }, { pregunta: "ahorros", es: ["bajo"] } ], resultado: "depende", condicion: "capital_economico",
           motivo: "Si las prácticas no son pagas, vas a necesitar cómo sostenerte." } ],
       ficha: {
         que: "Un permiso para hacer prácticas con un convenio de una entidad española. Después se puede pasar a trabajo sin salir de España.",
@@ -457,8 +461,8 @@ const DATOS = {
     { id: "estudiante", nombre: "Estudiante", corto: "Estudios",
       resumen: "Para estudiar un máster u otro estudio superior.",
       reglas: [
-        { si: { pregunta: "ahorros", es: ["no"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide demostrar medios económicos para todo el período de estudios, además del costo de la matrícula." },
+        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
+          motivo: "Pide demostrar medios económicos para todo el período de estudios (unos {iprem_anual} por año), además del costo de la matrícula." },
         { si: { pregunta: "estudiar", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "estudiar", es: ["si"] }, resultado: "nota",
           motivo: "Te permite trabajar hasta {estudiante_horas} y pasar a residencia y trabajo sin salir de España." } ],
@@ -480,7 +484,7 @@ const DATOS = {
           motivo: "Pide título universitario o de educación superior, o al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)." },
         { si: { pregunta: "cuidados", es: ["si"] }, resultado: "cierra", condicion: "cuidados",
           motivo: "No se extiende a familiares: no contempla que viaje con vos alguien a tu cargo." },
-        { si: { pregunta: "ahorros", es: ["no"] }, resultado: "cierra", condicion: "capital_economico",
+        { si: { pregunta: "ahorros", es: ["bajo", "medio"] }, resultado: "cierra", condicion: "capital_economico",
           motivo: "Pide demostrar fondos de {vyt_fondos} y un seguro con cobertura de {vyt_seguro}." },
         { si: { pregunta: "edad", es: ["hasta35"] }, resultado: "nota",
           motivo: "Hay {vyt_cupo} lugares por año en todo el país. Al terminar, hay que regresar." } ],
@@ -515,7 +519,7 @@ const DATOS = {
     { id: "A", nombre: "Valentina", edad: 27,
       descripcion: "Ingeniera en sistemas. Tiene ciudadanía italiana por su abuelo. Trabaja en remoto para una empresa de afuera.",
       clave: "Muestra el peso de la herencia: casi todo le queda abierto.",
-      resp: { pasaporte: "ue", ascendencia: "no", edad: "hasta35", formacion: "universitario", egreso: "medio", cuidados: "no", ahorros: "si", oferta: "no", remoto: "formal_alto", propia: "no", investigar: "interes", practicas: "no", estudiar: "si" },
+      resp: { pasaporte: "ue", ascendencia: "no", edad: "hasta35", formacion: "universitario", egreso: "medio", cuidados: "no", ahorros: "alto", oferta: "no", remoto: "formal_alto", propia: "no", investigar: "interes", practicas: "no", estudiar: "si" },
       notas: {
         pasaporte: "Su abuelo italiano le dejó una puerta que no depende de ningún visado.",
         remoto: "Trabaja con contrato y factura: sus ingresos se pueden demostrar." } },
@@ -523,15 +527,15 @@ const DATOS = {
     { id: "B", nombre: "Joaquín", edad: 30,
       descripcion: "Técnico superior. Trabaja en remoto para clientes del exterior, pero sin facturación formal.",
       clave: "Muestra cómo pesa la informalidad laboral, y cómo una vía depende de tener ahorros.",
-      resp: { pasaporte: "no", ascendencia: "no", edad: "hasta35", formacion: "tecnico", egreso: "mas3", cuidados: "no", ahorros: "no", oferta: "no", remoto: "informal", propia: "no", investigar: "no", practicas: "no", estudiar: "no" },
+      resp: { pasaporte: "no", ascendencia: "no", edad: "hasta35", formacion: "tecnico", egreso: "mas3", cuidados: "no", ahorros: "bajo", oferta: "no", remoto: "informal", propia: "no", investigar: "no", practicas: "no", estudiar: "no" },
       notas: {
-        ahorros: "Si Joaquín tuviera ahorros, Vacaciones y Trabajo seguiría abierta. Podés probarlo después con «Cambiar».",
+        ahorros: "Si Joaquín tuviera {vyt_fondos}, Vacaciones y Trabajo seguiría abierta. Podés probarlo después con «Cambiar».",
         remoto: "Trabaja en remoto, pero cobra sin factura: el entorno no le reconoce esos ingresos." } },
 
     { id: "C", nombre: "Romina", edad: 33,
       descripcion: "Profesional universitaria, con un hijo. No tiene ascendencia europea.",
       clave: "Muestra cómo varias condiciones se cruzan y cierran casi todo a la vez.",
-      resp: { pasaporte: "no", ascendencia: "no", edad: "hasta35", formacion: "universitario", egreso: "mas3", cuidados: "si", ahorros: "no", oferta: "no", remoto: "no", propia: "no", investigar: "interes", practicas: "no", estudiar: "si" },
+      resp: { pasaporte: "no", ascendencia: "no", edad: "hasta35", formacion: "universitario", egreso: "mas3", cuidados: "si", ahorros: "bajo", oferta: "no", remoto: "no", propia: "no", investigar: "interes", practicas: "no", estudiar: "si" },
       notas: {
         cuidados: "Tener a su hijo a cargo cierra vías que no contemplan a quienes cuidan.",
         estudiar: "Le interesa estudiar, pero la vía pide capital económico." } }

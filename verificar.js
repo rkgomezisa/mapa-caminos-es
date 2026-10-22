@@ -157,7 +157,7 @@ const ESPERADO = {
   },
   B: { // Joaquín: informalidad cierra nómada digital; VyT depende de los ahorros
     cerradaPor: { nomada: "informalidad", vyt: "capital_economico" },
-    abiertaSiCambia: { cambio: { ahorros: "si" }, via: "vyt" }
+    abiertaSiCambia: { cambio: { ahorros: "alto" }, via: "vyt" }
   },
   C: { // Romina: se le cierra casi todo a la vez, llega a la hoja final
     maxAbiertas: 0,
