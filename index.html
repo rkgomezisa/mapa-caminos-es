@@ -125,7 +125,6 @@ main { padding-block: 28px 32px; display: block; }
   display: flex; flex-direction: column; gap: 6px;
 }
 .camino:hover { border-color: var(--accent); }
-.camino-principal { border: 2.5px solid var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--surface)); }
 .camino-titulo { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; display: flex; justify-content: space-between; gap: 10px; }
 .camino-texto { color: var(--muted); font-size: 0.95rem; }
 .camino-ir { color: var(--accent); }
@@ -386,8 +385,8 @@ h2 { scroll-margin-top: 12px; }
   function inicio() {
     reiniciar("propio");
     const op = D.textos.inicioOpciones;
-    const camino = (id, principal) => `
-      <li><button class="camino${principal ? " camino-principal" : ""}" type="button" data-camino="${id}">
+    const camino = id => `
+      <li><button class="camino" type="button" data-camino="${id}">
         <span class="camino-titulo">${tx(op[id].titulo)}<span class="camino-ir" aria-hidden="true">→</span></span>
         <span class="camino-texto">${tx(op[id].texto)}</span>
       </button></li>`;
@@ -395,7 +394,7 @@ h2 { scroll-margin-top: 12px; }
       <div class="pila">
         <h1>${tx(D.textos.inicioTitulo)}</h1>
         <p class="bajada">${tx(D.textos.inicioBajada)}</p>
-        <nav aria-label="Qué querés hacer"><ul class="caminos">${camino("cuestionario", true)}${camino("ejemplos")}${camino("explorar")}</ul></nav>
+        <nav aria-label="Qué querés hacer"><ul class="caminos">${camino("cuestionario")}${camino("ejemplos")}${camino("explorar")}</ul></nav>
         <p class="ayuda">${tx(D.textos.inicioPrivacidad)}</p>
         <p class="autoria">${tx(D.textos.autoria)}</p>
       </div>`);
