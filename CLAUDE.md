@@ -28,7 +28,7 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
 | `verificar.js` | Valida `datos.js` y comprueba los tres recorridos de ejemplo. También corre en GitHub Actions. |
 | `README.md` | Guía para el grupo: editar desde la web de GitHub. |
 
-- **Reglas de las vías** (en `datos.js`): `{ si, resultado, condicion, motivo }`. `si` puede ser una condición o una lista de condiciones (todas tienen que cumplirse). Los resultados posibles son `cierra`, `depende`, `noInteresa`, `nota` y `oculta`. Prioridad: oculta > cerrada > noInteresa > depende > abierta.
+- **Reglas de las vías** (en `datos.js`): `{ si, resultado, condicion, motivo }`. `si` puede ser una condición o una lista de condiciones (todas tienen que cumplirse). Los resultados posibles son `cierra`, `depende`, `noInteresa`, `nota`, `advierte` y `oculta`. Prioridad: oculta > cerrada > noInteresa > depende > abierta. `nota` y `advierte` no cambian el estado: `advierte` muestra «⚠ Antes de avanzar, revisá» con algo que la persona tiene que chequear por su cuenta (un dato no oficial, un monto que acorta la estancia, una limitación con personas a cargo). Una regla `advierte` sin `si` se muestra siempre.
 - **Cifras:** `{nombre}` dentro de cualquier texto se reemplaza por `DATOS.cifras.nombre`.
 - **Lógica duplicada:** `cumple()` y `evaluar()` existen en `index.html` y copiadas en `verificar.js`. Si cambiás la lógica, actualizá las dos.
 

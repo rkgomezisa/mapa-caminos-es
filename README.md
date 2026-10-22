@@ -42,6 +42,17 @@ Los montos y fechas que aparecen en varias pantallas están juntos al principio 
 
 **Cada vez que actualicen datos, cambien también `fecha_vigencia`**, que es la fecha que aparece en el pie.
 
+### Advertencias: algo que la persona tiene que revisar
+
+Una regla con `resultado: "advierte"` muestra **⚠ Antes de avanzar, revisá** en la ficha, y en la tarjeta *Hay algo para revisar: mirá la ficha*. No abre ni cierra la vía. Sirve para lo que la persona tiene que chequear por su cuenta, por ejemplo:
+
+```js
+{ si: { pregunta: "ahorros", es: ["medio"] }, resultado: "advierte", condicion: "capital_economico",
+  motivo: "Con menos de {vyt_fondos} podés ir si tenés pasaje de regreso, pero solo por los meses que cubras." },
+```
+
+Sin `si`, la advertencia se muestra siempre. Es distinta de `[verificar]`: `[verificar]` es una tarea del **grupo** (confirmar un dato); la advertencia es una tarea de **quien usa el mapa**.
+
 ### Completar una ficha
 
 Cada vía tiene un bloque `ficha:` con: qué es, requisitos, para qué sirve, qué no permite, dónde se tramita, fuente (texto y `url`) y `vigencia`.
