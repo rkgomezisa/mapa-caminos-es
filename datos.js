@@ -254,15 +254,24 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "pasaporte", es: ["espanol"] }, resultado: "oculta" },
         { si: { pregunta: "pasaporte", es: ["no"] }, resultado: "cierra", condicion: "ascendencia",
-          motivo: "Pide un pasaporte de otro país de la UE. Tenerlo depende de la historia migratoria de tu familia y de que se haya podido documentar." } ],
+          motivo: "Pide un pasaporte de otro país de la UE. Tenerlo depende de la historia migratoria de tu familia y de que se haya podido documentar." },
+        // RD 240/2007, art. 7.1.b y c: sin trabajo, piden recursos suficientes y seguro de enfermedad
+        // (para estudiar, matrícula, seguro y declaración de recursos).
+        { si: { pregunta: "pasaporte", es: ["ue"] }, resultado: "nota",
+          motivo: "Si no vas con trabajo ni a estudiar, para registrarte te piden recursos suficientes y un seguro de enfermedad." } ],
       ficha: {
-        que: "El registro que hacen en España las personas con ciudadanía de otro país de la Unión Europea.",
-        requisitos: ["Pasaporte o documento de un país de la UE", "Registrarse por trabajo, por recursos propios (seguro médico y medios económicos) o por estudios"],
-        sirve: "Vivir y trabajar en España sin visado.",
-        noPermite: "No reemplaza los trámites de residente: empadronamiento y Seguridad Social.",
-        tramite: "Oficina de extranjería o comisaría de policía en España.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: Real Decreto 240/2007 (arts. 1, 3 y 7, y disposición adicional
+        // tercera para Suiza); sede de la Policía Nacional (certificado de registro de ciudadano de la UE);
+        // Hoja 65 de Inclusión (actualizada en mayo de 2025). El trámite se hace en España: no pasa por el
+        // Consulado de Córdoba.
+        que: "El registro que hacen en España las personas con ciudadanía de otro país de la Unión Europea. También vale para Noruega, Islandia, Liechtenstein y Suiza.",
+        requisitos: ["Pasaporte o documento de identidad válido de un país de la UE", "Registrarse por trabajo (en relación de dependencia o por cuenta propia), por recursos propios (medios económicos y seguro de enfermedad) o por estudios (matrícula, seguro y declaración de recursos)", "Pedirlo en persona dentro de los 3 meses desde que llegás, si vas a quedarte más de 3 meses", "Pagar la tasa (modelo 790, código 012)"],
+        sirve: "Vivir y trabajar en España sin visado, en igualdad con las personas españolas.",
+        // La Policía detalla qué contiene: nombre, nacionalidad, domicilio, NIE y fecha de registro.
+        noPermite: "No es una tarjeta de residencia ni la nacionalidad española: es un certificado de registro con tu NIE.",
+        tramite: "En la Oficina de Extranjería de la provincia de España donde vayas a vivir o, si no hay, en la comisaría de policía. El certificado se entrega en el momento.",
+        fuente: { texto: "Policía Nacional: certificado de registro de ciudadano de la UE (y Hoja 65 de Inclusión, mayo de 2025)", url: "https://sede.policia.gob.es/portalCiudadano/_es/tramites_extranjeria_tramite_certificadoregistro_ciudadanoue.php" },
+        vigencia: "Mayo de 2025", verificar: false, relleno: false } },
 
     { id: "familiar", nombre: "Residencia como familiar de español/a", corto: "Familiar de español",
       resumen: "Residencia para hijos e hijas de españoles de origen.",
