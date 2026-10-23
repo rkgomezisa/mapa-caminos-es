@@ -254,84 +254,197 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "pasaporte", es: ["espanol"] }, resultado: "oculta" },
         { si: { pregunta: "pasaporte", es: ["no"] }, resultado: "cierra", condicion: "ascendencia",
-          motivo: "Pide un pasaporte de otro país de la UE. Tenerlo depende de la historia migratoria de tu familia y de que se haya podido documentar." } ],
+          motivo: "Pide un pasaporte de otro país de la UE. Tenerlo depende de la historia migratoria de tu familia y de que se haya podido documentar." },
+        // RD 240/2007, art. 7.1.b y c: sin trabajo, piden recursos suficientes y seguro de enfermedad
+        // (para estudiar, matrícula, seguro y declaración de recursos).
+        { si: { pregunta: "pasaporte", es: ["ue"] }, resultado: "nota",
+          motivo: "Si no vas con trabajo ni a estudiar, para registrarte te piden recursos suficientes y un seguro de enfermedad." } ],
       ficha: {
-        que: "El registro que hacen en España las personas con ciudadanía de otro país de la Unión Europea.",
-        requisitos: ["Pasaporte o documento de un país de la UE", "Registrarse por trabajo, por recursos propios (seguro médico y medios económicos) o por estudios"],
-        sirve: "Vivir y trabajar en España sin visado.",
-        noPermite: "No reemplaza los trámites de residente: empadronamiento y Seguridad Social.",
-        tramite: "Oficina de extranjería o comisaría de policía en España.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: Real Decreto 240/2007 (arts. 1, 3 y 7, y disposición adicional
+        // tercera para Suiza); sede de la Policía Nacional (certificado de registro de ciudadano de la UE);
+        // Hoja 65 de Inclusión (actualizada en mayo de 2025). El trámite se hace en España: no pasa por el
+        // Consulado de Córdoba.
+        que: "El registro que hacen en España las personas con ciudadanía de otro país de la Unión Europea. También vale para Noruega, Islandia, Liechtenstein y Suiza.",
+        requisitos: ["Pasaporte o documento de identidad válido de un país de la UE", "Registrarse por trabajo (en relación de dependencia o por cuenta propia), por recursos propios (medios económicos y seguro de enfermedad) o por estudios (matrícula, seguro y declaración de recursos)", "Pedirlo en persona dentro de los 3 meses desde que llegás, si vas a quedarte más de 3 meses", "Pagar la tasa (modelo 790, código 012)"],
+        sirve: "Vivir y trabajar en España sin visado, en igualdad con las personas españolas.",
+        // La Policía detalla qué contiene: nombre, nacionalidad, domicilio, NIE y fecha de registro.
+        noPermite: "No es una tarjeta de residencia ni la nacionalidad española: es un certificado de registro con tu NIE.",
+        tramite: "En la Oficina de Extranjería de la provincia de España donde vayas a vivir o, si no hay, en la comisaría de policía. El certificado se entrega en el momento.",
+        fuente: { texto: "Policía Nacional: certificado de registro de ciudadano de la UE (y Hoja 65 de Inclusión, mayo de 2025)", url: "https://sede.policia.gob.es/portalCiudadano/_es/tramites_extranjeria_tramite_certificadoregistro_ciudadanoue.php" },
+        vigencia: "Mayo de 2025", verificar: false, relleno: false } },
 
     { id: "familiar", nombre: "Residencia como familiar de español/a", corto: "Familiar de español",
       resumen: "Residencia para hijos e hijas de españoles de origen.",
       reglas: [
         { si: { pregunta: "pasaporte", es: ["espanol"] }, resultado: "oculta" },
+        // Hoja 18 de Inclusión (abril de 2026): no aplica a nacionales de la UE, el EEE o Suiza.
+        // Con pasaporte UE corresponde el registro como ciudadano/a de la UE (decisión del grupo: ocultarla).
+        { si: { pregunta: "pasaporte", es: ["ue"] }, resultado: "oculta" },
         { si: { pregunta: "ascendencia", es: ["no"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Es para hijos e hijas de españoles de origen." },
         { si: { pregunta: "ascendencia", es: ["abuelo"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Es para hijos e hijas. Por abuelo o abuela, mirá la vía de búsqueda de empleo." },
-        { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "cierra", condicion: "ascendencia",
-          motivo: "Si no lo sabés, vale la pena preguntar en tu familia: esta vía depende de documentos que a veces nadie buscó." },
+        // Decisión del grupo: «No lo sé» no cierra la vía; se abre si aparecen los documentos.
+        { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "depende", condicion: "ascendencia",
+          motivo: "Se abre si tu padre o tu madre es o fue español/a de origen. Vale la pena preguntar en tu familia: esta vía depende de documentos que a veces nadie buscó." },
+        // Hoja 18 de Inclusión (abril de 2026): documentos extranjeros apostillados o legalizados y traducidos;
+        // plazo de resolución de 2 meses, con silencio negativo.
+        { si: { pregunta: "ascendencia", es: ["padre", "nose"] }, resultado: "advierte",
+          motivo: "Las partidas y el certificado de antecedentes argentinos tienen que estar apostillados. Si no te contestan en 2 meses, la solicitud se entiende denegada." },
+        // RD 1155/2024, art. 95.3: dura 5 años o el periodo previsto de residencia en España del familiar
+        // español, si es menor. No queda claro cómo se aplica si el padre o la madre no vive en España.
+        { si: { pregunta: "ascendencia", es: ["padre", "nose"] }, resultado: "advierte",
+          motivo: "La residencia puede durar menos de 5 años si tu padre o tu madre va a vivir en España por menos tiempo. Preguntalo en el consulado al presentar la solicitud." },
         // Fuente: Consulado de Córdoba, «Nacionalidad española - Opción» (octubre 2026)
         { si: { pregunta: "ascendencia", es: ["padre"] }, resultado: "nota",
           motivo: "Si tu padre o tu madre es español/a de origen y nació en España, también podés pedir la nacionalidad española por opción, a cualquier edad. Se inicia en el Consulado General de España en Córdoba." } ],
       ficha: {
+        // Revisada el 23/10/2026 contra la Hoja 18 de Inclusión (última actualización: abril de 2026); el
+        // RD 1155/2024 en el BOE (texto consolidado, arts. 38, 41, 93 a 97); y la página del Consulado General
+        // de España en Córdoba «Visados Nacionales - Visado de residencia de familiares de personas de
+        // nacionalidad española» (sin fecha, consultada el 23/10/2026):
+        // https://www.exteriores.gob.es/Consulados/cordoba/es/ServiciosConsulares/Paginas/index.aspx?scco=Argentina&scd=129&scca=Visados&scs=Visados+Nacionales+-+Visado+de+residencia+de+familiares+de+personas+de+nacionalidad+espa%c3%b1ola
         que: "Una autorización de residencia para familiares de personas con nacionalidad española, prevista en el nuevo reglamento de extranjería (Real Decreto 1155/2024).",
-        requisitos: ["Padre o madre español/a de origen", "Documentación que acredite el vínculo"],
-        sirve: "Residir y trabajar en España.",
-        noPermite: "Contenido provisorio.",
-        // Hoja 18 de Inclusión (abril de 2026): si la persona y su familiar español están fuera de España,
-        // la solicitud la presenta la persona en el consulado; es gratuita.
-        // Desde Argentina, la solicitud se presenta en el consulado, que le pide a la oficina de extranjería
-        // que resuelva la autorización (RD 1155/2024, art. 41.3). El visado es gratuito y vale 365 días
-        // (Consulado de Córdoba, oct. 2026). La autorización dura 5 años y permite trabajar en cualquier
-        // sector y lugar de España (art. 95). Los hijos de españoles de origen no necesitan convivir (art. 93).
-        tramite: "Consulado General de España en Córdoba. La solicitud es gratuita y la autorización la resuelve la oficina de extranjería en España.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // RD 1155/2024, art. 94.1.h: «Los hijos y las hijas cuyo padre o madre sean o hubieran sido españoles
+        // de origen»; por el art. 93 son la única categoría que no tiene que convivir. No ser de la UE, el EEE
+        // ni Suiza (art. 93). Art. 38: pasaporte con 1 año de vigencia, antecedentes penales de los últimos
+        // 5 años y certificado médico. Consulado de Córdoba: certificados de nacimiento de la persona y de su
+        // padre o madre, documentos apostillados y prueba de residencia en la demarcación del consulado.
+        // Ni la Hoja 18 ni el consulado piden medios económicos ni seguro.
+        requisitos: ["Padre o madre que sea o haya sido español/a de origen", "Partidas de nacimiento tuya y de tu padre o madre, apostilladas", "Pasaporte con al menos 1 año de vigencia", "Certificado de antecedentes penales de los últimos 5 años", "Certificado médico", "Comprobante de que vivís en la zona del Consulado de Córdoba", "No tener nacionalidad de un país de la UE"],
+        // RD 1155/2024, art. 95.1 y 95.3: validez de 5 años; derecho a residir y trabajar por cuenta ajena o
+        // propia, en cualquier sector y en todo el territorio. (El 95.3 prevé una duración menor si la
+        // residencia prevista en España del familiar español fuera inferior.)
+        sirve: "Residir y trabajar en España durante 5 años, por cuenta ajena o propia, en cualquier sector y lugar. No pide ahorros ni seguro médico.",
+        noPermite: "No es la nacionalidad española: es una residencia por 5 años. No alcanza a nietos y nietas.",
+        // Hay dos procedimientos (RD 1155/2024, art. 97.1). Si la persona y su familiar están fuera de España
+        // (97.1.b y 41.3), la persona presenta el visado en el consulado y esa solicitud incluye la de la
+        // autorización; extranjería resuelve en 2 meses (silencio negativo) y el consulado expide el visado en
+        // 15 días. Si el familiar español vive en España (97.1.a y 41.2), pide la autorización allá y después
+        // hay 1 mes para pedir el visado. Consulado de Córdoba: presentación personal en el consulado; visado
+        // gratuito (salvo la tasa del proveedor externo, si se usa); vale 365 días; TIE dentro del mes desde la
+        // entrada. Antes la ficha mezclaba los dos casos ("2 meses y después 1 mes para pedir el visado").
+        tramite: "Lo presentás en persona en el Consulado General de España en Córdoba: pedís el visado y la autorización juntos, y es gratis. La oficina de extranjería en España resuelve en 2 meses y después el consulado entrega el visado en 15 días. Si tu padre o tu madre vive en España, puede pedir la autorización allá y vos tenés 1 mes para pedir el visado. El visado vale 365 días; una vez allá, tenés 1 mes para tramitar la TIE.",
+        fuente: { texto: "Hoja 18 de Inclusión: residencia de familiares de personas con nacionalidad española (abril de 2026)", url: "https://inclusion.gob.es/web/migraciones/w/18.-autorizacion-de-residencia-temporal-de-familiares-de-personas-con-nacionalidad-espanola" },
+        vigencia: "Abril de 2026", verificar: false, relleno: false } },
 
     { id: "nietos", nombre: "Búsqueda de empleo para hijos y nietos de españoles", corto: "Búsqueda de empleo",
       resumen: "Visado de 12 meses para buscar trabajo, si la orden anual abre cupo.",
       reglas: [
         { si: { pregunta: "pasaporte", es: ["espanol"] }, resultado: "oculta" },
+        // Es un visado para personas que no tienen la ciudadanía de la UE. Con pasaporte UE corresponde
+        // el registro como ciudadano/a de la UE (decisión del grupo: ocultarla, igual que en «familiar»).
+        { si: { pregunta: "pasaporte", es: ["ue"] }, resultado: "oculta" },
         { si: { pregunta: "ascendencia", es: ["no"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Es para hijos, hijas, nietos y nietas de españoles de origen." },
-        { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "cierra", condicion: "ascendencia",
-          motivo: "Si no lo sabés, vale la pena preguntar en tu familia." },
-        // La orden de 2026 (Orden ISM/1547/2025, BOE 30/12/2025) solo dice que se «podrá establecer» un
-        // número de visados para hijos y nietos: no fija ninguno. 1 año para la nacionalidad: Código Civil,
-        // art. 22.2.f. Para el resto de las personas argentinas son 2 años de residencia legal (art. 22.1).
+        // Decisión del grupo: «No lo sé» no cierra la vía; se abre si aparecen los documentos (como en «familiar»).
+        { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "depende", condicion: "ascendencia",
+          motivo: "Se abre si tu padre, madre, abuelo o abuela fue español/a de origen, y si ese año hay cupo. Vale la pena preguntar en tu familia: esta vía depende de documentos que a veces nadie buscó." },
+        // RD 1155/2024, art. 44.1: la orden anual de gestión colectiva «podrá aprobar un número» de estos visados.
+        // Orden ISM/1547/2025 (GECCO 2026, BOE 30/12/2025), art. 1: el Ministerio «podrá establecer un número
+        // de visados para búsqueda de empleo» para hijos o nietos de español de origen. No fija ninguno.
+        // No se encontró ningún acto posterior que fije un cupo para 2026 (búsqueda de octubre de 2026). Ojo: la
+        // disposición final segunda de la orden permite revisarla dentro de los 6 meses de su entrada en vigor y
+        // cambiar «el número de visados para búsqueda de empleo previstos»; no se pudo confirmar en el buscador
+        // del BOE que no haya habido una orden de revisión (de ahí la advertencia).
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "depende", condicion: "convocatoria",
-          motivo: "Se abre si España publica la convocatoria anual con cupo. Según fuentes secundarias, en 2026 no hubo convocatoria." },
+          motivo: "Se abre si la orden anual fija un cupo de visados. La de 2026 no fijó ninguno." },
+        { si: { pregunta: "ascendencia", es: ["padre", "abuelo", "nose"] }, resultado: "advierte",
+          motivo: "La orden de cada año se puede revisar a mitad de año y sumar un cupo de estos visados. Antes de descartar esta vía, buscá en el BOE si salió una orden nueva o preguntá en el consulado." },
+        // Código Civil, art. 22.2.f: 1 año de residencia para «el nacido fuera de España de padre o madre, abuelo
+        // o abuela, que originariamente hubieran sido españoles». Para el resto de las personas argentinas son
+        // 2 años de residencia legal (art. 22.1). Cotejado en el BOE (texto consolidado) el 23/10/2026.
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "nota",
-          motivo: "Los descendientes de españoles de origen pueden pedir la nacionalidad con 1 año de residencia legal." } ],
+          motivo: "Si tu padre, madre, abuelo o abuela fue español/a de origen y vos naciste fuera de España, podés pedir la nacionalidad con 1 año de residencia legal." },
+        // Consulado General de España en Córdoba, «Ley de Memoria Democrática» (aviso del 13/06/2025):
+        // el plazo de la disposición adicional octava de la Ley 20/2022 cerró el 22/10/2025.
+        { si: { pregunta: "ascendencia", es: ["padre", "abuelo", "nose"] }, resultado: "nota",
+          motivo: "La opción de nacionalidad por la Ley de Memoria Democrática («ley de nietos») cerró el 22 de octubre de 2025." } ],
       ficha: {
-        que: "Un visado de 12 meses para buscar trabajo en España, destinado a hijos y nietos de españoles de origen.",
-        requisitos: ["Padre, madre, abuelo o abuela español/a de origen", "Que la orden anual de gestión colectiva abra cupo"],
-        sirve: "Entrar a España y buscar trabajo durante un año.",
-        noPermite: "No sirve si ese año no hay convocatoria.",
-        // Octubre 2026: el Consulado de Córdoba no lista este visado entre sus visados nacionales.
-        tramite: "Consulado de España, cuando hay convocatoria.",
-        fuente: { texto: "Ministerio de Asuntos Exteriores de España", url: "https://www.exteriores.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: RD 1155/2024, arts. 43 y 44 (texto consolidado, última modificación
+        // 22/09/2026); Orden ISM/1547/2025 de gestión colectiva para 2026 (23/12/2025, BOE 30/12/2025);
+        // Hoja 24 de Inclusión (mayo de 2025). Los arts. 38, 43 y 44 y la orden se cotejaron en el BOE el
+        // 23/10/2026.
+        // RD 1155/2024, art. 43.1: permite entrar en España para buscar trabajo «durante un periodo de
+        // residencia de doce meses». Art. 44: modalidad para hijos o nietos de español de origen.
+        que: "Un visado para vivir 12 meses en España buscando trabajo, destinado a hijos, hijas, nietos y nietas de españoles de origen (Real Decreto 1155/2024).",
+        // Art. 44.1 y 44.2: el número de visados, la selección y la forma de presentar la solicitud los fija
+        // la orden anual. Art. 43.3: requisitos del art. 38 (pasaporte con 1 año de vigencia, antecedentes
+        // penales de los últimos 5 años, certificado médico, tasa) y los específicos que fije la orden.
+        requisitos: ["Padre, madre, abuelo o abuela español/a de origen", "Que la orden anual de gestión colectiva fije un cupo de visados", "Pasaporte con al menos 1 año de vigencia, certificado de antecedentes penales de los últimos 5 años y certificado médico", "Los demás requisitos y cómo se elige a quienes lo reciben los fija la orden de cada año"],
+        // Art. 43.1, 43.4 y 43.5: con contrato, el empleador pide la autorización de residencia y trabajo sin
+        // necesidad de otro visado; se resuelve en 10 días y hay 1 mes para el alta en la Seguridad Social.
+        // Art. 44.1: exentos de la valoración de la situación nacional de empleo.
+        sirve: "Vivir en España 12 meses buscando trabajo. Si conseguís contrato, la autorización se tramita desde allá, sin volver por otro visado, y quien te contrata no tiene que demostrar que no encontró a alguien en España.",
+        noPermite: "No es un permiso de trabajo: para trabajar necesitás un contrato, y la autorización la pide quien te contrata. Tampoco es la nacionalidad. Si ese año la orden no fija cupo, el visado no existe.",
+        // Art. 44.2: la orden regula «las fórmulas de presentación de las solicitudes». En el piloto de 2019 para
+        // Argentina la inscripción fue en línea (nota de prensa de Inclusión, 19/03/2019).
+        // 23/10/2026: ni la hoja de tasas ni el menú de visados (nacionales y de estancia) del Consulado General
+        // de España en Córdoba incluyen este visado.
+        tramite: "Lo define la orden de cada año: cómo se elige a las personas y dónde se presenta la solicitud. En la prueba piloto de 2019 para Argentina, se hizo en línea. Hoy el Consulado de Córdoba no lo tiene entre sus visados.",
+        fuente: { texto: "Real Decreto 1155/2024, arts. 43 y 44 (y Orden ISM/1547/2025, diciembre de 2025)", url: "https://www.boe.es/buscar/act.php?id=BOE-A-2024-24099" },
+        vigencia: "Diciembre de 2025", verificar: false, relleno: false } },
 
     { id: "cuenta_ajena", nombre: "Trabajo por cuenta ajena", corto: "Cuenta ajena",
       resumen: "Trabajar en relación de dependencia para un empleador en España.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre con una oferta de un empleador en España. Es más simple si tu ocupación está en el Catálogo de Ocupaciones de Difícil Cobertura." },
+        // Catálogo de Ocupaciones de Difícil Cobertura del 3.er trimestre de 2026 (Resolución del SEPE del
+        // 3/8/2026, BOE-A-2026-18504, 2/9/2026): 27 ocupaciones, de marina mercante, deportes y oficios
+        // (carpintería metálica, electricidad, grúas). Ninguna pide título universitario. Lo publica el SEPE
+        // cada trimestre (RD 1155/2024, art. 75).
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: ["mercado", "redes"],
+          motivo: "Se abre con una oferta de un empleador en España. El trámite es más simple si tu ocupación está en el Catálogo de Ocupaciones de Difícil Cobertura, pero hoy el catálogo tiene oficios y puestos de marina mercante, no profesiones universitarias." },
+        // Hoja 12 de Inclusión (mayo de 2025) y RD 1155/2024, art. 75: fuera del catálogo, el empleador publica
+        // la oferta en el servicio público de empleo (8 días) y acredita que no pudo cubrir el puesto.
         { si: { pregunta: "oferta", es: ["oferta"] }, resultado: "nota",
-          motivo: "Si tu ocupación no está en el Catálogo de Difícil Cobertura, el empleador tiene que acreditar que no encontró candidatos disponibles." } ],
+          motivo: "Si tu ocupación no está en el Catálogo de Difícil Cobertura, el empleador primero publica la oferta en el servicio público de empleo y tiene que acreditar que no encontró candidatos disponibles en España." },
+        // Ley Orgánica 4/2000, art. 40.1.h: no se tiene en cuenta la situación nacional de empleo para
+        // hijos o nietos de español de origen.
+        { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "nota", condicion: "ascendencia",
+          motivo: "Como tu padre, madre, abuelo o abuela es español/a de origen, el empleador no tiene que demostrar que no encontró candidatos en España." },
+        // RD 1155/2024, art. 73.1: el límite de ocupación y comunidad autónoma no se aplica cuando no corre
+        // la situación nacional de empleo (LO 4/2000, art. 40.1.h: hijos o nietos de español de origen).
+        { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "advierte",
+          motivo: "Si tu padre, madre, abuelo o abuela es español/a de origen, el primer permiso no debería quedar atado a una ocupación ni a una comunidad autónoma. Confirmá que tu autorización lo diga así." },
+        // Consulado de Córdoba (23/10/2026): alta en la Seguridad Social dentro de 3 días desde la entrada.
+        // RD 1155/2024, art. 73.1: dentro de 3 meses desde la entrada legal. Las fuentes no coinciden.
+        { resultado: "advierte",
+          motivo: "El plazo para darte de alta en la Seguridad Social cuando llegás no está claro: el consulado dice 3 días y el reglamento, 3 meses. Acordá con quien te contrata hacerlo apenas llegues." },
+        // Hoja 12 de Inclusión (mayo de 2025): el trabajador tiene que tener la cualificación que exige la
+        // profesión, «homologada en su caso».
+        { resultado: "advierte", condicion: "formacion",
+          motivo: "Si tu profesión está regulada en España (por ejemplo, en salud, psicología, abogacía o algunas ingenierías), vas a necesitar el título homologado. Averiguá cuánto tarda antes de buscar la oferta." } ],
       ficha: {
-        que: "La autorización de residencia y trabajo para una persona contratada por un empleador en España.",
-        requisitos: ["Oferta de trabajo de un empleador en España", "Vía simplificada si la ocupación está en el Catálogo de Difícil Cobertura", "Si no, vía general: el empleador acredita que no hay candidatos disponibles"],
+        // Hoja 12 de Inclusión (mayo de 2025): la pide el empleador para contratar a una persona extranjera
+        // por más de 90 días y menos de 5 años.
+        que: "La autorización de residencia y trabajo que pide un empleador en España para contratar a una persona extranjera.",
+        // Hoja 12 de Inclusión (mayo de 2025): contrato firmado por las dos partes; situación nacional de
+        // empleo (catálogo o acreditación del empleador); cualificación homologada si la profesión lo exige;
+        // para el visado, antecedentes penales y certificado médico. El empleador, además, tiene que estar al
+        // día con Hacienda y la Seguridad Social y tener solvencia. Consulado de Córdoba, «Visados Nacionales -
+        // Visado de trabajo por cuenta ajena» (consultada el 23/10/2026): antecedentes de los últimos 5 años,
+        // certificado médico y prueba de residencia en la demarcación, apostillados; pasaporte con 1 año de vigencia.
+        // https://www.exteriores.gob.es/Consulados/cordoba/es/ServiciosConsulares/Paginas/index.aspx?scco=Argentina&scd=129&scca=Visados&scs=Visados+Nacionales+-+Visado+de+trabajo+por+cuenta+ajena
+        requisitos: ["Contrato u oferta firmada con un empleador en España", "Vía simplificada si la ocupación está en el Catálogo de Difícil Cobertura", "Si no, vía general: el empleador acredita que no hay candidatos disponibles en España", "Si tu profesión está regulada en España, el título homologado", "Antecedentes penales de los últimos 5 años y certificado médico, apostillados", "Comprobante de que vivís en la zona del Consulado de Córdoba"],
         sirve: "Trabajar en relación de dependencia.",
-        noPermite: "Contenido provisorio.",
-        tramite: "El empleador inicia el trámite en España; después, visado en el Consulado General de España en Córdoba.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // RD 1155/2024, art. 73: la autorización inicial dura lo que la actividad, con un máximo de 1 año, y
+        // se limita a una ocupación y a una comunidad autónoma. Art. 81: la renovación dura 4 años y permite
+        // cualquier actividad en todo el país. Cotejados en el BOE el 23/10/2026. Ojo: el art. 73.1 exceptúa
+        // del límite de ocupación y comunidad autónoma los casos sin situación nacional de empleo (por ejemplo,
+        // hijos y nietos de español de origen, LO 4/2000 art. 40.1.h): se avisa con una regla «advierte».
+        noPermite: "No es un visado para buscar trabajo: sin una oferta no se puede pedir. El primer permiso dura hasta 1 año y queda atado a una ocupación y a una comunidad autónoma. Recién al renovarlo podés trabajar en cualquier actividad y lugar.",
+        // Hoja 12 de Inclusión (mayo de 2025): el empleador presenta por la sede electrónica (Mercurio) ante la
+        // oficina de extranjería de la provincia del centro de trabajo (RD 1155/2024, art. 77); resuelve en
+        // 3 meses y el silencio es negativo; el trabajador pide el visado en el consulado de su demarcación
+        // dentro de 1 mes desde que se notifica al empleador. Consulado de Córdoba (23/10/2026): plazo de 1 mes,
+        // presentación personal con cita pedida por correo electrónico, resuelve en 1 mes, el visado vale
+        // 365 días si la autorización dura más de 6 meses. El consulado dice que el alta en la Seguridad Social
+        // es dentro de 3 días desde la entrada; el art. 73.1 del RD 1155/2024 dice 3 meses: va como advertencia.
+        tramite: "El empleador lo pide en la oficina de extranjería de la provincia del trabajo. Si en 3 meses no contestan, se entiende denegado. Con la autorización, tenés 1 mes para pedir el visado en persona en el Consulado General de España en Córdoba, con cita que se pide por correo electrónico. El consulado resuelve en 1 mes.",
+        fuente: { texto: "Hoja informativa 12 del Ministerio de Inclusión (mayo de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/autorizacion-inicial-de-residencia-temporal-y-trabajo-por-cuenta-ajena-hi-16-" },
+        // Vigencia: Hoja 12 (mayo de 2025), que respalda los requisitos principales. El catálogo citado en
+        // las reglas es del 3.er trimestre de 2026.
+        vigencia: "Mayo de 2025", verificar: false, relleno: false } },
 
     { id: "tarjeta_azul", nombre: "Tarjeta Azul UE", corto: "Tarjeta Azul",
       resumen: "Para empleos cualificados con un salario mínimo fijado.",
