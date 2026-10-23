@@ -34,11 +34,14 @@ const DATOS = {
     // Fecha que aparece en el pie de todas las pantallas
     fecha_vigencia:        "21/10/2026",
     // Tarjeta Azul UE: salario mínimo general y reducido
+    // Nota informativa de la UGE «Umbral salarial 2026» (junio de 2026)
     ta_salario:            "41.356,36 €/año",
     ta_reducido:           "33.085,09 €/año",
-    // Profesional altamente cualificado (vía nacional)
+    // Profesional altamente cualificado (vía nacional): umbral único, sin reducido.
+    // Misma nota de la UGE (junio de 2026)
     hq_salario:            "41.356,36 €/año",
-    // Nómada digital: ingreso mínimo y suplementos por familiar
+    // Nómada digital: ingreso mínimo y suplementos por familiar.
+    // 200 % del SMI = 2.442 € × 14 pagas ÷ 12 (Consulado de Buenos Aires y UGE, 2026)
     nomada_ingreso:        "2.849 €/mes",
     nomada_familiar1:      "75 % del SMI",
     nomada_familiar_extra: "25 % del SMI",
@@ -49,10 +52,17 @@ const DATOS = {
     vyt_fondos:            "14.652 €",
     vyt_seguro:            "30.000 €",
     vyt_cupo:              "500",
+    // Vacaciones y Trabajo: fondos por mes si tenés pasaje de regreso (SMI 2026, RD 126/2026;
+    // hoja del Consulado de Buenos Aires V.22-04-2026)
+    vyt_mes:               "1.221 €",
     // Estudiante: horas de trabajo permitidas
     estudiante_horas:      "30 horas por semana",
     // Estudiante: medios económicos (100 % del IPREM). Consulado de Buenos Aires, 2026
-    estudiante_medios:     "600 € por mes"
+    estudiante_medios:     "600 € por mes",
+    // Doctorado sin contrato: 50 % del SMI anual (100 % si viaja un familiar).
+    // SMI 2026: 1.221 € × 14 pagas (RD 126/2026). Hoja 68 de Inclusión, agosto de 2026
+    doctorado_medios:      "8.547 €",
+    doctorado_medios_familia: "17.094 €"
   },
 
   textos: {
@@ -96,6 +106,10 @@ const DATOS = {
     tituloNoInteresa: "Otras vías del mapa (dijiste que no te interesan por ahora)",
     tituloCondiciones: "Condiciones del entorno que pesaron en este recorrido",
     // Avisos de las fichas (el # se reemplaza por la cantidad)
+    // Advertencias: algo para revisar antes de avanzar (no abren ni cierran la vía)
+    advertenciaTitulo: "Antes de avanzar, revisá",
+    advertenciaCorta: "Hay algo para revisar: mirá la ficha",
+    advertenciaEtiqueta: "Revisá",
     avisoDato: "a verificar",
     avisoDatos1: "1 dato a verificar",
     avisoDatosN: "# datos a verificar",
@@ -231,7 +245,9 @@ const DATOS = {
        resultado "depende"    → la vía se abre si aparece algo
        resultado "noInteresa" → la persona dijo que no le interesa
        resultado "oculta"     → no se muestra
-       resultado "nota"       → aclaración que se suma a la tarjeta */
+       resultado "nota"       → aclaración que se suma a la tarjeta
+       resultado "advierte"   → algo que la persona tiene que revisar antes de avanzar.
+                                No abre ni cierra la vía. Sin "si", se muestra siempre. */
   vias: [
     { id: "ue", nombre: "Registro como ciudadano/a de la UE", corto: "Ciudadanía UE",
       resumen: "Con pasaporte de otro país de la UE, te registrás como ciudadano/a comunitario/a.",
@@ -266,9 +282,15 @@ const DATOS = {
         requisitos: ["Padre o madre español/a de origen", "Documentación que acredite el vínculo"],
         sirve: "Residir y trabajar en España.",
         noPermite: "Contenido provisorio.",
-        tramite: "Oficina de extranjería en España.",
+        // Hoja 18 de Inclusión (abril de 2026): si la persona y su familiar español están fuera de España,
+        // la solicitud la presenta la persona en el consulado; es gratuita.
+        // Desde Argentina, la solicitud se presenta en el consulado, que le pide a la oficina de extranjería
+        // que resuelva la autorización (RD 1155/2024, art. 41.3). El visado es gratuito y vale 365 días
+        // (Consulado de Córdoba, oct. 2026). La autorización dura 5 años y permite trabajar en cualquier
+        // sector y lugar de España (art. 95). Los hijos de españoles de origen no necesitan convivir (art. 93).
+        tramite: "Consulado General de España en Córdoba. La solicitud es gratuita y la autorización la resuelve la oficina de extranjería en España.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "nietos", nombre: "Búsqueda de empleo para hijos y nietos de españoles", corto: "Búsqueda de empleo",
       resumen: "Visado de 12 meses para buscar trabajo, si la orden anual abre cupo.",
@@ -278,6 +300,9 @@ const DATOS = {
           motivo: "Es para hijos, hijas, nietos y nietas de españoles de origen." },
         { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Si no lo sabés, vale la pena preguntar en tu familia." },
+        // La orden de 2026 (Orden ISM/1547/2025, BOE 30/12/2025) solo dice que se «podrá establecer» un
+        // número de visados para hijos y nietos: no fija ninguno. 1 año para la nacionalidad: Código Civil,
+        // art. 22.2.f. Para el resto de las personas argentinas son 2 años de residencia legal (art. 22.1).
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "depende", condicion: "convocatoria",
           motivo: "Se abre si España publica la convocatoria anual con cupo. Según fuentes secundarias, en 2026 no hubo convocatoria." },
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "nota",
@@ -290,7 +315,7 @@ const DATOS = {
         // Octubre 2026: el Consulado de Córdoba no lista este visado entre sus visados nacionales.
         tramite: "Consulado de España, cuando hay convocatoria.",
         fuente: { texto: "Ministerio de Asuntos Exteriores de España", url: "https://www.exteriores.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "cuenta_ajena", nombre: "Trabajo por cuenta ajena", corto: "Cuenta ajena",
       resumen: "Trabajar en relación de dependencia para un empleador en España.",
@@ -313,15 +338,15 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
           motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {ta_salario}." },
-        { si: { pregunta: "formacion", es: ["tecnico", "universidad2"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide título universitario o experiencia profesional equivalente: se abre si podés acreditarla." },
-        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
-          motivo: "Pide título universitario o experiencia profesional equivalente." },
+        // Hoja 66 de Inclusión (mayo de 2025): título superior de al menos 3 años, o 5 años de experiencia
+        // profesional (3 años, dentro de los últimos 7, para informática y telecomunicaciones).
+        { si: { pregunta: "formacion", es: ["tecnico", "universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide un título superior de al menos 3 años o 5 años de experiencia profesional en el área (3 en informática): se abre si podés acreditarlos." },
         { si: { pregunta: "egreso", es: ["reciente", "medio"] }, resultado: "nota",
           motivo: "Como te recibiste hace 3 años o menos, el salario mínimo exigido baja a {ta_reducido}." } ],
       ficha: {
         que: "Un permiso europeo para trabajos cualificados.",
-        requisitos: ["Título universitario o experiencia equivalente", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos o si la ocupación es de difícil cobertura"],
+        requisitos: ["Título superior de al menos 3 años, o 5 años de experiencia profesional (3 en informática)", "Contrato u oferta de al menos 6 meses", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos o si la ocupación es de difícil cobertura"],
         sirve: "Trabajar en un puesto cualificado, con facilidades de movilidad dentro de la UE.",
         noPermite: "Contenido provisorio.",
         tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
@@ -333,13 +358,12 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
           motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {hq_salario}." },
-        { si: { pregunta: "formacion", es: ["tecnico", "universidad2"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide formación superior o experiencia equivalente: se abre si podés acreditarla." },
-        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
-          motivo: "Pide formación superior o experiencia equivalente." } ],
+        // Hoja 66 de Inclusión (mayo de 2025): titulación de nivel superior o 3 años de experiencia equiparable.
+        { si: { pregunta: "formacion", es: ["tecnico", "universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide formación superior o 3 años de experiencia profesional equiparable: se abre si podés acreditarlos." } ],
       ficha: {
         que: "La vía nacional española para profesionales en puestos cualificados.",
-        requisitos: ["Oferta de un puesto cualificado", "Salario de al menos {hq_salario}", "Sin umbral reducido"],
+        requisitos: ["Oferta de un puesto cualificado", "Formación superior o 3 años de experiencia profesional", "Salario de al menos {hq_salario}", "Sin umbral reducido"],
         sirve: "Trabajar en un puesto cualificado.",
         noPermite: "Contenido provisorio.",
         tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
@@ -379,7 +403,10 @@ const DATOS = {
           motivo: "Pide título universitario o de formación profesional, o 3 años de experiencia: se abre si podés acreditarlos." } ],
       ficha: {
         que: "Un permiso para residir en España trabajando en remoto para empresas o clientes del exterior.",
-        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "No más del 20 % de ingresos de origen español", "Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
+        // 20 %: solo para quien trabaja por su cuenta (Consulados de Córdoba y Buenos Aires, oct. 2026).
+        // En relación de dependencia, solo se puede trabajar para empresas de fuera de España.
+        // Título o 3 años de experiencia y seguro sin copagos: documentación de la UGE para teletrabajadores.
+        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "Si trabajás en relación de dependencia, solo para empresas de fuera de España. Si trabajás por tu cuenta, no más del 20 % de tu actividad para empresas españolas", "Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
         sirve: "Vivir en España sin depender del mercado laboral español.",
         noPermite: "Contenido provisorio.",
         // En Córdoba se presenta en persona en el consulado (en Buenos Aires, en cambio, por BLS)
@@ -396,11 +423,16 @@ const DATOS = {
         { si: { pregunta: "propia", es: ["negocio"] }, resultado: "depende", condicion: "innovacion",
           motivo: "Es para proyectos innovadores o escalables. Para un negocio tradicional, mirá la vía de cuenta propia." } ],
       ficha: {
+        // «3 años»: la autorización dura 3 años y se renueva por 2 (Ley 14/2013, art. 69.1).
+        // El visado del consulado dura 1 año. Informe de ENISA: Ley 14/2013, art. 70.1.
         que: "Un permiso de 3 años para desarrollar un proyecto emprendedor en España.",
         requisitos: ["Proyecto innovador o escalable", "Informe favorable de ENISA"],
         sirve: "Emprender en España durante 3 años.",
         noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas o consulado.",
+        // No es una cosa o la otra: la autorización se pide en la Unidad de Grandes Empresas (que pide el
+        // informe a ENISA) y, ya concedida, el visado en el consulado (Ley 14/2013, art. 70.1; Consulado
+        // de Córdoba, oct. 2026).
+        tramite: "Primero se pide la autorización en la Unidad de Grandes Empresas, que le pide el informe a ENISA. Con la autorización, visado en el Consulado General de España en Córdoba.",
         fuente: { texto: "ENISA, Gobierno de España", url: "https://www.enisa.es" },
         vigencia: "21/10/2026", verificar: false, relleno: true } },
 
@@ -408,32 +440,47 @@ const DATOS = {
       resumen: "Para trabajar de forma autónoma con un plan de negocio.",
       reglas: [
         { si: { pregunta: "propia", es: ["no"] }, resultado: "noInteresa" },
-        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide inversión y medios de vida (alrededor de {iprem_anual} por año) además del plan de negocio." },
-        { si: [ { pregunta: "ahorros", es: ["medio", "alto"] }, { pregunta: "propia", es: ["innovador", "negocio"] } ], resultado: "nota",
-          motivo: "Además de los medios de vida, pide una inversión que depende de tu plan de negocio." },
+        // Ni el Consulado de Córdoba (oct. 2026) ni el RD 1155/2024 (art. 84) fijan un monto: piden que la
+        // inversión prevista sea suficiente. El IPREM no aparece para esta vía.
+        // Hoja 14 de Inclusión (mayo de 2025): «que la inversión prevista sea suficiente», sin monto fijo.
+        { resultado: "advierte", condicion: "capital_economico",
+          motivo: "Pide demostrar que la inversión alcanza para tu proyecto. No hay un monto fijo: depende de tu plan de negocio." },
         { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "nota",
           motivo: "Dura 1 año y queda limitada a una región y un sector." } ],
       ficha: {
         que: "Una autorización para trabajar de forma autónoma en España.",
-        requisitos: ["Plan de negocio viable", "Inversión", "Experiencia", "Medios de vida: aproximadamente {iprem_anual}, el IPREM anual"],
+        // RD 1155/2024, art. 84: pide «la cualificación profesional legalmente exigida o experiencia
+        // acreditada suficiente», y que la inversión prevista sea suficiente (sin monto ni IPREM).
+        requisitos: ["Plan de negocio viable", "Inversión suficiente para el proyecto (no hay un monto fijo)", "La cualificación profesional que pida la actividad, o experiencia suficiente en ella"],
         sirve: "Trabajar por tu cuenta.",
+        // RD 1155/2024, art. 83: la autorización inicial dura 1 año y se limita a una comunidad autónoma
+        // y a un sector de actividad. La renovación dura 4 años (art. 86).
         noPermite: "Dura 1 año y se limita a una región y un sector.",
         tramite: "Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "investigador", nombre: "Investigador/a", corto: "Investigación",
       resumen: "Para investigar en una universidad, centro de I+D o empresa.",
       reglas: [
         { si: { pregunta: "investigar", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "investigar", es: ["interes"] }, resultado: "depende", condicion: ["capital_academico", "redes"],
-          motivo: "Se abre si una universidad, un centro de I+D o una empresa te acepta para investigar." } ],
+          motivo: "Se abre si una universidad, un centro de I+D o una empresa te acepta para investigar." },
+        // Hoja 68 de Inclusión (agosto de 2026): doctorandos sin contrato, 50 % del SMI anual.
+        { si: { pregunta: "investigar", es: ["si", "interes"] }, resultado: "advierte", condicion: "capital_economico",
+          motivo: "Si vas a hacer un doctorado sin contrato, pide demostrar al menos {doctorado_medios} por año ({doctorado_medios_familia} si viaja un familiar)." } ],
       ficha: {
-        // «3 años»: no figura en la página del consulado (dice: visado de 1 año o lo que dure la autorización). Verificar.
-        que: "Un permiso de 3 años [verificar] para investigar, doctorado incluido, con trabajo pleno.",
-        requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante"],
-        sirve: "Investigar y trabajar en España.",
+        // «3 años»: la autorización dura 3 años o lo que dure el convenio o contrato, si es menos
+        // (Ley 14/2013, art. 72.3). El visado del consulado dura 1 año; en España se sigue con la autorización.
+        // Doctorado como investigador: Consulado de Buenos Aires, noticia del 4/10/2026.
+        // «con trabajo pleno»: la Hoja 68 de Inclusión (agosto de 2026) dice que habilita a «residir y
+        // trabajar» para hacer actividades de investigación, desarrollo e innovación; no habla de cualquier
+        // trabajo. Al terminar, hasta 12 meses para buscar empleo o emprender (art. 72.9).
+        // Doctorado sin contrato: la Hoja 68 pide medios de al menos el 50 % del SMI anual (unos 8.547 € en
+        // 2026; 100 % si viaja un familiar). Y el propio estudiante puede presentar la solicitud.
+        que: "Un permiso de 3 años para investigar o hacer un doctorado, con permiso de trabajo para esa actividad.",
+        requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante", "Doctorado sin contrato: medios de al menos {doctorado_medios} por año"],
+        sirve: "Investigar en España y trabajar en esa actividad.",
         noPermite: "Contenido provisorio.",
         tramite: "La entidad que te recibe pide la autorización en la Unidad de Grandes Empresas; después, visado en el Consulado General de España en Córdoba. Pueden viajar familiares.",
         fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
@@ -444,25 +491,45 @@ const DATOS = {
       reglas: [
         { si: { pregunta: "egreso", es: ["medio", "mas3"] }, resultado: "cierra", condicion: "edad_egreso",
           motivo: "Es para quienes se recibieron hace menos de 2 años o están estudiando." },
+        // Hoja 21 de Inclusión (sept. 2025): título de educación superior (incluye FP de grado superior)
+        // de los 2 años anteriores, o estar estudiando para obtenerlo.
+        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
+          motivo: "Pide un título de educación superior (incluye el técnico superior) o estar estudiando para obtenerlo." },
         { si: { pregunta: "practicas", es: ["no"] }, resultado: "noInteresa" },
+        // Hoja 21 de Inclusión (sept. 2025): «Esta autorización no prevé la reagrupación familiar».
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
+          motivo: "No permite reagrupar familiares: no podrías llevar a las personas a tu cargo." },
         { si: { pregunta: "practicas", es: ["interes"] }, resultado: "depende", condicion: "redes",
           motivo: "Se abre con un convenio de prácticas de una entidad española." },
         { si: [ { pregunta: "practicas", es: ["si", "interes"] }, { pregunta: "ahorros", es: ["bajo"] } ], resultado: "depende", condicion: "capital_economico",
           motivo: "Si las prácticas no son pagas, vas a necesitar cómo sostenerte." } ],
       ficha: {
-        que: "Un permiso para hacer prácticas con un convenio de una entidad española. Después se puede pasar a trabajo sin salir de España.",
-        requisitos: ["Recibido/a hace menos de 2 años, o estudiando", "Convenio de prácticas con una entidad española"],
+        // «pasar a trabajo»: el RD 1155/2024 (art. 191) permite cambiar de residencia a residencia y trabajo
+        // sin visado, pero con una oferta y los requisitos de cuenta ajena. Ni la Hoja 21 ni la Ley 14/2013
+        // lo prevén para prácticas en particular.
+        // Hoja 21 de Inclusión (sept. 2025): «título de educación superior» incluye la formación profesional
+        // de grado superior; con convenio (sin contrato) pide el 100 % del IPREM por mes; no permite
+        // reagrupar familiares.
+        que: "Un permiso para hacer prácticas con una entidad española. Al terminar, para quedarte a trabajar hace falta una oferta y cumplir los requisitos de cuenta ajena.",
+        // Ley 14/2013, disposición adicional 18.ª, y Consulado de Córdoba (oct. 2026): sirve un convenio
+        // de prácticas o un contrato de trabajo en prácticas. Además, las prácticas tienen que ser del
+        // mismo campo y nivel que tu título o tus estudios, y hay que tener seguro y recursos suficientes.
+        requisitos: ["Título de educación superior (incluye el técnico superior) obtenido hace menos de 2 años, o estar estudiando para obtenerlo", "Convenio o contrato de prácticas con una entidad española, en el mismo campo y nivel que tu título", "Si no hay contrato: medios de vida ({estudiante_medios}) y seguro médico"],
         sirve: "Hacer una primera experiencia laboral en España.",
-        noPermite: "Contenido provisorio.",
-        tramite: "Consulado General de España en Córdoba.",
+        noPermite: "No permite reagrupar familiares.",
+        // Ley 14/2013, DA 18.ª: la entidad española pide la autorización en la Delegación o Subdelegación
+        // del Gobierno de la provincia de las prácticas (resuelve en 30 días); después, visado en el consulado.
+        tramite: "La entidad española pide la autorización en España; después, visado en el Consulado General de España en Córdoba.",
         fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: true, relleno: true } },
+        vigencia: "21/10/2026", verificar: false, relleno: true } },
 
     { id: "estudiante", nombre: "Estudiante", corto: "Estudios",
       resumen: "Para estudiar un máster u otro estudio superior.",
       reglas: [
-        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide demostrar medios económicos para todo el período de estudios (unos {iprem_anual} por año), además del costo de la matrícula." },
+        // Consulado de Buenos Aires y RD 1155/2024 (art. 35): 100 % del IPREM por mes de estudio, hasta 12
+        // meses. Se acredita con ahorros, beca o ingresos regulares. Un programa corto pide menos de 7.200 €.
+        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "depende", condicion: "capital_economico",
+          motivo: "Se abre si podés demostrar {estudiante_medios} de estudio (hasta 12 meses), con ahorros, una beca o ingresos regulares. Aparte está el costo de la matrícula." },
         { si: { pregunta: "estudiar", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "estudiar", es: ["si"] }, resultado: "nota",
           motivo: "Te permite trabajar hasta {estudiante_horas} y pasar a residencia y trabajo sin salir de España." } ],
@@ -482,21 +549,38 @@ const DATOS = {
           motivo: "Es para personas de 18 a 35 años." },
         { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
           motivo: "Pide título universitario o de educación superior, o al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)." },
-        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "cierra", condicion: "cuidados",
-          motivo: "No se extiende a familiares: no contempla que viaje con vos alguien a tu cargo." },
-        { si: { pregunta: "ahorros", es: ["bajo", "medio"] }, resultado: "cierra", condicion: "capital_economico",
-          motivo: "Pide demostrar fondos de {vyt_fondos} y un seguro con cobertura de {vyt_seguro}." },
+        // Acuerdo (BOE-A-2023-2097, art. 2.e): «En ningún caso los beneficiarios podrán viajar acompañados
+        // por familiares a su cargo». No prohíbe tenerlos: se puede ir sin ellos.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
+          motivo: "El programa no permite viajar con hijos u otras personas a tu cargo. Si vas, es sin ellas, y su cuidado acá tiene que quedar resuelto." },
+        { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "cierra", condicion: "capital_economico",
+          motivo: "Pide demostrar fondos de {vyt_fondos}, o {vyt_mes} por cada mes de estancia si tenés pasaje de regreso, y un seguro con cobertura de {vyt_seguro}." },
+        // Hoja de Buenos Aires (V.22-04-2026): con pasaje de regreso, fondos por los meses de estancia.
+        { si: { pregunta: "ahorros", es: ["medio"] }, resultado: "advierte", condicion: "capital_economico",
+          motivo: "Con menos de {vyt_fondos} podés ir si tenés pasaje de regreso, pero solo por los meses que cubras: {vyt_mes} por cada mes de estancia." },
+        // Suspensión en Córdoba: YoMeAnimo (17/03/2026, act. 20/04/2026; y 15/10/2026), sin fuente oficial.
+        // No tenemos respuesta del consulado: queda como tarea para quien usa el mapa.
+        { resultado: "advierte",
+          motivo: "Según fuentes no oficiales, desde marzo de 2026 el Consulado de Córdoba no estaría recibiendo solicitudes. Antes de empezar, escribiles a cog.cordoba.vis@maec.es para confirmarlo." },
         { si: { pregunta: "edad", es: ["hasta35"] }, resultado: "nota",
           motivo: "Hay {vyt_cupo} lugares por año en todo el país. Al terminar, hay que regresar." } ],
       ficha: {
         que: "El Programa de Movilidad de Jóvenes entre Argentina y España: una estancia para explorar, no una vía para quedarse.",
-        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} [verificar] (o el SMI por mes de estancia, con billete de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
+        // Fondos: 1.221 €/mes (SMI 2026) por 12 meses = 14.652 €. Hoja del Consulado de Buenos Aires
+        // V.22-04-2026, que reemplazó a la V.05-03-2026 en el mismo enlace.
+        requisitos: ["Entre 18 y 35 años", "Título universitario o de educación superior. No hace falta estar recibido/a: alcanza con al menos 2 años aprobados de una carrera universitaria (los años de terciario no cuentan)", "Fondos de {vyt_fondos} (o {vyt_mes} por cada mes de estancia, con pasaje de regreso)", "Seguro con cobertura de {vyt_seguro}", "No haber participado antes del programa"],
         sirve: "Pasar hasta 12 meses en España y trabajar hasta 6 meses en total.",
         noPermite: "No se extiende a familiares. Se hace una sola vez. Hay que regresar al terminar.",
         // Octubre 2026: la sección de visados del Consulado de Córdoba no lista este programa
-        // y su página del programa (2023) tiene montos viejos (1.080 €/mes). YoMeAnimo (oct. 2026)
-        // dice que Córdoba pediría 15.120 €. Se usa la hoja de Buenos Aires (abril 2026) hasta confirmar.
-        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es [verificar]. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
+        // y su página del programa (10/03/2023) tiene montos viejos (SMI 2023: 1.080 €/mes). Los 15.120 €
+        // que cita YoMeAnimo (15/10/2026) no cierran con su propio cálculo (1.134 €/mes) y parecen
+        // 1.080 × 14 pagas, la cifra vieja. La regla del convenio es el SMI vigente por mes de estancia:
+        // se usa la hoja de Buenos Aires (SMI 2026: 1.221 €/mes, RD 126/2026).
+        // Correo: lo dicen la página de Córdoba (2023) y YoMeAnimo (15/10/2026): se manda todo en PDF a
+        // cog.cordoba.vis@maec.es, después dan turno para el NIE y luego la cita presencial del visado.
+        // YoMeAnimo advierte, por comentarios de lectores, que Córdoba podría no estar recibiendo
+        // solicitudes: conviene preguntarle al consulado.
+        tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
         fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
         vigencia: "Abril de 2026", verificar: false, relleno: false } }
   ],
@@ -537,7 +621,7 @@ const DATOS = {
       clave: "Muestra cómo varias condiciones se cruzan y cierran casi todo a la vez.",
       resp: { pasaporte: "no", ascendencia: "no", edad: "hasta35", formacion: "universitario", egreso: "mas3", cuidados: "si", ahorros: "bajo", oferta: "no", remoto: "no", propia: "no", investigar: "interes", practicas: "no", estudiar: "si" },
       notas: {
-        cuidados: "Tener a su hijo a cargo cierra vías que no contemplan a quienes cuidan.",
+        cuidados: "Tener a su hijo a cargo pesa en las vías que no contemplan a quienes cuidan: Vacaciones y Trabajo no le permite viajar con él.",
         estudiar: "Le interesa estudiar, pero la vía pide capital económico." } }
   ]
 };

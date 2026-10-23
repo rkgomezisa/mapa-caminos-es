@@ -28,7 +28,7 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
 | `verificar.js` | Valida `datos.js` y comprueba los tres recorridos de ejemplo. También corre en GitHub Actions. |
 | `README.md` | Guía para el grupo: editar desde la web de GitHub. |
 
-- **Reglas de las vías** (en `datos.js`): `{ si, resultado, condicion, motivo }`. `si` puede ser una condición o una lista de condiciones (todas tienen que cumplirse). Los resultados posibles son `cierra`, `depende`, `noInteresa`, `nota` y `oculta`. Prioridad: oculta > cerrada > noInteresa > depende > abierta.
+- **Reglas de las vías** (en `datos.js`): `{ si, resultado, condicion, motivo }`. `si` puede ser una condición o una lista de condiciones (todas tienen que cumplirse). Los resultados posibles son `cierra`, `depende`, `noInteresa`, `nota`, `advierte` y `oculta`. Prioridad: oculta > cerrada > noInteresa > depende > abierta. `nota` y `advierte` no cambian el estado: `advierte` muestra «⚠ Antes de avanzar, revisá» con algo que la persona tiene que chequear por su cuenta (un dato no oficial, un monto que acorta la estancia, una limitación con personas a cargo). Una regla `advierte` sin `si` se muestra siempre.
 - **Cifras:** `{nombre}` dentro de cualquier texto se reemplaza por `DATOS.cifras.nombre`.
 - **Lógica duplicada:** `cumple()` y `evaluar()` existen en `index.html` y copiadas en `verificar.js`. Si cambiás la lógica, actualizá las dos.
 
@@ -44,7 +44,11 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
    - proyectado y grabado.
 6. **Accesibilidad:** contraste adecuado en tema claro y oscuro, todo navegable con teclado, foco visible, y el estado nunca se comunica solo con color (siempre ícono + texto).
 7. **Mostrá el cambio:** si el cambio es visual, revisalo en ancho de celular (375 px) y de escritorio antes de abrir el PR. Chromium y Playwright están disponibles en el entorno.
-8. **Contenido legal o de cifras:** no inventes requisitos, montos ni fechas. Si falta un dato, marcá la ficha con `verificar: true` o dejá `relleno: true` y avisá en el PR. Las decisiones de contenido las toma el grupo.
+8. **Contenido legal o de cifras:** no inventes requisitos, montos ni fechas.
+   - **Si una fuente oficial confirma que un dato está mal y dice cuál es el correcto**, corregilo y citá la fuente en un comentario arriba.
+   - **Si no se pudo confirmar**, escribí `[verificar]` al lado de ese dato (por ejemplo, `"Fondos de {vyt_fondos} [verificar]"`). No marques con `[verificar]` un dato que ya sabés que está mal.
+   - `verificar: true` marca la ficha entera: usalo solo si no se sabe qué dato hay que revisar. `relleno: true` marca contenido provisorio.
+   - Avisá en el PR qué corregiste y qué quedó marcado. Las decisiones de contenido (qué mostrar, cómo se abre o se cierra una vía) las toma el grupo.
 
 ## Flujo de trabajo
 

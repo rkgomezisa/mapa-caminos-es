@@ -45,7 +45,7 @@ function cumple(si, resp) {
   return lista(si).every(c => resp[c.pregunta] !== undefined && c.es.includes(resp[c.pregunta]));
 }
 function evaluar(via, resp) {
-  const r = { via, cierres: [], depende: [], notas: [] };
+  const r = { via, cierres: [], depende: [], notas: [], advertencias: [] };
   let oculta = false, noInt = false;
   for (const g of via.reglas || []) {
     if (!cumple(g.si, resp)) continue;
@@ -54,6 +54,7 @@ function evaluar(via, resp) {
     else if (g.resultado === "depende") r.depende.push(g);
     else if (g.resultado === "noInteresa") noInt = true;
     else if (g.resultado === "nota") r.notas.push(g);
+    else if (g.resultado === "advierte") r.advertencias.push(g);
   }
   r.estado = oculta ? "oculta" : r.cierres.length ? "cerrada" : noInt ? "noInteresa" : r.depende.length ? "depende" : "abierta";
   return r;
@@ -67,7 +68,7 @@ for (const k of ["cifras", "textos", "condiciones", "preguntas", "vias", "siempr
 if (errores.length) terminar();
 
 // textos de las pantallas de inicio, ejemplos y explorar
-for (const k of ["avisoDato", "avisoDatos1", "avisoDatosN", "avisoFicha", "avisoRelleno", "inicioTitulo", "inicioBajada", "inicioPrivacidad", "ejemplosTitulo", "ejemplosBajada", "explorarTitulo", "explorarBajada", "explorarTituloVias", "explorarPesan", "explorarCierran", "explorarDependen"]) {
+for (const k of ["advertenciaTitulo", "advertenciaCorta", "advertenciaEtiqueta", "avisoDato", "avisoDatos1", "avisoDatosN", "avisoFicha", "avisoRelleno", "inicioTitulo", "inicioBajada", "inicioPrivacidad", "ejemplosTitulo", "ejemplosBajada", "explorarTitulo", "explorarBajada", "explorarTituloVias", "explorarPesan", "explorarCierran", "explorarDependen"]) {
   if (!D.textos[k]) error(`Falta el texto "${k}" en textos.`);
 }
 for (const k of ["cuestionario", "ejemplos", "explorar"]) {
@@ -77,7 +78,7 @@ for (const k of ["cuestionario", "ejemplos", "explorar"]) {
 
 const preguntas = Object.fromEntries(D.preguntas.map(q => [q.id, q]));
 const valores = id => (preguntas[id]?.opciones || []).map(o => o.valor);
-const RESULTADOS = ["cierra", "depende", "noInteresa", "nota", "oculta"];
+const RESULTADOS = ["cierra", "depende", "noInteresa", "nota", "oculta", "advierte"];
 const CAMPOS_FICHA = ["que", "requisitos", "sirve", "noPermite", "tramite", "fuente", "vigencia"];
 
 // ids repetidos
@@ -105,6 +106,10 @@ D.vias.forEach(v => {
       if (!g.condicion) error(`${donde}: una regla "${g.resultado}" tiene que nombrar la condición del entorno.`);
       lista(g.condicion).forEach(c => { if (!D.condiciones[c]) error(`${donde}: la condición "${c}" no existe.`); });
       if (!g.motivo) error(`${donde}: falta el motivo.`);
+    }
+    if (g.resultado === "advierte") {
+      if (!g.motivo) error(`${donde}: una advertencia necesita el texto en "motivo".`);
+      lista(g.condicion).forEach(c => { if (!D.condiciones[c]) error(`${donde}: la condición "${c}" no existe.`); });
     }
   });
   const f = v.ficha;
@@ -159,9 +164,11 @@ const ESPERADO = {
     cerradaPor: { nomada: "informalidad", vyt: "capital_economico" },
     abiertaSiCambia: { cambio: { ahorros: "alto" }, via: "vyt" }
   },
-  C: { // Romina: se le cierra casi todo a la vez, llega a la hoja final
+  C: { // Romina: se le cierra casi todo a la vez, llega a la hoja final.
+       // VyT se cierra por ahorros; tener un hijo a cargo aparece como advertencia (no puede viajar con él).
     maxAbiertas: 0,
-    cerradaPor: { vyt: "cuidados", ue: "ascendencia" }
+    cerradaPor: { vyt: "capital_economico", ue: "ascendencia" },
+    advertidaPor: { vyt: "cuidados" }
   }
 };
 
@@ -184,6 +191,10 @@ Object.entries(ESPERADO).forEach(([id, esp]) => {
     const r = estadoDe(m, v);
     if (!r || r.estado !== "cerrada") error(`${quien}: "${v}" tendría que estar cerrada y está ${r ? r.estado : "ausente"}.`);
     else if (!condicionesDe(r).includes(cond)) error(`${quien}: "${v}" tendría que cerrarse por "${cond}" y se cierra por ${condicionesDe(r).join(", ")}.`);
+  });
+  Object.entries(esp.advertidaPor || {}).forEach(([v, cond]) => {
+    const r = estadoDe(m, v);
+    if (!r || !r.advertencias.some(g => lista(g.condicion).includes(cond))) error(`${quien}: "${v}" tendría que mostrar una advertencia por "${cond}".`);
   });
   if (esp.abiertaSiCambia) {
     const r = estadoDe(mapa({ ...p.resp, ...esp.abiertaSiCambia.cambio }), esp.abiertaSiCambia.via);
