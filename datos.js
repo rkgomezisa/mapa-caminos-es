@@ -291,6 +291,10 @@ const DATOS = {
         // plazo de resolución de 2 meses, con silencio negativo.
         { si: { pregunta: "ascendencia", es: ["padre", "nose"] }, resultado: "advierte",
           motivo: "Las partidas y el certificado de antecedentes argentinos tienen que estar apostillados. Si no te contestan en 2 meses, la solicitud se entiende denegada." },
+        // RD 1155/2024, art. 95.3: dura 5 años o el periodo previsto de residencia en España del familiar
+        // español, si es menor. No queda claro cómo se aplica si el padre o la madre no vive en España.
+        { si: { pregunta: "ascendencia", es: ["padre", "nose"] }, resultado: "advierte",
+          motivo: "La residencia puede durar menos de 5 años si tu padre o tu madre va a vivir en España por menos tiempo. Preguntalo en el consulado al presentar la solicitud." },
         // Fuente: Consulado de Córdoba, «Nacionalidad española - Opción» (octubre 2026)
         { si: { pregunta: "ascendencia", es: ["padre"] }, resultado: "nota",
           motivo: "Si tu padre o tu madre es español/a de origen y nació en España, también podés pedir la nacionalidad española por opción, a cualquier edad. Se inicia en el Consulado General de España en Córdoba." } ],
@@ -342,9 +346,11 @@ const DATOS = {
         // No se encontró ningún acto posterior que fije un cupo para 2026 (búsqueda de octubre de 2026). Ojo: la
         // disposición final segunda de la orden permite revisarla dentro de los 6 meses de su entrada en vigor y
         // cambiar «el número de visados para búsqueda de empleo previstos»; no se pudo confirmar en el buscador
-        // del BOE que no haya habido una orden de revisión.
+        // del BOE que no haya habido una orden de revisión (de ahí la advertencia).
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "depende", condicion: "convocatoria",
           motivo: "Se abre si la orden anual fija un cupo de visados. La de 2026 no fijó ninguno." },
+        { si: { pregunta: "ascendencia", es: ["padre", "abuelo", "nose"] }, resultado: "advierte",
+          motivo: "La orden de cada año se puede revisar a mitad de año y sumar un cupo de estos visados. Antes de descartar esta vía, buscá en el BOE si salió una orden nueva o preguntá en el consulado." },
         // Código Civil, art. 22.2.f: 1 año de residencia para «el nacido fuera de España de padre o madre, abuelo
         // o abuela, que originariamente hubieran sido españoles». Para el resto de las personas argentinas son
         // 2 años de residencia legal (art. 22.1). Cotejado en el BOE (texto consolidado) el 23/10/2026.
@@ -396,6 +402,14 @@ const DATOS = {
         // hijos o nietos de español de origen.
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "nota", condicion: "ascendencia",
           motivo: "Como tu padre, madre, abuelo o abuela es español/a de origen, el empleador no tiene que demostrar que no encontró candidatos en España." },
+        // RD 1155/2024, art. 73.1: el límite de ocupación y comunidad autónoma no se aplica cuando no corre
+        // la situación nacional de empleo (LO 4/2000, art. 40.1.h: hijos o nietos de español de origen).
+        { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "advierte",
+          motivo: "Si tu padre, madre, abuelo o abuela es español/a de origen, el primer permiso no debería quedar atado a una ocupación ni a una comunidad autónoma. Confirmá que tu autorización lo diga así." },
+        // Consulado de Córdoba (23/10/2026): alta en la Seguridad Social dentro de 3 días desde la entrada.
+        // RD 1155/2024, art. 73.1: dentro de 3 meses desde la entrada legal. Las fuentes no coinciden.
+        { resultado: "advierte",
+          motivo: "El plazo para darte de alta en la Seguridad Social cuando llegás no está claro: el consulado dice 3 días y el reglamento, 3 meses. Acordá con quien te contrata hacerlo apenas llegues." },
         // Hoja 12 de Inclusión (mayo de 2025): el trabajador tiene que tener la cualificación que exige la
         // profesión, «homologada en su caso».
         { resultado: "advierte", condicion: "formacion",
@@ -417,7 +431,7 @@ const DATOS = {
         // se limita a una ocupación y a una comunidad autónoma. Art. 81: la renovación dura 4 años y permite
         // cualquier actividad en todo el país. Cotejados en el BOE el 23/10/2026. Ojo: el art. 73.1 exceptúa
         // del límite de ocupación y comunidad autónoma los casos sin situación nacional de empleo (por ejemplo,
-        // hijos y nietos de español de origen, LO 4/2000 art. 40.1.h). Si se muestra o no, lo decide el grupo.
+        // hijos y nietos de español de origen, LO 4/2000 art. 40.1.h): se avisa con una regla «advierte».
         noPermite: "No es un visado para buscar trabajo: sin una oferta no se puede pedir. El primer permiso dura hasta 1 año y queda atado a una ocupación y a una comunidad autónoma. Recién al renovarlo podés trabajar en cualquier actividad y lugar.",
         // Hoja 12 de Inclusión (mayo de 2025): el empleador presenta por la sede electrónica (Mercurio) ante la
         // oficina de extranjería de la provincia del centro de trabajo (RD 1155/2024, art. 77); resuelve en
@@ -425,7 +439,7 @@ const DATOS = {
         // dentro de 1 mes desde que se notifica al empleador. Consulado de Córdoba (23/10/2026): plazo de 1 mes,
         // presentación personal con cita pedida por correo electrónico, resuelve en 1 mes, el visado vale
         // 365 días si la autorización dura más de 6 meses. El consulado dice que el alta en la Seguridad Social
-        // es dentro de 3 días desde la entrada; el art. 73.1 del RD 1155/2024 dice 3 meses: no se incluye.
+        // es dentro de 3 días desde la entrada; el art. 73.1 del RD 1155/2024 dice 3 meses: va como advertencia.
         tramite: "El empleador lo pide en la oficina de extranjería de la provincia del trabajo. Si en 3 meses no contestan, se entiende denegado. Con la autorización, tenés 1 mes para pedir el visado en persona en el Consulado General de España en Córdoba, con cita que se pide por correo electrónico. El consulado resuelve en 1 mes.",
         fuente: { texto: "Hoja informativa 12 del Ministerio de Inclusión (mayo de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/autorizacion-inicial-de-residencia-temporal-y-trabajo-por-cuenta-ajena-hi-16-" },
         // Vigencia: Hoja 12 (mayo de 2025), que respalda los requisitos principales. El catálogo citado en
