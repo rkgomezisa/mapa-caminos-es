@@ -321,26 +321,52 @@ const DATOS = {
       resumen: "Visado de 12 meses para buscar trabajo, si la orden anual abre cupo.",
       reglas: [
         { si: { pregunta: "pasaporte", es: ["espanol"] }, resultado: "oculta" },
+        // Es un visado para personas que no tienen la ciudadanía de la UE. Con pasaporte UE corresponde
+        // el registro como ciudadano/a de la UE (decisión del grupo: ocultarla, igual que en «familiar»).
+        { si: { pregunta: "pasaporte", es: ["ue"] }, resultado: "oculta" },
         { si: { pregunta: "ascendencia", es: ["no"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Es para hijos, hijas, nietos y nietas de españoles de origen." },
-        { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "cierra", condicion: "ascendencia",
-          motivo: "Si no lo sabés, vale la pena preguntar en tu familia." },
-        // La orden de 2026 (Orden ISM/1547/2025, BOE 30/12/2025) solo dice que se «podrá establecer» un
-        // número de visados para hijos y nietos: no fija ninguno. 1 año para la nacionalidad: Código Civil,
-        // art. 22.2.f. Para el resto de las personas argentinas son 2 años de residencia legal (art. 22.1).
+        // Decisión del grupo: «No lo sé» no cierra la vía; se abre si aparecen los documentos (como en «familiar»).
+        { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "depende", condicion: "ascendencia",
+          motivo: "Se abre si tu padre, madre, abuelo o abuela fue español/a de origen, y si ese año hay cupo. Vale la pena preguntar en tu familia: esta vía depende de documentos que a veces nadie buscó." },
+        // RD 1155/2024, art. 44.1: la orden anual de gestión colectiva «podrá aprobar un número» de estos visados.
+        // Orden ISM/1547/2025 (GECCO 2026, BOE 30/12/2025), art. 1: el Ministerio «podrá establecer un número
+        // de visados para búsqueda de empleo» para hijos o nietos de español de origen. No fija ninguno.
+        // No se encontró ningún acto posterior que fije un cupo para 2026 (búsqueda de octubre de 2026).
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "depende", condicion: "convocatoria",
-          motivo: "Se abre si España publica la convocatoria anual con cupo. Según fuentes secundarias, en 2026 no hubo convocatoria." },
+          motivo: "Se abre si la orden anual fija un cupo de visados. La de 2026 no fijó ninguno." },
+        // Código Civil, art. 22.2.f: 1 año de residencia para «el nacido fuera de España de padre o madre, abuelo
+        // o abuela, que originariamente hubieran sido españoles». Para el resto de las personas argentinas son
+        // 2 años de residencia legal (art. 22.1). Texto leído en una reproducción: falta cotejarlo en el BOE (PR #12).
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "nota",
-          motivo: "Los descendientes de españoles de origen pueden pedir la nacionalidad con 1 año de residencia legal." } ],
+          motivo: "Si tu padre, madre, abuelo o abuela fue español/a de origen y vos naciste fuera de España, podés pedir la nacionalidad con 1 año de residencia legal." },
+        // Consulado General de España en Córdoba, «Ley de Memoria Democrática» (aviso del 13/06/2025):
+        // el plazo de la disposición adicional octava de la Ley 20/2022 cerró el 22/10/2025.
+        { si: { pregunta: "ascendencia", es: ["padre", "abuelo", "nose"] }, resultado: "nota",
+          motivo: "La opción de nacionalidad por la Ley de Memoria Democrática («ley de nietos») cerró el 22 de octubre de 2025." } ],
       ficha: {
-        que: "Un visado de 12 meses para buscar trabajo en España, destinado a hijos y nietos de españoles de origen.",
-        requisitos: ["Padre, madre, abuelo o abuela español/a de origen", "Que la orden anual de gestión colectiva abra cupo"],
-        sirve: "Entrar a España y buscar trabajo durante un año.",
-        noPermite: "No sirve si ese año no hay convocatoria.",
-        // Octubre 2026: el Consulado de Córdoba no lista este visado entre sus visados nacionales.
-        tramite: "Consulado de España, cuando hay convocatoria.",
-        fuente: { texto: "Ministerio de Asuntos Exteriores de España", url: "https://www.exteriores.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: RD 1155/2024, arts. 43 y 44 (texto consolidado, última modificación
+        // 22/09/2026); Orden ISM/1547/2025 de gestión colectiva para 2026 (23/12/2025, BOE 30/12/2025);
+        // Hoja 24 de Inclusión (mayo de 2025). Los arts. 43 y 44 y la orden se leyeron en reproducciones
+        // (Conceptos Jurídicos, Legalteam, INAP) porque el BOE no se pudo abrir: falta cotejarlos (ver PR #12).
+        // RD 1155/2024, art. 43.1: permite entrar en España para buscar trabajo «durante un periodo de
+        // residencia de doce meses». Art. 44: modalidad para hijos o nietos de español de origen.
+        que: "Un visado para vivir 12 meses en España buscando trabajo, destinado a hijos, hijas, nietos y nietas de españoles de origen (Real Decreto 1155/2024).",
+        // Art. 44.1 y 44.2: el número de visados, la selección y la forma de presentar la solicitud los fija
+        // la orden anual. Art. 43.3: requisitos del art. 38 (no se pudo leer) y los que fije la orden.
+        requisitos: ["Padre, madre, abuelo o abuela español/a de origen", "Que la orden anual de gestión colectiva fije un cupo de visados", "Los demás requisitos y cómo se elige a quienes lo reciben los fija la orden de cada año [verificar]"],
+        // Art. 43.1, 43.4 y 43.5: con contrato, el empleador pide la autorización de residencia y trabajo sin
+        // necesidad de otro visado; se resuelve en 10 días y hay 1 mes para el alta en la Seguridad Social.
+        // Art. 44.1: exentos de la valoración de la situación nacional de empleo.
+        sirve: "Vivir en España 12 meses buscando trabajo. Si conseguís contrato, la autorización se tramita desde allá, sin volver por otro visado, y quien te contrata no tiene que demostrar que no encontró a alguien en España.",
+        noPermite: "No es un permiso de trabajo: para trabajar necesitás un contrato, y la autorización la pide quien te contrata. Tampoco es la nacionalidad. Si ese año la orden no fija cupo, el visado no existe.",
+        // Art. 44.2: la orden regula «las fórmulas de presentación de las solicitudes». En el piloto de 2019 para
+        // Argentina la inscripción fue en línea (nota de prensa de Inclusión, 19/03/2019).
+        // Octubre 2026: la hoja de tasas del Consulado de Córdoba no lista este visado. La página de visados
+        // nacionales del Consulado de Córdoba no se pudo abrir: queda pendiente (ver PR #12).
+        tramite: "Lo define la orden de cada año: cómo se elige a las personas y dónde se presenta la solicitud. En la prueba piloto de 2019 para Argentina, se hizo en línea. Hoy el Consulado de Córdoba no lo ofrece [verificar].",
+        fuente: { texto: "Real Decreto 1155/2024, arts. 43 y 44 (y Orden ISM/1547/2025, diciembre de 2025)", url: "https://www.boe.es/buscar/act.php?id=BOE-A-2024-24099" },
+        vigencia: "Diciembre de 2025", verificar: false, relleno: false } },
 
     { id: "cuenta_ajena", nombre: "Trabajo por cuenta ajena", corto: "Cuenta ajena",
       resumen: "Trabajar en relación de dependencia para un empleador en España.",
