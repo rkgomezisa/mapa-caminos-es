@@ -371,18 +371,49 @@ const DATOS = {
     { id: "cuenta_ajena", nombre: "Trabajo por cuenta ajena", corto: "Cuenta ajena",
       resumen: "Trabajar en relación de dependencia para un empleador en España.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre con una oferta de un empleador en España. Es más simple si tu ocupación está en el Catálogo de Ocupaciones de Difícil Cobertura." },
+        // Catálogo de Ocupaciones de Difícil Cobertura del 3.er trimestre de 2026 (Resolución del SEPE del
+        // 3/8/2026, BOE-A-2026-18504, 2/9/2026): 27 ocupaciones, de marina mercante, deportes y oficios
+        // (carpintería metálica, electricidad, grúas). Ninguna pide título universitario. Lo publica el SEPE
+        // cada trimestre (RD 1155/2024, art. 75).
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: ["mercado", "redes"],
+          motivo: "Se abre con una oferta de un empleador en España. El trámite es más simple si tu ocupación está en el Catálogo de Ocupaciones de Difícil Cobertura, pero hoy el catálogo tiene oficios y puestos de marina mercante, no profesiones universitarias." },
+        // Hoja 12 de Inclusión (mayo de 2025) y RD 1155/2024, art. 75: fuera del catálogo, el empleador publica
+        // la oferta en el servicio público de empleo (8 días) y acredita que no pudo cubrir el puesto.
         { si: { pregunta: "oferta", es: ["oferta"] }, resultado: "nota",
-          motivo: "Si tu ocupación no está en el Catálogo de Difícil Cobertura, el empleador tiene que acreditar que no encontró candidatos disponibles." } ],
+          motivo: "Si tu ocupación no está en el Catálogo de Difícil Cobertura, el empleador primero publica la oferta en el servicio público de empleo y tiene que acreditar que no encontró candidatos disponibles en España." },
+        // Ley Orgánica 4/2000, art. 40.1.h: no se tiene en cuenta la situación nacional de empleo para
+        // hijos o nietos de español de origen.
+        { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "nota", condicion: "ascendencia",
+          motivo: "Como tu padre, madre, abuelo o abuela es español/a de origen, el empleador no tiene que demostrar que no encontró candidatos en España." },
+        // Hoja 12 de Inclusión (mayo de 2025): el trabajador tiene que tener la cualificación que exige la
+        // profesión, «homologada en su caso».
+        { resultado: "advierte", condicion: "formacion",
+          motivo: "Si tu profesión está regulada en España (por ejemplo, en salud, psicología, abogacía o algunas ingenierías), vas a necesitar el título homologado. Averiguá cuánto tarda antes de buscar la oferta." } ],
       ficha: {
-        que: "La autorización de residencia y trabajo para una persona contratada por un empleador en España.",
-        requisitos: ["Oferta de trabajo de un empleador en España", "Vía simplificada si la ocupación está en el Catálogo de Difícil Cobertura", "Si no, vía general: el empleador acredita que no hay candidatos disponibles"],
+        // Hoja 12 de Inclusión (mayo de 2025): la pide el empleador para contratar a una persona extranjera
+        // por más de 90 días y menos de 5 años.
+        que: "La autorización de residencia y trabajo que pide un empleador en España para contratar a una persona extranjera.",
+        // Hoja 12 de Inclusión (mayo de 2025): contrato firmado por las dos partes; situación nacional de
+        // empleo (catálogo o acreditación del empleador); cualificación homologada si la profesión lo exige;
+        // para el visado, antecedentes penales y certificado médico. El empleador, además, tiene que estar al
+        // día con Hacienda y la Seguridad Social y tener solvencia.
+        requisitos: ["Contrato u oferta firmada con un empleador en España", "Vía simplificada si la ocupación está en el Catálogo de Difícil Cobertura", "Si no, vía general: el empleador acredita que no hay candidatos disponibles en España", "Si tu profesión está regulada en España, el título homologado", "Antecedentes penales y certificado médico, apostillados"],
         sirve: "Trabajar en relación de dependencia.",
-        noPermite: "Contenido provisorio.",
-        tramite: "El empleador inicia el trámite en España; después, visado en el Consulado General de España en Córdoba.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // RD 1155/2024, art. 73: la autorización inicial dura lo que la actividad, con un máximo de 1 año, y
+        // se limita a una ocupación y a una comunidad autónoma. Art. 81: la renovación dura 4 años y permite
+        // cualquier actividad en todo el país. Leídos en una reproducción (Conceptos Jurídicos): el BOE no se
+        // pudo abrir desde la sesión.
+        noPermite: "No es un visado para buscar trabajo: sin una oferta no se puede pedir. El primer permiso dura hasta 1 año y queda atado a una ocupación y a una comunidad autónoma [verificar]. Recién al renovarlo podés trabajar en cualquier actividad y lugar [verificar].",
+        // Hoja 12 de Inclusión (mayo de 2025): el empleador presenta por la sede electrónica (Mercurio) ante la
+        // oficina de extranjería de la provincia del centro de trabajo (RD 1155/2024, art. 77); resuelve en
+        // 3 meses y el silencio es negativo; el trabajador pide el visado en el consulado de su demarcación
+        // dentro de 1 mes desde que se notifica al empleador. El Consulado de Córdoba lista el «Visado de
+        // trabajo por cuenta ajena» en su menú, pero su página no se pudo abrir desde la sesión.
+        tramite: "El empleador lo pide en la oficina de extranjería de la provincia del trabajo. Si en 3 meses no contestan, se entiende denegado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba [verificar].",
+        fuente: { texto: "Hoja informativa 12 del Ministerio de Inclusión (mayo de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/autorizacion-inicial-de-residencia-temporal-y-trabajo-por-cuenta-ajena-hi-16-" },
+        // Vigencia: Hoja 12 (mayo de 2025), que respalda los requisitos principales. El catálogo citado en
+        // las reglas es del 3.er trimestre de 2026.
+        vigencia: "Mayo de 2025", verificar: false, relleno: false } },
 
     { id: "tarjeta_azul", nombre: "Tarjeta Azul UE", corto: "Tarjeta Azul",
       resumen: "Para empleos cualificados con un salario mínimo fijado.",
