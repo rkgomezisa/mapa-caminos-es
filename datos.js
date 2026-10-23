@@ -277,29 +277,45 @@ const DATOS = {
       resumen: "Residencia para hijos e hijas de españoles de origen.",
       reglas: [
         { si: { pregunta: "pasaporte", es: ["espanol"] }, resultado: "oculta" },
+        // Hoja 18 de Inclusión (abril de 2026): no aplica a nacionales de la UE, el EEE o Suiza.
+        // Con pasaporte UE corresponde el registro como ciudadano/a de la UE (decisión del grupo: ocultarla).
+        { si: { pregunta: "pasaporte", es: ["ue"] }, resultado: "oculta" },
         { si: { pregunta: "ascendencia", es: ["no"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Es para hijos e hijas de españoles de origen." },
         { si: { pregunta: "ascendencia", es: ["abuelo"] }, resultado: "cierra", condicion: "ascendencia",
           motivo: "Es para hijos e hijas. Por abuelo o abuela, mirá la vía de búsqueda de empleo." },
-        { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "cierra", condicion: "ascendencia",
-          motivo: "Si no lo sabés, vale la pena preguntar en tu familia: esta vía depende de documentos que a veces nadie buscó." },
+        // Decisión del grupo: «No lo sé» no cierra la vía; se abre si aparecen los documentos.
+        { si: { pregunta: "ascendencia", es: ["nose"] }, resultado: "depende", condicion: "ascendencia",
+          motivo: "Se abre si tu padre o tu madre es o fue español/a de origen. Vale la pena preguntar en tu familia: esta vía depende de documentos que a veces nadie buscó." },
+        // Hoja 18 de Inclusión (abril de 2026): documentos extranjeros apostillados o legalizados y traducidos;
+        // plazo de resolución de 2 meses, con silencio negativo.
+        { si: { pregunta: "ascendencia", es: ["padre", "nose"] }, resultado: "advierte",
+          motivo: "Las partidas y el certificado de antecedentes argentinos tienen que estar apostillados. Si no te contestan en 2 meses, la solicitud se entiende denegada." },
         // Fuente: Consulado de Córdoba, «Nacionalidad española - Opción» (octubre 2026)
         { si: { pregunta: "ascendencia", es: ["padre"] }, resultado: "nota",
           motivo: "Si tu padre o tu madre es español/a de origen y nació en España, también podés pedir la nacionalidad española por opción, a cualquier edad. Se inicia en el Consulado General de España en Córdoba." } ],
       ficha: {
+        // Revisada el 23/10/2026 contra la Hoja 18 de Inclusión (última actualización: abril de 2026), que
+        // cita los arts. 93 a 98 del RD 1155/2024, y la página del Consulado de Buenos Aires sobre el visado
+        // de residencia de familiares de españoles (sin fecha, consultada en octubre de 2026).
+        // La página del Consulado de Córdoba no se pudo abrir: queda pendiente (ver PR #12).
         que: "Una autorización de residencia para familiares de personas con nacionalidad española, prevista en el nuevo reglamento de extranjería (Real Decreto 1155/2024).",
-        requisitos: ["Padre o madre español/a de origen", "Documentación que acredite el vínculo"],
-        sirve: "Residir y trabajar en España.",
-        noPermite: "Contenido provisorio.",
-        // Hoja 18 de Inclusión (abril de 2026): si la persona y su familiar español están fuera de España,
-        // la solicitud la presenta la persona en el consulado; es gratuita.
-        // Desde Argentina, la solicitud se presenta en el consulado, que le pide a la oficina de extranjería
-        // que resuelva la autorización (RD 1155/2024, art. 41.3). El visado es gratuito y vale 365 días
-        // (Consulado de Córdoba, oct. 2026). La autorización dura 5 años y permite trabajar en cualquier
-        // sector y lugar de España (art. 95). Los hijos de españoles de origen no necesitan convivir (art. 93).
-        tramite: "Consulado General de España en Córdoba. La solicitud es gratuita y la autorización la resuelve la oficina de extranjería en España.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Hoja 18: «Los hijos y las hijas cuyo padre o madre sean o hubieran sido españoles de origen»; son la
+        // única categoría que no tiene que convivir. Antecedentes penales de los últimos 5 años; no ser de la
+        // UE, el EEE ni Suiza; documentos apostillados o legalizados. No menciona medios económicos ni seguro.
+        // Consulado de Buenos Aires: certificado médico (Reglamento Sanitario Internacional de 2005).
+        requisitos: ["Padre o madre que sea o haya sido español/a de origen", "Partidas que acrediten el vínculo, apostilladas", "Certificado de antecedentes penales de los últimos 5 años", "Certificado médico", "No tener nacionalidad de un país de la UE"],
+        // Hoja 18: validez de 5 años; derecho a residir y trabajar por cuenta ajena o propia, en cualquier
+        // sector y en todo el territorio.
+        sirve: "Residir y trabajar en España durante 5 años, por cuenta ajena o propia, en cualquier sector y lugar. No pide ahorros ni seguro médico.",
+        noPermite: "No es la nacionalidad española: es una residencia por 5 años. No alcanza a nietos y nietas.",
+        // Hoja 18: si la persona y su familiar están fuera de España, la persona presenta la solicitud en el
+        // consulado; es gratuita. Resolución en 2 meses (silencio negativo); visado dentro del mes siguiente;
+        // TIE dentro del mes desde la entrada. Consulado de Buenos Aires: visado gratuito, válido por 365 días.
+        // Falta confirmar ese dato en la página del Consulado de Córdoba.
+        tramite: "Consulado General de España en Córdoba. La solicitud es gratuita y la autorización la resuelve la oficina de extranjería en España. Resuelven en 2 meses; después tenés 1 mes para pedir el visado (gratuito, vale 365 días [verificar]) y 1 mes desde que llegás para tramitar la TIE.",
+        fuente: { texto: "Hoja 18 de Inclusión: residencia de familiares de personas con nacionalidad española (abril de 2026)", url: "https://inclusion.gob.es/web/migraciones/w/18.-autorizacion-de-residencia-temporal-de-familiares-de-personas-con-nacionalidad-espanola" },
+        vigencia: "Abril de 2026", verificar: false, relleno: false } },
 
     { id: "nietos", nombre: "Búsqueda de empleo para hijos y nietos de españoles", corto: "Búsqueda de empleo",
       resumen: "Visado de 12 meses para buscar trabajo, si la orden anual abre cupo.",
