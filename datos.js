@@ -351,14 +351,14 @@ const DATOS = {
         // RD 1155/2024, art. 44.1: la orden anual de gestión colectiva «podrá aprobar un número» de estos visados.
         // Orden ISM/1547/2025 (GECCO 2026, BOE 30/12/2025), art. 1: el Ministerio «podrá establecer un número
         // de visados para búsqueda de empleo» para hijos o nietos de español de origen. No fija ninguno.
-        // No se encontró ningún acto posterior que fije un cupo para 2026 (búsqueda de octubre de 2026). Ojo: la
-        // disposición final segunda de la orden permite revisarla dentro de los 6 meses de su entrada en vigor y
-        // cambiar «el número de visados para búsqueda de empleo previstos»; no se pudo confirmar en el buscador
-        // del BOE que no haya habido una orden de revisión (de ahí la advertencia).
+        // La disposición final segunda de la orden permitía revisarla dentro de los 6 meses de su entrada en vigor
+        // (01/01/2026) y cambiar «el número de visados para búsqueda de empleo previstos». La ficha de la orden en
+        // el BOE (BOE-A-2025-27014, leída el 24/10/2026) no tiene referencias posteriores: no hubo revisión y el
+        // plazo venció. Antes la advertencia decía que se podía revisar a mitad de año.
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo"] }, resultado: "depende", condicion: "convocatoria",
           motivo: "Se abre si la orden anual fija un cupo de visados. La de 2026 no fijó ninguno." },
         { si: { pregunta: "ascendencia", es: ["padre", "abuelo", "nose"] }, resultado: "advierte",
-          motivo: "La orden de cada año se puede revisar a mitad de año y sumar un cupo de estos visados. Antes de descartar esta vía, buscá en el BOE si salió una orden nueva o preguntá en el consulado." },
+          motivo: "La orden de 2026 no fijó cupo y ya pasó el plazo para revisarla. Cada año sale una orden nueva: antes de descartar esta vía, buscá en el BOE si la del año próximo abre cupo o preguntá en el consulado." },
         // Código Civil, art. 22.2.f: 1 año de residencia para «el nacido fuera de España de padre o madre, abuelo
         // o abuela, que originariamente hubieran sido españoles». Para el resto de las personas argentinas son
         // 2 años de residencia legal (art. 22.1). Cotejado en el BOE (texto consolidado) el 23/10/2026.
@@ -485,9 +485,10 @@ const DATOS = {
       ficha: {
         // Revisada el 23/10/2026 contra: nota de la UGE «Umbral salarial» (junio de 2026); Hoja 66 de Inclusión
         // (última actualización: mayo de 2025); página del Consulado de Buenos Aires «Visado para trabajador
-        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página
-        // del mismo visado en el Consulado de Córdoba (aparece en el menú, sin contenido), el texto de la
-        // Ley 14/2013 en el BOE (art. 71 bis) ni la Directiva (UE) 2021/1883 en EUR-Lex.
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). Después se leyeron (23/10/2026,
+        // PR #13): la página del mismo visado en el Consulado de Córdoba (releída el 24/10/2026: en persona, con
+        // cita por mail; resuelve en 10 días; visado de 1 año), el art. 71 bis de la Ley 14/2013 en el BOE y la
+        // Directiva (UE) 2021/1883 en EUR-Lex.
         // Hoja 66: es una de las dos modalidades de la autorización para profesionales altamente cualificados
         // (la otra es la nacional, vía «hq»).
         que: "Una autorización de residencia y trabajo, común a la Unión Europea, para puestos de alta cualificación.",
@@ -543,9 +544,10 @@ const DATOS = {
       ficha: {
         // Revisada el 23/10/2026 contra: nota de la UGE «Umbral salarial» (junio de 2026); Hoja 66 de Inclusión
         // (última actualización: mayo de 2025); página del Consulado de Buenos Aires «Visado para trabajador
-        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página
-        // del mismo visado en el Consulado de Córdoba (aparece en el menú, sin contenido) ni el art. 71 de la
-        // Ley 14/2013 en el BOE.
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). Después se leyeron (23/10/2026,
+        // PR #13): la página del mismo visado en el Consulado de Córdoba (releída el 24/10/2026) y el art. 71 de
+        // la Ley 14/2013 en el BOE. Ni la página de la UGE «Profesionales altamente cualificados» ni su
+        // documentación orientativa (leídas el 24/10/2026) dicen si hace falta homologar el título.
         // Hoja 66: es la otra modalidad de la autorización para profesionales altamente cualificados (la primera
         // es la Tarjeta Azul UE). Pide menos formación, y la nota de la UGE dice que no tiene umbral reducido.
         que: "La autorización nacional española para profesionales en puestos cualificados. Pide menos formación que la Tarjeta Azul, pero no tiene umbral reducido.",
@@ -603,17 +605,17 @@ const DATOS = {
         // Revisada el 23/10/2026 contra: tríptico de la UGE «Traslado intraempresarial. Ciudadanos no UE» (sin
         // fecha; NIPO 720-16-209-1, depósito legal M-26544-2016); página de la UGE «Trabajadores que efectúen
         // movimientos intraempresariales» (sin fecha); página del Consulado de Buenos Aires «Visado para trabajador
-        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página del
-        // mismo visado en el Consulado de Córdoba, los arts. 73 a 76 de la Ley 14/2013 en el BOE (última
-        // modificación: 09/04/2025) ni el PDF oficial del Criterio de gestión DGGM 2/2025.
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). Después se leyeron (23 y
+        // 24/10/2026): la página del mismo visado en el Consulado de Córdoba, los arts. 73 a 76 de la Ley 14/2013
+        // en el BOE (última modificación: 09/04/2025) y el PDF oficial del Criterio de gestión DGGM 2/2025.
         que: "Un permiso para que la empresa en la que ya trabajás te traslade a una sede o filial de su grupo en España. Hay una modalidad para puestos de dirección, especialistas y personas en formación, y otra nacional para otros casos.",
         // Art. 73.2 de la Ley 14/2013 (BOE, texto consolidado al 09/04/2025): 3 meses de relación previa y
         // continuada con el grupo; titulación de nivel 1 del MECES o 3 años de experiencia. Tríptico de la UGE:
         // titulación superior o equivalente, o 3 años de experiencia; lo pide la empresa; seguro médico;
         // certificado de antecedentes penales; no ser de la UE, el EEE ni Suiza.
         requisitos: ["3 meses o más trabajando en la empresa o el grupo", "Título de educación superior o 3 años de experiencia profesional", "Que la empresa decida trasladarte y lo pida", "Seguro médico", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
-        // Familia: tríptico de la UGE y Consulado de Buenos Aires. No se afirma la movilidad a otros países de la
-        // UE (solo ICT‑UE, según el tríptico): falta confirmarla en la ley vigente.
+        // Familia: tríptico de la UGE y Consulado de Buenos Aires. No se muestra la movilidad a otros países de
+        // la UE: la Ley 14/2013, art. 73.3 (BOE, leído el 24/10/2026), la da solo en la modalidad ICT UE.
         sirve: "Trabajar en la sede española de tu empresa durante el traslado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
         // Tríptico de la UGE: la autorización dura lo que el traslado, hasta 2 años renovables, con un máximo de
         // 3 años (directivos y especialistas) y 1 año (trabajadores en formación). El Criterio DGGM 2/2025
@@ -625,9 +627,9 @@ const DATOS = {
         // para retirarlo. Consulado de Córdoba (leída el 23/10/2026): en persona, con cita pedida por correo.
         tramite: "La empresa lo pide en la Unidad de Grandes Empresas, que resuelve en 20 días. Con la autorización, pedís el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
         fuente: { texto: "Unidad de Grandes Empresas: tríptico «Traslado intraempresarial» y Consulado de Buenos Aires", url: "https://www.inclusion.gob.es/documents/1823432/1826080/triptico-traslado-empresarial-ESP.pdf/72ee37b3-6a4a-3722-2a88-70501ed4aef2?t=1664798332880" },
-        // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento más reciente sobre la duración. No
-        // leído en el PDF oficial de la UGE el 23/10/2026. El tríptico de la UGE, que respalda el resto, no
-        // tiene fecha (depósito legal de 2016).
+        // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento más reciente sobre la duración
+        // (PDF oficial de la UGE, leído el 24/10/2026). El tríptico de la UGE, que respalda el resto, no tiene
+        // fecha (depósito legal de 2016).
         vigencia: "Julio de 2025", verificar: false, relleno: false } },
 
     { id: "nomada", nombre: "Nómada digital", corto: "Nómada digital",
