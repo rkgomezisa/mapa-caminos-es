@@ -812,28 +812,50 @@ const DATOS = {
     { id: "investigador", nombre: "Investigador/a", corto: "Investigación",
       resumen: "Para investigar en una universidad, centro de I+D o empresa.",
       reglas: [
+        // Hoja 68 de Inclusión (agosto de 2026): no aplica a nacionales de la UE, el EEE o Suiza. Con pasaporte UE
+        // corresponde el registro como ciudadano/a de la UE (decisión del grupo: ocultarla, igual que en
+        // Tarjeta Azul, Altamente cualificado, Traslado, Nómada digital, Emprendedor/a y Cuenta propia).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
         { si: { pregunta: "investigar", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "investigar", es: ["interes"] }, resultado: "depende", condicion: ["capital_academico", "redes"],
           motivo: "Se abre si una universidad, un centro de I+D o una empresa te acepta para investigar." },
         // Hoja 68 de Inclusión (agosto de 2026): doctorandos sin contrato, 50 % del SMI anual.
         { si: { pregunta: "investigar", es: ["si", "interes"] }, resultado: "advierte", condicion: "capital_economico",
-          motivo: "Si vas a hacer un doctorado sin contrato, pide demostrar al menos {doctorado_medios} por año ({doctorado_medios_familia} si viaja un familiar)." } ],
+          motivo: "Si vas a hacer un doctorado sin contrato, pide demostrar al menos {doctorado_medios} por año ({doctorado_medios_familia} si viaja un familiar)." },
+        // Hoja 68 de Inclusión (agosto de 2026): seguro de una aseguradora autorizada en España; no valen los de
+        // viaje ni los que tienen copagos o carencias.
+        { si: { pregunta: "investigar", es: ["si", "interes"] }, resultado: "advierte", condicion: "capital_economico",
+          motivo: "El seguro médico tiene que ser de una aseguradora autorizada en España: no sirve un seguro de viaje ni uno con copagos o carencias." },
+        // Hoja 68 de Inclusión (agosto de 2026): pueden ir la pareja, los hijos e hijas y los ascendientes a
+        // cargo, en forma conjunta, simultánea o sucesiva. Los medios suben si viaja un familiar.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a tu familia: las personas a tu cargo pueden ir con vos desde el principio o después." } ],
       ficha: {
-        // «3 años»: la autorización dura 3 años o lo que dure el convenio o contrato, si es menos
-        // (Ley 14/2013, art. 72.3). El visado del consulado dura 1 año; en España se sigue con la autorización.
-        // Doctorado como investigador: Consulado de Buenos Aires, noticia del 4/10/2026.
-        // «con trabajo pleno»: la Hoja 68 de Inclusión (agosto de 2026) dice que habilita a «residir y
-        // trabajar» para hacer actividades de investigación, desarrollo e innovación; no habla de cualquier
-        // trabajo. Al terminar, hasta 12 meses para buscar empleo o emprender (art. 72.9).
-        // Doctorado sin contrato: la Hoja 68 pide medios de al menos el 50 % del SMI anual (unos 8.547 € en
-        // 2026; 100 % si viaja un familiar). Y el propio estudiante puede presentar la solicitud.
+        // Hoja 68 de Inclusión (agosto de 2026): la autorización dura 3 años o lo que dure el convenio o
+        // contrato, si es menos, y habilita a residir y trabajar para hacer actividades de investigación,
+        // desarrollo e innovación (no cualquier trabajo).
         que: "Un permiso de 3 años para investigar o hacer un doctorado, con permiso de trabajo para esa actividad.",
-        requisitos: ["Aceptación de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante", "Doctorado sin contrato: medios de al menos {doctorado_medios} por año"],
-        sirve: "Investigar en España y trabajar en esa actividad.",
-        noPermite: "Contenido provisorio.",
-        tramite: "La entidad que te recibe pide la autorización en la Unidad de Grandes Empresas; después, visado en el Consulado General de España en Córdoba. Pueden viajar familiares.",
-        fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Hoja 68 de Inclusión (agosto de 2026): convenio de acogida o contrato con la entidad; doctorandos
+        // considerados investigadores (Criterio de gestión 2/2026; Consulado de Buenos Aires, noticia del
+        // 4/10/2026); medios del 50 % del SMI anual sin contrato; seguro (no de viaje); sin antecedentes
+        // penales de los últimos 2 años (más declaración responsable de 5); mayor de 18; no ser de la UE.
+        requisitos: ["Aceptación o contrato de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante", "Doctorado sin contrato: medios de al menos {doctorado_medios} por año", "Seguro médico (no de viaje)", "No tener antecedentes penales de los últimos 2 años", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
+        // Hoja 68 de Inclusión (agosto de 2026): familiares (pareja, hijos e hijas, ascendientes a cargo);
+        // renovación por 2 años; al terminar, hasta 12 meses para buscar empleo o emprender.
+        // No se muestra: si los familiares pueden trabajar. La Hoja 68 no lo dice; la Directiva (UE) 2016/801
+        // (art. 26.6) lo garantiza solo en la modalidad UE. Falta leer el art. 62 de la Ley 14/2013 en el BOE.
+        sirve: "Investigar o hacer un doctorado en España y trabajar en esa actividad. Pueden ir tu pareja, tus hijos e hijas y otros familiares a cargo. Se renueva por 2 años y, al terminar, tenés hasta 12 meses para buscar trabajo o emprender.",
+        // Hoja 68 de Inclusión (agosto de 2026): trabajo solo en la actividad investigadora; hace falta convenio
+        // o contrato; 3 años o lo que dure el convenio; para renovar, misma entidad y actividad continuada.
+        noPermite: "No es un permiso para cualquier trabajo: solo para la actividad de investigación. Sin la aceptación o el contrato de una entidad no se puede pedir. Dura 3 años, o menos si el convenio es más corto, y para renovar tenés que seguir en la misma entidad.",
+        // Hoja 68 de Inclusión (agosto de 2026): la presenta en línea la entidad (o el doctorando sin contrato)
+        // ante la UGE; resolución en 20 días hábiles con silencio positivo; con residencia en el exterior,
+        // visado en el consulado que corresponda.
+        tramite: "La entidad que te recibe pide la autorización en línea a la Unidad de Grandes Empresas. Si hacés un doctorado sin contrato, la podés pedir vos. Resuelven en 20 días hábiles: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba.",
+        fuente: { texto: "Hoja 68 de Inclusión: autorización de residencia temporal y trabajo para investigación (agosto de 2026)", url: "https://www.inclusion.gob.es/web/migraciones/w/68.-autorizacion-de-residencia-temporal-y-trabajo-para-investigacion" },
+        // Vigencia: Hoja 68 (agosto de 2026), que respalda los requisitos principales. Otra fuente: noticia del
+        // Consulado de Buenos Aires del 4/10/2026 (doctorado como investigación).
+        vigencia: "Agosto de 2026", verificar: false, relleno: false } },
 
     { id: "practicas", nombre: "Prácticas", corto: "Prácticas",
       resumen: "Para recién recibidos con un convenio de prácticas en España.",
