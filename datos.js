@@ -499,7 +499,8 @@ const DATOS = {
         // Familia: Consulado de Buenos Aires y de Córdoba (art. 62.4 de la Ley 14/2013). Movilidad: Directiva (UE)
         // 2021/1883 en EUR-Lex (leída el 23/10/2026), art. 20: hasta 90 días cada 180 en otro país sin otro permiso;
         // art. 21: tras 12 meses, se puede pedir la Tarjeta Azul en otro país (con contrato de al menos 6 meses).
-        sirve: "Trabajar en un puesto cualificado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo. Facilita moverte a otro país de la UE.",
+        // Art. 17.6: los familiares tienen acceso al mercado laboral, sin límite temporal.
+        sirve: "Trabajar en un puesto cualificado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo, y también pueden trabajar. Facilita moverte a otro país de la UE.",
         // Hoja 66 (mayo de 2025): la autorización dura 3 años o, si el contrato es más corto, lo que dure el
         // contrato más 3 meses.
         noPermite: "No es un visado para buscar trabajo: sin un contrato u oferta de al menos 6 meses no se puede pedir. Dura hasta 3 años, o lo que dure el contrato más 3 meses. Si tu profesión está regulada en España, sin el título homologado no se puede pedir.",
