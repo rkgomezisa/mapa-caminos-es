@@ -669,7 +669,7 @@ const DATOS = {
         // Revisada el 23/10/2026 contra: documentación de la UGE para teletrabajadores de carácter internacional
         // (sin fecha); preguntas frecuentes de la UGE sobre nómadas digitales (sin fecha); página del Consulado de
         // Buenos Aires «Visado de residencia para teletrabajo» (sin fecha); Criterio de gestión DGGM 2/2025
-        // (16/07/2025), leído en una copia del Colegio de Gestores de Alicante. El 24/10/2026 se leyeron en el BOE
+        // (16/07/2025; el 24/10/2026 se leyó el PDF oficial de la UGE). El 24/10/2026 se leyeron en el BOE
         // los arts. 74 bis a 74 quinquies de la Ley 14/2013 (versión consolidada): coinciden con la ficha (20 %,
         // título o 3 años de experiencia, 1 año de actividad, 3 meses de relación, visado de 1 año, autorización
         // de hasta 3 años renovable por 2).
@@ -728,8 +728,9 @@ const DATOS = {
       ficha: {
         // Revisada el 23/10/2026 contra: página «Emprendedores» de la UGE (sin fecha); «Instrucciones para realizar
         // una solicitud de la autorización de emprendedores» de la UGE (sin fecha, ~2023); Instrucción DGM 1/2023
-        // (03/04/2023), leída en una copia de mentorday.es; Criterio de gestión DGGM 2/2025 (16/07/2025), leído en
-        // una copia del Colegio de Gestores de Alicante; Consulado de Londres, «Visado para emprendedor» (29/04/2026).
+        // (03/04/2023) y Criterio de gestión DGGM 2/2025 (16/07/2025), los dos en sus PDF oficiales de Inclusión
+        // (leídos el 24/10/2026; antes, en copias de mentorday.es y del Colegio de Gestores de Alicante);
+        // Consulado de Londres, «Visado para emprendedor» (29/04/2026).
         // El 24/10/2026 se leyeron también: la página del visado en el Consulado de Córdoba (sin fecha) y los
         // arts. 61, 62, 69 y 70 de la Ley 14/2013 en el BOE (versión consolidada).
         // «3 años» y renovación por 2: Ley 14/2013, art. 69.1. Visado de 1 año: Consulado de Córdoba.
@@ -775,9 +776,10 @@ const DATOS = {
         // (o la declaración responsable, para comercio minorista y algunos servicios en locales de hasta 750 m²).
         { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "advierte", condicion: "redes",
           motivo: "Al presentar la solicitud tenés que mostrar qué licencias o permisos necesita tu actividad en España y en qué estado está cada trámite. Desde Córdoba, revisá cómo vas a gestionarlos o quién puede hacerlo allá." },
-        // Hoja 8 de Inclusión (reagrupación familiar): para reagrupar hay que haber residido al menos 1 año en
-        // España y tener autorización por al menos otro año. La autorización inicial de cuenta propia dura 1 año
-        // (Hoja 14), así que la familia no puede viajar desde el principio por esta vía.
+        // Hoja 8 de Inclusión (reagrupación familiar, mayo de 2025): para reagrupar hay que haber residido al
+        // menos 1 año en España y tener autorización por al menos otro año; las únicas excepciones son para
+        // residentes de larga duración. La autorización inicial de cuenta propia dura 1 año (Hoja 14), así que
+        // la familia no puede viajar desde el principio por esta vía.
         { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
           motivo: "Las personas a tu cargo no pueden viajar con vos desde el principio. Para reagruparlas tenés que haber vivido 1 año en España y renovar el permiso." },
         // Hoja 15 de Inclusión (mayo de 2025) y RD 1155/2024, arts. 83 y 87 (BOE, consolidado): el primer año,
@@ -788,7 +790,7 @@ const DATOS = {
       ficha: {
         // Revisada el 23/10/2026 contra: Hoja 14 de Inclusión, «Autorización inicial de residencia temporal y
         // trabajo por cuenta propia» (última actualización: mayo de 2025; cita los arts. 82 a 85 del RD 1155/2024);
-        // Hoja 15, «Renovación…» (mayo de 2025); Hoja 8, «Reagrupación familiar» (sin fecha leída). El Consulado de
+        // Hoja 15, «Renovación…» (mayo de 2025); Hoja 8, «Reagrupación familiar» (mayo de 2025). El Consulado de
         // Córdoba, «Visado de trabajo por cuenta propia» (sin fecha), y RD 1155/2024, arts. 39 y 82 a 87 (BOE,
         // consolidado): leídos el 24/10/2026.
         que: "Una autorización para vivir y trabajar de forma autónoma en España, si hoy vivís fuera.",
@@ -818,7 +820,7 @@ const DATOS = {
         tramite: "Pedís turno por mail y presentás todo en persona en el Consulado General de España en Córdoba: con la solicitud del visado se pide también la autorización. La inversión se puede acreditar, por ejemplo, con un informe de una organización de trabajadores autónomos. Extranjería resuelve en 3 meses: si no contesta, se entiende denegada. Si sale, el consulado resuelve el visado en 1 mes. Al llegar, tenés 3 meses para darte de alta en la Seguridad Social.",
         fuente: { texto: "Hoja 14 de Inclusión: autorización inicial de residencia temporal y trabajo por cuenta propia (mayo de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/autorizacion-inicial-de-residencia-temporal-y-trabajo-por-cuenta-propia" },
         // Vigencia: Hoja 14 (mayo de 2025), que respalda los requisitos principales. Otras fuentes: Hoja 15
-        // (mayo de 2025, renovación) y Hoja 8 (reagrupación, sin fecha leída).
+        // (mayo de 2025, renovación) y Hoja 8 (mayo de 2025, reagrupación).
         vigencia: "Mayo de 2025", verificar: false, relleno: false } },
     { id: "investigador", nombre: "Investigador/a", corto: "Investigación",
       resumen: "Para investigar en una universidad, centro de I+D o empresa.",
@@ -847,15 +849,16 @@ const DATOS = {
         // desarrollo e innovación (no cualquier trabajo).
         que: "Un permiso de 3 años para investigar o hacer un doctorado, con permiso de trabajo para esa actividad.",
         // Hoja 68 de Inclusión (agosto de 2026): convenio de acogida o contrato con la entidad; doctorandos
-        // considerados investigadores (Criterio de gestión 2/2026; Consulado de Buenos Aires, noticia del
-        // 4/10/2026); medios del 50 % del SMI anual sin contrato; seguro (no de viaje); sin antecedentes
+        // considerados investigadores (Criterio de gestión DGGM 2/2026, 07/08/2026, PDF oficial de la UGE;
+        // Consulado de Buenos Aires, noticia del 4/10/2026); medios del 50 % del SMI anual sin contrato; seguro (no de viaje); sin antecedentes
         // penales de los últimos 2 años (más declaración responsable de 5); mayor de 18; no ser de la UE.
         requisitos: ["Aceptación o contrato de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante", "Doctorado sin contrato: medios de al menos {doctorado_medios} por año", "Seguro médico (no de viaje)", "No tener antecedentes penales de los últimos 2 años", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
         // Hoja 68 de Inclusión (agosto de 2026), Consulado de Córdoba (leída el 24/10/2026) y Ley 14/2013,
         // arts. 62.4 y 72.3 y 72.9 (BOE, consolidada): familiares (pareja, hijos e hijas, ascendientes a cargo);
         // renovación por 2 años; al terminar, hasta 12 meses para buscar empleo o emprender.
-        // No se muestra: si los familiares pueden trabajar. Ni la Hoja 68 ni el art. 62 de la Ley 14/2013 lo
-        // dicen; la Directiva (UE) 2016/801 (art. 26.6) lo garantiza solo en la modalidad UE.
+        // No se muestra: si los familiares pueden trabajar. Ni la Hoja 68, ni el art. 62 de la Ley 14/2013, ni la
+        // documentación de la UGE para familiares, ni la Instrucción DGM 3/2018 lo dicen. La Directiva (UE)
+        // 2016/801, art. 26.6 (DOUE L 132, 21/05/2016, copia del BOE), lo garantiza solo en la modalidad UE.
         sirve: "Investigar o hacer un doctorado en España y trabajar en esa actividad. Pueden ir tu pareja, tus hijos e hijas y otros familiares a cargo. Se renueva por 2 años y, al terminar, tenés hasta 12 meses para buscar trabajo o emprender.",
         // Hoja 68 de Inclusión (agosto de 2026): trabajo solo en la actividad investigadora; hace falta convenio
         // o contrato; 3 años o lo que dure el convenio; para renovar, misma entidad y actividad continuada.
@@ -902,7 +905,8 @@ const DATOS = {
         // «pasar a trabajo»: el RD 1155/2024, art. 191 (leído en el BOE), deja pasar de «residencia temporal» a
         // residencia y trabajo sin visado; con menos de 1 año de residencia, cumpliendo todos los requisitos de
         // cuenta ajena (art. 74). Pero el art. 60.2 no nombra la autorización para prácticas entre las de
-        // residencia temporal, y ni la Hoja 21 ni la DA 18.ª lo prevén: sigue [verificar].
+        // residencia temporal, y ni la Hoja 21, ni la DA 18.ª, ni la Instrucción DGM 4/2018 (21/12/2018, PDF
+        // oficial de Inclusión) lo prevén: sigue [verificar].
         que: "Un permiso para hacer prácticas en una empresa o institución de España, con un convenio o un contrato de trabajo en prácticas. Al terminar, para quedarte a trabajar hace falta una oferta y cumplir los requisitos de cuenta ajena [verificar].",
         // Hoja 21 de Inclusión (sept. 2025): título de educación superior de los 2 años anteriores o estudios
         // en curso; convenio de prácticas o contrato de trabajo en prácticas con una entidad pública o privada;
