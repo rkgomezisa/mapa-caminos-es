@@ -41,7 +41,8 @@ const DATOS = {
     ta_salario:           "41.356,36 €/año",
     ta_reducido:           "33.085,09 €/año",
     // Profesional altamente cualificado (vía nacional): umbral único, sin reducido.
-    // Misma nota de la UGE (junio de 2026)
+    // Misma nota de la UGE (junio de 2026), apartado «PAC nacional (art. 71.2.b)». La Orden PJC/44/2026 solo
+    // regula la Tarjeta Azul, pero la UGE actualiza este umbral en la misma nota. Revisar cada junio.
     hq_salario:            "41.356,36 €/año",
     // Nómada digital: ingreso mínimo y suplementos por familiar.
     // 200 % del SMI = 2.442 € × 14 pagas ÷ 12 (Consulado de Buenos Aires y UGE, 2026)
@@ -495,9 +496,10 @@ const DATOS = {
         // grupos 1 y 2 de la CNO-2011 incluidas en el Catálogo de Ocupaciones de Difícil Cobertura (antes la
         // ficha decía solo «difícil cobertura»; hoy el catálogo no tiene profesiones universitarias).
         requisitos: ["Título superior de al menos 3 años, o 5 años de experiencia profesional (3 en los últimos 7 años, en informática)", "Contrato u oferta de al menos 6 meses", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos, o si tu ocupación es de alta cualificación y está en el Catálogo de Ocupaciones de Difícil Cobertura", "Si tu profesión está regulada en España, el título homologado", "Seguro médico y recursos suficientes para vos y tu familia", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
-        // Familia: Consulado de Buenos Aires. Movilidad a otros países de la UE: art. 71 bis.4 de la Ley 14/2013
-        // y Directiva 2021/1883, vistos solo en una transcripción no oficial (Iberley): queda [verificar].
-        sirve: "Trabajar en un puesto cualificado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo. Facilita moverte a otro país de la UE [verificar].",
+        // Familia: Consulado de Buenos Aires y de Córdoba (art. 62.4 de la Ley 14/2013). Movilidad: Directiva (UE)
+        // 2021/1883 en EUR-Lex (leída el 23/10/2026), art. 20: hasta 90 días cada 180 en otro país sin otro permiso;
+        // art. 21: tras 12 meses, se puede pedir la Tarjeta Azul en otro país (con contrato de al menos 6 meses).
+        sirve: "Trabajar en un puesto cualificado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo. Facilita moverte a otro país de la UE.",
         // Hoja 66 (mayo de 2025): la autorización dura 3 años o, si el contrato es más corto, lo que dure el
         // contrato más 3 meses.
         noPermite: "No es un visado para buscar trabajo: sin un contrato u oferta de al menos 6 meses no se puede pedir. Dura hasta 3 años, o lo que dure el contrato más 3 meses. Si tu profesión está regulada en España, sin el título homologado no se puede pedir.",
