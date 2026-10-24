@@ -53,7 +53,7 @@ const DATOS = {
     nomada_ingreso:        "2.849 €/mes",
     nomada_familiar1:      "75 % del SMI",
     nomada_familiar_extra: "25 % del SMI",
-    // IPREM anual: medios de vida de cuenta propia y de un año de estudios.
+    // IPREM anual: medios de un año de estudios (la vía de cuenta propia no fija un monto: Hoja 14, mayo de 2025).
     // Es también el primer corte de la pregunta de ahorros.
     iprem_anual:           "7.200 €",
     // Vacaciones y Trabajo: fondos, seguro y cupo anual
@@ -757,27 +757,58 @@ const DATOS = {
     { id: "cuenta_propia", nombre: "Trabajo por cuenta propia", corto: "Cuenta propia",
       resumen: "Para trabajar de forma autónoma con un plan de negocio.",
       reglas: [
+        // Hoja 14 de Inclusión (mayo de 2025), requisito 1: no ser ciudadano/a de la UE, el EEE ni Suiza. Con
+        // pasaporte UE corresponde el registro como ciudadano/a de la UE (decisión del grupo: ocultarla, igual que
+        // en Emprendedor/a, Tarjeta Azul, Altamente cualificado, Traslado y Nómada digital).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
         { si: { pregunta: "propia", es: ["no"] }, resultado: "noInteresa" },
-        // Ni el Consulado de Córdoba (oct. 2026) ni el RD 1155/2024 (art. 84) fijan un monto: piden que la
-        // inversión prevista sea suficiente. El IPREM no aparece para esta vía.
-        // Hoja 14 de Inclusión (mayo de 2025): «que la inversión prevista sea suficiente», sin monto fijo.
+        // Hoja 14 de Inclusión (mayo de 2025): «que la inversión prevista sea suficiente», sin monto fijo. Ni el
+        // RD 1155/2024 (art. 84) ni la Hoja nombran el IPREM para esta vía.
         { resultado: "advierte", condicion: "capital_economico",
           motivo: "Pide demostrar que la inversión alcanza para tu proyecto. No hay un monto fijo: depende de tu plan de negocio." },
+        // Hoja 14 de Inclusión (mayo de 2025): hay que cumplir los requisitos de apertura y funcionamiento de la
+        // actividad y presentar la relación de licencias o autorizaciones necesarias, con el estado de su trámite
+        // (o la declaración responsable, para comercio minorista y algunos servicios en locales de hasta 750 m²).
+        { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "advierte", condicion: "redes",
+          motivo: "Al presentar la solicitud tenés que mostrar qué licencias o permisos necesita tu actividad en España y en qué estado está cada trámite. Desde Córdoba, revisá cómo vas a gestionarlos o quién puede hacerlo allá." },
+        // Hoja 8 de Inclusión (reagrupación familiar): para reagrupar hay que haber residido al menos 1 año en
+        // España y tener autorización por al menos otro año. La autorización inicial de cuenta propia dura 1 año
+        // (Hoja 14), así que la familia no puede viajar desde el principio por esta vía.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
+          motivo: "Las personas a tu cargo no pueden viajar con vos desde el principio. Para reagruparlas tenés que haber vivido 1 año en España y renovar el permiso." },
+        // Hoja 15 de Inclusión (mayo de 2025): la renovación dura 4 años y habilita a trabajar por cuenta ajena
+        // y propia en cualquier parte del territorio y en cualquier sector (RD 1155/2024, arts. 86 y 87).
         { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "nota",
-          motivo: "Dura 1 año y queda limitada a una región y un sector." } ],
+          motivo: "El primer año queda limitado a una región y un sector. Si lo renovás, pasa a 4 años sin esos límites." } ],
       ficha: {
-        que: "Una autorización para trabajar de forma autónoma en España.",
-        // RD 1155/2024, art. 84: pide «la cualificación profesional legalmente exigida o experiencia
-        // acreditada suficiente», y que la inversión prevista sea suficiente (sin monto ni IPREM).
-        requisitos: ["Plan de negocio viable", "Inversión suficiente para el proyecto (no hay un monto fijo)", "La cualificación profesional que pida la actividad, o experiencia suficiente en ella"],
-        sirve: "Trabajar por tu cuenta.",
-        // RD 1155/2024, art. 83: la autorización inicial dura 1 año y se limita a una comunidad autónoma
-        // y a un sector de actividad. La renovación dura 4 años (art. 86).
-        noPermite: "Dura 1 año y se limita a una región y un sector.",
-        tramite: "Consulado General de España en Córdoba.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
-
+        // Revisada el 23/10/2026 contra: Hoja 14 de Inclusión, «Autorización inicial de residencia temporal y
+        // trabajo por cuenta propia» (última actualización: mayo de 2025; cita los arts. 82 a 85 del RD 1155/2024);
+        // Hoja 15, «Renovación…» (mayo de 2025); Hoja 8, «Reagrupación familiar» (sin fecha leída). El Consulado de
+        // Córdoba ofrece este visado (figura en su menú de visados nacionales), pero su contenido no se pudo leer;
+        // tampoco el RD 1155/2024 en el BOE.
+        que: "Una autorización para vivir y trabajar de forma autónoma en España, si hoy vivís fuera.",
+        // Hoja 14 de Inclusión (mayo de 2025), requisitos 1, 3 y 7 a 9: no ser de la UE, el EEE ni Suiza; sin
+        // antecedentes penales en los países de residencia de los últimos 5 años; requisitos legales de apertura y
+        // funcionamiento de la actividad; cualificación exigible o experiencia acreditada, y colegiación cuando
+        // proceda; inversión suficiente y su efecto en la creación de empleo, incluido el autoempleo.
+        // Antes decía «Plan de negocio viable»: la Hoja no lo nombra así, por eso se reemplazó por sus requisitos.
+        requisitos: ["Un proyecto que cumpla lo que se le pide a cualquier negocio en España para abrir y funcionar (licencias o permisos)", "Inversión suficiente para el proyecto (no hay un monto fijo) y que genere empleo, aunque sea el tuyo", "La cualificación que pida la actividad, o experiencia suficiente en ella, y colegiarte si hace falta", "No tener antecedentes penales de los últimos 5 años", "No tener nacionalidad de un país de la UE"],
+        // Hoja 14: autorización inicial de 1 año. Hoja 15 (mayo de 2025): la renovación dura 4 años y habilita a
+        // trabajar por cuenta ajena y propia en cualquier parte del territorio y en cualquier sector.
+        sirve: "Vivir y trabajar por tu cuenta en España durante 1 año. Si lo renovás, pasa a 4 años y podés trabajar en cualquier sector y lugar, también en relación de dependencia.",
+        // Hoja 14 de Inclusión (mayo de 2025): limitada a un ámbito geográfico autonómico y a un sector de
+        // actividad. Familia: Hoja 8 (1 año de residencia previa para reagrupar).
+        // No se muestra: si el primer permiso habilita trabajo por cuenta ajena. Solo se deduce de la Hoja 15.
+        noPermite: "El primer año queda limitado a una comunidad autónoma y un sector. Tu familia no puede ir con vos desde el principio: para reagruparla tenés que haber vivido 1 año en España.",
+        // Hoja 14 de Inclusión (mayo de 2025): se presenta en persona en la oficina consular de tu residencia;
+        // resolución en 3 meses con silencio negativo; con la concesión, 1 mes para pedir el visado (que se
+        // resuelve en 1 mes) y entrada dentro de la vigencia del visado (3 meses). La inversión y su efecto en el
+        // empleo pueden acreditarse, por ejemplo, con un informe de ATA, UPTA, CIAE, OPA o UATAE.
+        tramite: "Lo presentás en persona en el Consulado General de España en Córdoba. La inversión se puede acreditar, por ejemplo, con un informe de una organización de trabajadores autónomos. Extranjería resuelve en 3 meses: si no contesta, se entiende denegada. Si sale, tenés 1 mes para pedir el visado y, una vez concedido, 3 meses para entrar.",
+        fuente: { texto: "Hoja 14 de Inclusión: autorización inicial de residencia temporal y trabajo por cuenta propia (mayo de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/autorizacion-inicial-de-residencia-temporal-y-trabajo-por-cuenta-propia" },
+        // Vigencia: Hoja 14 (mayo de 2025), que respalda los requisitos principales. Otras fuentes: Hoja 15
+        // (mayo de 2025, renovación) y Hoja 8 (reagrupación, sin fecha leída).
+        vigencia: "Mayo de 2025", verificar: false, relleno: false } },
     { id: "investigador", nombre: "Investigador/a", corto: "Investigación",
       resumen: "Para investigar en una universidad, centro de I+D o empresa.",
       reglas: [
