@@ -918,21 +918,61 @@ const DATOS = {
     { id: "estudiante", nombre: "Estudiante", corto: "Estudios",
       resumen: "Para estudiar un máster u otro estudio superior.",
       reglas: [
-        // Consulado de Buenos Aires y RD 1155/2024 (art. 35): 100 % del IPREM por mes de estudio, hasta 12
-        // meses. Se acredita con ahorros, beca o ingresos regulares. Un programa corto pide menos de 7.200 €.
+        // Hoja 1 de Inclusión (nov. 2025): no aplica a nacionales de la UE, el EEE o Suiza. Con pasaporte UE
+        // corresponde el registro como ciudadano/a de la UE (decisión del grupo: ocultarla, igual que en
+        // Tarjeta Azul, Altamente cualificado, Traslado, Nómada digital, Emprendedor/a, Cuenta propia,
+        // Investigador/a y Prácticas).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        // Hoja 1 de Inclusión (nov. 2025) y Consulado de Buenos Aires: 100 % del IPREM (600 €) por mes de
+        // estudio, o por 12 meses si el curso dura más de un año. La matrícula no cuenta. Se acredita con
+        // ahorros, beca, ingresos regulares o el compromiso de un familiar. Un programa corto pide menos de 7.200 €.
         { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "depende", condicion: "capital_economico",
           motivo: "Se abre si podés demostrar {estudiante_medios} de estudio (hasta 12 meses), con ahorros, una beca o ingresos regulares. Aparte está el costo de la matrícula." },
         { si: { pregunta: "estudiar", es: ["no"] }, resultado: "noInteresa" },
+        // Hoja 1 de Inclusión (nov. 2025): los familiares pueden ir con la persona que estudia (solo estudios
+        // superiores), pero «no están autorizados para trabajar». Los medios suben 75 % del IPREM por el primer
+        // familiar y 50 % por cada uno más.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
+          motivo: "Tu familia puede acompañarte, pero no puede trabajar en España. Además, los medios que tenés que demostrar suben por cada familiar." },
+        // 30 horas por semana: nota de prensa de Inclusión del 19/11/2024 (nuevo Reglamento, RD 1155/2024) y
+        // Hoja 4 bis (mayo de 2025). El paso directo a residencia y trabajo al terminar (RD 1155/2024, art. 191)
+        // no se pudo leer en el BOE: queda [verificar]. Antes decía «sin salir de España».
         { si: { pregunta: "estudiar", es: ["si"] }, resultado: "nota",
-          motivo: "Te permite trabajar hasta {estudiante_horas} y pasar a residencia y trabajo sin salir de España." } ],
+          motivo: "Te permite trabajar hasta {estudiante_horas}. Al terminar, para quedarte hace falta pasar a otra autorización [verificar]." } ],
       ficha: {
-        que: "Una estancia por estudios superiores (Real Decreto 1155/2024).",
-        requisitos: ["Admisión en un estudio superior", "Medios económicos para el período de estudios: al menos {estudiante_medios} (hasta 12 meses), más un extra por cada familiar", "Seguro médico completo, sin copagos"],
-        sirve: "Estudiar y trabajar hasta {estudiante_horas}, y después pasar a residencia y trabajo sin salir de España.",
-        noPermite: "No permite trabajar a tiempo completo mientras estudiás.",
-        tramite: "Consulado General de España en Córdoba.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Revisada el 24/10/2026 contra la Hoja 1 de Inclusión, «Autorización de estancia de larga duración por
+        // estudios» (última actualización: noviembre de 2025; cita la Directiva (UE) 2016/801, la LO 4/2000 y el
+        // RD 1155/2024, arts. 34 a 36 y 52 a 58). No se pudieron leer la página del Consulado de Córdoba ni el BOE.
+        // Hoja 1: la autorización dura lo que duran los estudios superiores.
+        que: "Una autorización de estancia para hacer estudios superiores en España, que dura lo que dura el estudio (Real Decreto 1155/2024).",
+        // Hoja 1 de Inclusión (nov. 2025): estudio superior a tiempo completo (universitario oficial, título propio,
+        // enseñanzas artísticas superiores o FP de grado superior), matrícula pagada; medios del 100 % del IPREM
+        // por mes (75 % por el primer familiar y 50 % por cada uno más; menos con alojamiento pagado; la matrícula
+        // no cuenta); seguro de una entidad autorizada en España; si la estancia supera 6 meses, sin antecedentes
+        // penales de los últimos 5 años y certificado médico; no ser de la UE, el EEE ni Suiza.
+        // Consulado de Buenos Aires: el seguro, sin copagos ni carencias; no sirven los de viaje ni de tarjeta.
+        requisitos: ["Admisión en un estudio superior a tiempo completo (de grado, máster, título propio o técnico superior), con la matrícula pagada", "Medios de al menos {estudiante_medios} de estudio (hasta 12 meses), sin contar la matrícula; más 75 % del IPREM por el primer familiar y 50 % por cada uno más (menos si el alojamiento está pago)", "Seguro médico de una aseguradora autorizada en España, sin copagos ni carencias (no sirve uno de viaje)", "Si la estancia supera 6 meses: no tener antecedentes penales de los últimos 5 años y presentar un certificado médico", "No tener nacionalidad de un país de la UE"],
+        // Hoja 1 (nov. 2025): dura lo que los estudios; se prorroga hasta 2 veces; familiares, solo en estudios
+        // superiores. Trabajo: 30 h por semana, sin pedir otro permiso si es compatible con los estudios (nota de
+        // prensa de Inclusión del 19/11/2024 y Hoja 4 bis, mayo de 2025).
+        // Hoja 20 de Inclusión (sept. 2025): al terminar en España estudios de nivel grado o superior (MEC 6),
+        // autorización de 24 meses, no prorrogable, para buscar empleo o emprender; se pide antes del vencimiento
+        // de la estancia o hasta 90 días después.
+        sirve: "Estudiar en España durante todo el programa: la autorización dura lo que dura el estudio y se puede prorrogar. Podés trabajar hasta {estudiante_horas} sin pedir otro permiso, si es compatible con los estudios. Puede ir tu familia. Si terminás en España un grado o un máster, podés pedir 24 meses para buscar trabajo o emprender.",
+        // Hoja 4 bis (mayo de 2025): no superar las 30 horas y que sea compatible con los estudios.
+        // Hoja 1 (nov. 2025): los familiares no están autorizados para trabajar.
+        // Consulado de Buenos Aires: el doctorado se pide con el visado de investigación.
+        noPermite: "No permite trabajar más de {estudiante_horas} ni en algo que no sea compatible con tus estudios. Tu familia puede acompañarte, pero no puede trabajar. No sirve para un doctorado: para eso está la vía de investigación.",
+        // Hoja 1 (nov. 2025): desde el exterior, en persona en el consulado de tu domicilio, al menos 2 meses antes
+        // del inicio de los estudios; TIE dentro del mes de llegar si la estancia supera 6 meses.
+        // Plazo: la Hoja 1 dice 1 mes con silencio negativo, pero un aviso del Consulado de Buenos Aires
+        // (15/12/2025) dice que la autorización la resuelve la Subdelegación de la provincia de estudios en hasta
+        // 2 meses y después el consulado emite el visado en 1 mes. Queda [verificar] hasta leer la página de Córdoba.
+        tramite: "Lo pedís en persona en el Consulado General de España en Córdoba, al menos 2 meses antes de que empiecen las clases. Plazo de resolución [verificar]. Si la estancia supera 6 meses, al llegar tenés 1 mes para sacar la tarjeta de extranjero (TIE).",
+        fuente: { texto: "Hoja 1 de Inclusión: autorización de estancia por estudios (noviembre de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/estancia-por-estudios" },
+        // Vigencia: Hoja 1 (noviembre de 2025), que respalda los requisitos principales. Otras fuentes: Hoja 4 bis
+        // (mayo de 2025), Hoja 20 (septiembre de 2025) y aviso del Consulado de Buenos Aires (15/12/2025).
+        vigencia: "Noviembre de 2025", verificar: false, relleno: false } },
 
     { id: "vyt", nombre: "Vacaciones y Trabajo", corto: "Vacaciones y Trabajo",
       resumen: "Una estancia de hasta 12 meses para explorar, no para quedarse.",
