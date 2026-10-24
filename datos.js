@@ -669,8 +669,10 @@ const DATOS = {
         // Revisada el 23/10/2026 contra: documentación de la UGE para teletrabajadores de carácter internacional
         // (sin fecha); preguntas frecuentes de la UGE sobre nómadas digitales (sin fecha); página del Consulado de
         // Buenos Aires «Visado de residencia para teletrabajo» (sin fecha); Criterio de gestión DGGM 2/2025
-        // (16/07/2025), leído en una copia del Colegio de Gestores de Alicante. No se pudieron leer: la página del
-        // mismo visado en el Consulado de Córdoba ni el art. 74 bis de la Ley 14/2013 en el BOE.
+        // (16/07/2025), leído en una copia del Colegio de Gestores de Alicante. El 24/10/2026 se leyeron en el BOE
+        // los arts. 74 bis a 74 quinquies de la Ley 14/2013 (versión consolidada): coinciden con la ficha (20 %,
+        // título o 3 años de experiencia, 1 año de actividad, 3 meses de relación, visado de 1 año, autorización
+        // de hasta 3 años renovable por 2).
         que: "Un permiso para residir en España trabajando en remoto para empresas o clientes del exterior.",
         // 20 %: solo para quien trabaja por su cuenta (Consulado de Buenos Aires y FAQ de la UGE n.º 14). En relación
         // de dependencia, solo se puede trabajar para empresas de fuera de España.
@@ -717,9 +719,10 @@ const DATOS = {
         // Cl@ve o certificado digital.
         { resultado: "advierte", condicion: "redes",
           motivo: "La solicitud se presenta en línea y hace falta Cl@ve o un certificado digital español. Desde Argentina, revisá cómo vas a conseguirlo o quién puede presentarla por vos." },
-        // Familia: Consulado de España en Londres, «Visado para emprendedor» (29/04/2026): pareja, hijos e hijas
-        // (también mayores a cargo) y ascendientes a cargo. Ley 28/2022, preámbulo (BOE 22/12/2022): pueden ir
-        // desde el principio o después. Monto: Instrucción DGM 1/2023, 3.ª. Si pueden trabajar: no confirmado.
+        // Familia: Consulado General de España en Córdoba, «Visado para emprendedor» (sin fecha, leída el
+        // 24/10/2026): pareja, hijos e hijas (también mayores a cargo) y ascendientes a cargo. Ley 14/2013,
+        // art. 62.4 (BOE, consolidada): pueden pedirlo «conjunta y simultánea o sucesivamente». Monto: Instrucción
+        // DGM 1/2023, 3.ª. Si pueden trabajar: no confirmado (el art. 62 no lo dice).
         { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
           motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden acompañarte, desde el principio o después. Por cada familiar, los medios económicos que te piden son mayores." } ],
       ficha: {
@@ -727,27 +730,28 @@ const DATOS = {
         // una solicitud de la autorización de emprendedores» de la UGE (sin fecha, ~2023); Instrucción DGM 1/2023
         // (03/04/2023), leída en una copia de mentorday.es; Criterio de gestión DGGM 2/2025 (16/07/2025), leído en
         // una copia del Colegio de Gestores de Alicante; Consulado de Londres, «Visado para emprendedor» (29/04/2026).
-        // No se pudieron leer: la página del visado en el Consulado de Córdoba (figura en el menú, sin contenido),
-        // la de Buenos Aires, ni los arts. 61 a 70 de la Ley 14/2013 en el BOE.
-        // «3 años»: «vigencia única de tres años (artículo 69.1)», Criterio DGGM 2/2025. La renovación por 2 años
-        // y el visado de 1 año (este último, según Londres) no se confirmaron para Argentina: no se muestran.
+        // El 24/10/2026 se leyeron también: la página del visado en el Consulado de Córdoba (sin fecha) y los
+        // arts. 61, 62, 69 y 70 de la Ley 14/2013 en el BOE (versión consolidada).
+        // «3 años» y renovación por 2: Ley 14/2013, art. 69.1. Visado de 1 año: Consulado de Córdoba.
         que: "Un permiso de 3 años para desarrollar un proyecto emprendedor en España.",
         // Proyecto: «innovadora y/o tenga especial interés económico para España» (UGE e Instrucción DGM 1/2023,
         // 7.1); la escalabilidad es el criterio con que ENISA mide ese interés (7.3). Informe de ENISA: perfil,
         // plan de negocio y valor añadido (UGE). Medios y seguro: Instrucción DGM 1/2023, 3.ª y 5.ª. Antecedentes:
-        // instrucciones de la UGE (desde el exterior, el certificado se presenta en el consulado). Mayor de 18:
-        // página de la UGE. No UE: instrucciones de la UGE.
-        requisitos: ["Proyecto innovador o de especial interés económico para España (por ejemplo, escalable)", "Informe favorable de ENISA sobre tu perfil, tu plan de negocio y lo que aporta a la economía española", "Medios económicos de al menos {nomada_ingreso} por mes (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico público o privado con una aseguradora que opere en España (no sirve uno de viaje)", "No tener antecedentes penales", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
+        // Consulado de Córdoba y Ley 14/2013, art. 62.3.c: certificado de los países de residencia de los últimos
+        // 2 años, más una declaración responsable de 5. Mayor de 18: página de la UGE y Ley 14/2013, art. 62.3.b.
+        // No UE: instrucciones de la UGE y Ley 14/2013, art. 61.2.
+        requisitos: ["Proyecto innovador o de especial interés económico para España (por ejemplo, escalable)", "Informe favorable de ENISA sobre tu perfil, tu plan de negocio y lo que aporta a la economía española", "Medios económicos de al menos {nomada_ingreso} por mes (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico público o privado con una aseguradora que opere en España (no sirve uno de viaje)", "No tener antecedentes penales de los últimos 2 años", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
         // Sin inversión mínima ni creación de empleo: página de la UGE. Familia: Consulado de Londres (29/04/2026).
         sirve: "Desarrollar tu proyecto en España durante 3 años. No pide un monto mínimo de inversión ni crear empleo. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
-        // Negocio tradicional: corresponde a cuenta propia (RD 1155/2024). Informe favorable: UGE. 3 años: Criterio
-        // DGGM 2/2025.
-        noPermite: "No sirve para un negocio o servicio tradicional: para eso está la vía de trabajo por cuenta propia. Sin informe favorable de ENISA no se concede. Es temporal: la autorización dura 3 años.",
+        // Negocio tradicional: corresponde a cuenta propia (RD 1155/2024). Informe favorable: UGE y Ley 14/2013,
+        // art. 70.1. 3 años y renovación por 2: Ley 14/2013, art. 69.1.
+        noPermite: "No sirve para un negocio o servicio tradicional: para eso está la vía de trabajo por cuenta propia. Sin informe favorable de ENISA no se concede. Es temporal: la autorización dura 3 años y se puede renovar por 2 más.",
         // Instrucciones de la UGE: se presenta en su sede electrónica (Cl@ve o certificado digital); los datos del
         // proyecto se cargan en la web de ENISA. Instrucción DGM 1/2023, 7.7: la UGE pide el informe a ENISA, que
-        // tiene 10 días hábiles. Visado después de la autorización: Consulado de Londres (29/04/2026) pide la
-        // autorización de la UGE. Córdoba ofrece el visado (figura en su menú de visados nacionales).
-        tramite: "Se pide en línea a la Unidad de Grandes Empresas, con certificado digital. Ella le pide el informe a ENISA, donde cargás los datos del proyecto. Con la autorización, pedís el visado en el Consulado General de España en Córdoba.",
+        // tiene 10 días hábiles (también Ley 14/2013, art. 70.1). Visado después de la autorización: Consulado de
+        // Córdoba (sin fecha, leída el 24/10/2026): pide copia de la autorización de la UGE; en persona, con cita
+        // por mail (cog.cordoba.vis@maec.es); resuelve en 10 días; visado de 1 año.
+        tramite: "Se pide en línea a la Unidad de Grandes Empresas, con certificado digital. Ella le pide el informe a ENISA, donde cargás los datos del proyecto. Con la autorización, pedís el visado en el Consulado General de España en Córdoba: en persona, con cita que se pide por mail. Resuelve en 10 días.",
         fuente: { texto: "Unidad de Grandes Empresas: Emprendedores", url: "https://www.inclusion.gob.es/web/unidadgrandesempresas/emprendedores" },
         // Vigencia: Instrucción DGM 1/2023 (03/04/2023), el documento que respalda los requisitos principales.
         // Otras fuentes: Criterio DGGM 2/2025 (julio de 2025, duración) y Consulado de Londres (abril de 2026,
@@ -776,35 +780,42 @@ const DATOS = {
         // (Hoja 14), así que la familia no puede viajar desde el principio por esta vía.
         { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
           motivo: "Las personas a tu cargo no pueden viajar con vos desde el principio. Para reagruparlas tenés que haber vivido 1 año en España y renovar el permiso." },
-        // Hoja 15 de Inclusión (mayo de 2025): la renovación dura 4 años y habilita a trabajar por cuenta ajena
-        // y propia en cualquier parte del territorio y en cualquier sector (RD 1155/2024, arts. 86 y 87).
+        // Hoja 15 de Inclusión (mayo de 2025) y RD 1155/2024, arts. 83 y 87 (BOE, consolidado): el primer año,
+        // una comunidad autónoma y un sector; la renovación dura 4 años y habilita a trabajar por cuenta ajena y
+        // propia en cualquier parte del territorio y en cualquier sector.
         { si: { pregunta: "propia", es: ["innovador", "negocio"] }, resultado: "nota",
           motivo: "El primer año queda limitado a una región y un sector. Si lo renovás, pasa a 4 años sin esos límites." } ],
       ficha: {
         // Revisada el 23/10/2026 contra: Hoja 14 de Inclusión, «Autorización inicial de residencia temporal y
         // trabajo por cuenta propia» (última actualización: mayo de 2025; cita los arts. 82 a 85 del RD 1155/2024);
         // Hoja 15, «Renovación…» (mayo de 2025); Hoja 8, «Reagrupación familiar» (sin fecha leída). El Consulado de
-        // Córdoba ofrece este visado (figura en su menú de visados nacionales), pero su contenido no se pudo leer;
-        // tampoco el RD 1155/2024 en el BOE.
+        // Córdoba, «Visado de trabajo por cuenta propia» (sin fecha), y RD 1155/2024, arts. 39 y 82 a 87 (BOE,
+        // consolidado): leídos el 24/10/2026.
         que: "Una autorización para vivir y trabajar de forma autónoma en España, si hoy vivís fuera.",
         // Hoja 14 de Inclusión (mayo de 2025), requisitos 1, 3 y 7 a 9: no ser de la UE, el EEE ni Suiza; sin
         // antecedentes penales en los países de residencia de los últimos 5 años; requisitos legales de apertura y
         // funcionamiento de la actividad; cualificación exigible o experiencia acreditada, y colegiación cuando
         // proceda; inversión suficiente y su efecto en la creación de empleo, incluido el autoempleo.
         // Antes decía «Plan de negocio viable»: la Hoja no lo nombra así, por eso se reemplazó por sus requisitos.
-        requisitos: ["Un proyecto que cumpla lo que se le pide a cualquier negocio en España para abrir y funcionar (licencias o permisos)", "Inversión suficiente para el proyecto (no hay un monto fijo) y que genere empleo, aunque sea el tuyo", "La cualificación que pida la actividad, o experiencia suficiente en ella, y colegiarte si hace falta", "No tener antecedentes penales de los últimos 5 años", "No tener nacionalidad de un país de la UE"],
+        // Consulado de Córdoba (leída el 24/10/2026): pide el «proyecto de establecimiento o actividad», con la
+        // inversión prevista, la rentabilidad esperada y los puestos de trabajo que se prevén; medios para la
+        // inversión o el compromiso de apoyo de instituciones financieras; y certificado médico.
+        requisitos: ["Un proyecto que cumpla lo que se le pide a cualquier negocio en España para abrir y funcionar (licencias o permisos)", "Un proyecto de la actividad con la inversión prevista, la rentabilidad que esperás y, si corresponde, los puestos de trabajo que vas a crear", "Inversión suficiente para el proyecto (no hay un monto fijo), con medios propios o el apoyo de una entidad financiera, y que genere empleo, aunque sea el tuyo", "La cualificación que pida la actividad, o experiencia suficiente en ella, y colegiarte si hace falta", "No tener antecedentes penales de los últimos 5 años", "Un certificado médico", "No tener nacionalidad de un país de la UE"],
         // Hoja 14: autorización inicial de 1 año. Hoja 15 (mayo de 2025): la renovación dura 4 años y habilita a
         // trabajar por cuenta ajena y propia en cualquier parte del territorio y en cualquier sector.
         sirve: "Vivir y trabajar por tu cuenta en España durante 1 año. Si lo renovás, pasa a 4 años y podés trabajar en cualquier sector y lugar, también en relación de dependencia.",
-        // Hoja 14 de Inclusión (mayo de 2025): limitada a un ámbito geográfico autonómico y a un sector de
-        // actividad. Familia: Hoja 8 (1 año de residencia previa para reagrupar).
-        // No se muestra: si el primer permiso habilita trabajo por cuenta ajena. Solo se deduce de la Hoja 15.
-        noPermite: "El primer año queda limitado a una comunidad autónoma y un sector. Tu familia no puede ir con vos desde el principio: para reagruparla tenés que haber vivido 1 año en España.",
-        // Hoja 14 de Inclusión (mayo de 2025): se presenta en persona en la oficina consular de tu residencia;
-        // resolución en 3 meses con silencio negativo; con la concesión, 1 mes para pedir el visado (que se
-        // resuelve en 1 mes) y entrada dentro de la vigencia del visado (3 meses). La inversión y su efecto en el
-        // empleo pueden acreditarse, por ejemplo, con un informe de ATA, UPTA, CIAE, OPA o UATAE.
-        tramite: "Lo presentás en persona en el Consulado General de España en Córdoba. La inversión se puede acreditar, por ejemplo, con un informe de una organización de trabajadores autónomos. Extranjería resuelve en 3 meses: si no contesta, se entiende denegada. Si sale, tenés 1 mes para pedir el visado y, una vez concedido, 3 meses para entrar.",
+        // Hoja 14 de Inclusión (mayo de 2025) y RD 1155/2024, art. 83: limitada a un ámbito geográfico autonómico
+        // y a un sector de actividad. Solo por cuenta propia: RD 1155/2024, art. 82; la cuenta ajena se habilita
+        // al renovar (art. 87). Familia: Hoja 8 (1 año de residencia previa para reagrupar).
+        noPermite: "El primer año solo podés trabajar por tu cuenta, en una comunidad autónoma y un sector. Tu familia no puede ir con vos desde el principio: para reagruparla tenés que haber vivido 1 año en España.",
+        // Consulado de Córdoba (leída el 24/10/2026) y RD 1155/2024, arts. 39 y 85: la solicitud de visado
+        // incluye la de la autorización; en persona, con turno por mail (cog.cordoba.vis@maec.es); extranjería
+        // resuelve en 3 meses con silencio negativo; después, el consulado resuelve el visado en 1 mes; visado de
+        // 365 días; alta en la Seguridad Social dentro de los 3 meses de llegar. Antes decía «tenés 1 mes para
+        // pedir el visado y 3 meses para entrar»: el RD 1155/2024 y Córdoba lo tramitan en una sola solicitud.
+        // La inversión y su efecto en el empleo pueden acreditarse, por ejemplo, con un informe de ATA, UPTA,
+        // CIAE, OPA o UATAE (Hoja 14).
+        tramite: "Pedís turno por mail y presentás todo en persona en el Consulado General de España en Córdoba: con la solicitud del visado se pide también la autorización. La inversión se puede acreditar, por ejemplo, con un informe de una organización de trabajadores autónomos. Extranjería resuelve en 3 meses: si no contesta, se entiende denegada. Si sale, el consulado resuelve el visado en 1 mes. Al llegar, tenés 3 meses para darte de alta en la Seguridad Social.",
         fuente: { texto: "Hoja 14 de Inclusión: autorización inicial de residencia temporal y trabajo por cuenta propia (mayo de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/autorizacion-inicial-de-residencia-temporal-y-trabajo-por-cuenta-propia" },
         // Vigencia: Hoja 14 (mayo de 2025), que respalda los requisitos principales. Otras fuentes: Hoja 15
         // (mayo de 2025, renovación) y Hoja 8 (reagrupación, sin fecha leída).
@@ -840,18 +851,20 @@ const DATOS = {
         // 4/10/2026); medios del 50 % del SMI anual sin contrato; seguro (no de viaje); sin antecedentes
         // penales de los últimos 2 años (más declaración responsable de 5); mayor de 18; no ser de la UE.
         requisitos: ["Aceptación o contrato de una universidad, centro de I+D o empresa", "Para hacer un doctorado se pide esta vía, no la de estudiante", "Doctorado sin contrato: medios de al menos {doctorado_medios} por año", "Seguro médico (no de viaje)", "No tener antecedentes penales de los últimos 2 años", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
-        // Hoja 68 de Inclusión (agosto de 2026): familiares (pareja, hijos e hijas, ascendientes a cargo);
+        // Hoja 68 de Inclusión (agosto de 2026), Consulado de Córdoba (leída el 24/10/2026) y Ley 14/2013,
+        // arts. 62.4 y 72.3 y 72.9 (BOE, consolidada): familiares (pareja, hijos e hijas, ascendientes a cargo);
         // renovación por 2 años; al terminar, hasta 12 meses para buscar empleo o emprender.
-        // No se muestra: si los familiares pueden trabajar. La Hoja 68 no lo dice; la Directiva (UE) 2016/801
-        // (art. 26.6) lo garantiza solo en la modalidad UE. Falta leer el art. 62 de la Ley 14/2013 en el BOE.
+        // No se muestra: si los familiares pueden trabajar. Ni la Hoja 68 ni el art. 62 de la Ley 14/2013 lo
+        // dicen; la Directiva (UE) 2016/801 (art. 26.6) lo garantiza solo en la modalidad UE.
         sirve: "Investigar o hacer un doctorado en España y trabajar en esa actividad. Pueden ir tu pareja, tus hijos e hijas y otros familiares a cargo. Se renueva por 2 años y, al terminar, tenés hasta 12 meses para buscar trabajo o emprender.",
         // Hoja 68 de Inclusión (agosto de 2026): trabajo solo en la actividad investigadora; hace falta convenio
         // o contrato; 3 años o lo que dure el convenio; para renovar, misma entidad y actividad continuada.
         noPermite: "No es un permiso para cualquier trabajo: solo para la actividad de investigación. Sin la aceptación o el contrato de una entidad no se puede pedir. Dura 3 años, o menos si el convenio es más corto, y para renovar tenés que seguir en la misma entidad.",
         // Hoja 68 de Inclusión (agosto de 2026): la presenta en línea la entidad (o el doctorando sin contrato)
-        // ante la UGE; resolución en 20 días hábiles con silencio positivo; con residencia en el exterior,
-        // visado en el consulado que corresponda.
-        tramite: "La entidad que te recibe pide la autorización en línea a la Unidad de Grandes Empresas. Si hacés un doctorado sin contrato, la podés pedir vos. Resuelven en 20 días hábiles: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba.",
+        // ante la UGE; resolución en 20 días hábiles con silencio positivo. Visado: Consulado de Córdoba,
+        // «Visado de investigador» (sin fecha, leída el 24/10/2026): con la autorización de la UGE, en persona,
+        // con cita por mail (cog.cordoba.vis@maec.es); resuelve en 10 días; incluye a quienes hacen un doctorado.
+        tramite: "La entidad que te recibe pide la autorización en línea a la Unidad de Grandes Empresas. Si hacés un doctorado sin contrato, la podés pedir vos. Resuelven en 20 días hábiles: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba: en persona, con cita que se pide por mail. Resuelve en 10 días.",
         fuente: { texto: "Hoja 68 de Inclusión: autorización de residencia temporal y trabajo para investigación (agosto de 2026)", url: "https://www.inclusion.gob.es/web/migraciones/w/68.-autorizacion-de-residencia-temporal-y-trabajo-para-investigacion" },
         // Vigencia: Hoja 68 (agosto de 2026), que respalda los requisitos principales. Otra fuente: noticia del
         // Consulado de Buenos Aires del 4/10/2026 (doctorado como investigación).
@@ -884,11 +897,12 @@ const DATOS = {
       ficha: {
         // Revisada el 24/10/2026 contra la Hoja 21 de Inclusión, «Autorización de residencia para prácticas»
         // (última actualización: septiembre de 2025; cita la Directiva (UE) 2016/801, la DA 18.ª de la
-        // Ley 14/2013, el RD 1155/2024 y la Instrucción DGM 4/2018). No se pudieron leer la página del
-        // Consulado de Córdoba ni el BOE.
-        // «pasar a trabajo»: el RD 1155/2024 (art. 191) permitiría cambiar de residencia a residencia y trabajo
-        // sin visado, pero con una oferta y los requisitos de cuenta ajena. Ni la Hoja 21 ni la Ley 14/2013
-        // lo prevén para prácticas en particular. No se pudo leer el art. 191 en el BOE: queda [verificar].
+        // Ley 14/2013, el RD 1155/2024 y la Instrucción DGM 4/2018). El 24/10/2026 se leyeron también la
+        // página del Consulado de Córdoba (sin fecha) y la DA 18.ª de la Ley 14/2013 en el BOE (consolidada).
+        // «pasar a trabajo»: el RD 1155/2024, art. 191 (leído en el BOE), deja pasar de «residencia temporal» a
+        // residencia y trabajo sin visado; con menos de 1 año de residencia, cumpliendo todos los requisitos de
+        // cuenta ajena (art. 74). Pero el art. 60.2 no nombra la autorización para prácticas entre las de
+        // residencia temporal, y ni la Hoja 21 ni la DA 18.ª lo prevén: sigue [verificar].
         que: "Un permiso para hacer prácticas en una empresa o institución de España, con un convenio o un contrato de trabajo en prácticas. Al terminar, para quedarte a trabajar hace falta una oferta y cumplir los requisitos de cuenta ajena [verificar].",
         // Hoja 21 de Inclusión (sept. 2025): título de educación superior de los 2 años anteriores o estudios
         // en curso; convenio de prácticas o contrato de trabajo en prácticas con una entidad pública o privada;
@@ -900,17 +914,21 @@ const DATOS = {
         // en un entorno profesional». Con convenio, dura lo que el convenio (máximo 12 meses) y se renueva una
         // sola vez, sin superar 2 años en total; con contrato, lo que prevea el contrato.
         // Antes decía «Hacer una primera experiencia laboral»: la Hoja no pide que sea la primera.
-        // No se muestra: la duración del visado (el Consulado de Bogotá da 6 meses con convenio y 1 año con
-        // contrato; falta confirmarlo en Córdoba).
+        // No se muestra: la duración del visado (el Consulado de Córdoba, leída el 24/10/2026, da 6 meses como
+        // máximo con convenio y 1 año con contrato).
         sirve: "Vivir en España mientras hacés prácticas en tu campo, para sumar experiencia profesional. Con convenio, dura lo que el convenio (hasta 12 meses) y se puede renovar una vez, hasta 2 años en total. Con contrato, dura lo que el contrato.",
         // Hoja 21 de Inclusión (sept. 2025): no prevé la reagrupación familiar (solo pueden seguir los familiares
         // que ya acompañaban una estancia por estudios en España); mismo campo y nivel; con convenio, 2 años
         // como máximo contando la renovación.
         noPermite: "No permite reagrupar familiares: no podés llevar a las personas a tu cargo. Las prácticas tienen que ser de tu mismo campo y nivel de estudios. Con convenio, no pasa de 2 años en total.",
         // Hoja 21 de Inclusión (sept. 2025): la presenta la entidad de acogida, solo en línea, por la sede
-        // electrónica Mercurio (Ministerio de Política Territorial); resolución en 30 días con silencio positivo;
-        // con residencia en el exterior, visado; TIE dentro del mes desde la entrada.
-        tramite: "La entidad que te recibe pide la autorización en línea en España. Resuelven en 30 días: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba. Al llegar, tenés 1 mes para sacar la tarjeta de extranjero (TIE).",
+        // electrónica Mercurio (Ministerio de Política Territorial); resolución en 30 días con silencio positivo
+        // (también Ley 14/2013, DA 18.ª, apartado 3). Visado: Consulado de Córdoba, «Visado de prácticas» (sin
+        // fecha, leída el 24/10/2026): con la autorización, en persona, con cita por mail
+        // (cog.cordoba.vis@maec.es); resuelve en 10 días. TIE: el visado ya acredita la residencia y, si las
+        // prácticas duran más de 6 meses, se puede pedir la TIE (Córdoba; Ley 14/2013, DA 18.ª, apartado 7:
+        // «podrán solicitar»). Antes decía «tenés 1 mes para sacar la TIE», como si fuera obligatorio.
+        tramite: "La entidad que te recibe pide la autorización en línea en España. Resuelven en 30 días: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba: en persona, con cita que se pide por mail. Resuelve en 10 días. Si las prácticas duran más de 6 meses, ya en España podés sacar la tarjeta de extranjero (TIE).",
         fuente: { texto: "Hoja 21 de Inclusión: autorización de residencia para prácticas (septiembre de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/21.-autorizacion-de-residencia-para-practicas" },
         // Vigencia: Hoja 21 (septiembre de 2025), que respalda los requisitos principales.
         vigencia: "Septiembre de 2025", verificar: false, relleno: false } },
@@ -934,15 +952,18 @@ const DATOS = {
         // familiar y 50 % por cada uno más.
         { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
           motivo: "Tu familia puede acompañarte, pero no puede trabajar en España. Además, los medios que tenés que demostrar suben por cada familiar." },
-        // 30 horas por semana: nota de prensa de Inclusión del 19/11/2024 (nuevo Reglamento, RD 1155/2024) y
-        // Hoja 4 bis (mayo de 2025). El paso directo a residencia y trabajo al terminar (RD 1155/2024, art. 191)
-        // no se pudo leer en el BOE: queda [verificar]. Antes decía «sin salir de España».
+        // 30 horas por semana: RD 1155/2024, art. 57.2 (BOE, consolidado), nota de prensa de Inclusión del
+        // 19/11/2024 y Hoja 4 bis (mayo de 2025). Al terminar: RD 1155/2024, art. 190 (leído en el BOE el
+        // 24/10/2026; antes se citaba el 191 por error): con el título, se puede pasar a residencia y trabajo
+        // por cuenta ajena o propia «sin necesidad de solicitar visado», con los requisitos de esa autorización
+        // (para cuenta ajena, sin la situación nacional de empleo).
         { si: { pregunta: "estudiar", es: ["si"] }, resultado: "nota",
-          motivo: "Te permite trabajar hasta {estudiante_horas}. Al terminar, para quedarte hace falta pasar a otra autorización [verificar]." } ],
+          motivo: "Te permite trabajar hasta {estudiante_horas}. Al terminar, si conseguís un trabajo o armás un proyecto propio que cumpla los requisitos, podés pasar a una autorización de residencia y trabajo sin salir de España." } ],
       ficha: {
         // Revisada el 24/10/2026 contra la Hoja 1 de Inclusión, «Autorización de estancia de larga duración por
         // estudios» (última actualización: noviembre de 2025; cita la Directiva (UE) 2016/801, la LO 4/2000 y el
-        // RD 1155/2024, arts. 34 a 36 y 52 a 58). No se pudieron leer la página del Consulado de Córdoba ni el BOE.
+        // RD 1155/2024, arts. 34 a 36 y 52 a 58). El 24/10/2026 se leyeron también la página del Consulado de
+        // Córdoba, «Visado de estudios» (sin fecha), y esos artículos del RD 1155/2024 en el BOE (consolidado).
         // Hoja 1: la autorización dura lo que duran los estudios superiores.
         que: "Una autorización de estancia para hacer estudios superiores en España, que dura lo que dura el estudio (Real Decreto 1155/2024).",
         // Hoja 1 de Inclusión (nov. 2025): estudio superior a tiempo completo (universitario oficial, título propio,
@@ -960,15 +981,16 @@ const DATOS = {
         // de la estancia o hasta 90 días después.
         sirve: "Estudiar en España durante todo el programa: la autorización dura lo que dura el estudio y se puede prorrogar. Podés trabajar hasta {estudiante_horas} sin pedir otro permiso, si es compatible con los estudios. Puede ir tu familia. Si terminás en España un grado o un máster, podés pedir 24 meses para buscar trabajo o emprender.",
         // Hoja 4 bis (mayo de 2025): no superar las 30 horas y que sea compatible con los estudios.
-        // Hoja 1 (nov. 2025): los familiares no están autorizados para trabajar.
+        // Hoja 1 (nov. 2025) y RD 1155/2024, art. 56.6: los familiares no están autorizados para trabajar.
         // Consulado de Buenos Aires: el doctorado se pide con el visado de investigación.
         noPermite: "No permite trabajar más de {estudiante_horas} ni en algo que no sea compatible con tus estudios. Tu familia puede acompañarte, pero no puede trabajar. No sirve para un doctorado: para eso está la vía de investigación.",
-        // Hoja 1 (nov. 2025): desde el exterior, en persona en el consulado de tu domicilio, al menos 2 meses antes
-        // del inicio de los estudios; TIE dentro del mes de llegar si la estancia supera 6 meses.
-        // Plazo: la Hoja 1 dice 1 mes con silencio negativo, pero un aviso del Consulado de Buenos Aires
-        // (15/12/2025) dice que la autorización la resuelve la Subdelegación de la provincia de estudios en hasta
-        // 2 meses y después el consulado emite el visado en 1 mes. Queda [verificar] hasta leer la página de Córdoba.
-        tramite: "Lo pedís en persona en el Consulado General de España en Córdoba, al menos 2 meses antes de que empiecen las clases. Plazo de resolución [verificar]. Si la estancia supera 6 meses, al llegar tenés 1 mes para sacar la tarjeta de extranjero (TIE).",
+        // Consulado de Córdoba, «Visado de estudios» (sin fecha, leída el 24/10/2026): turno por mail
+        // (cog.cordoba.vis@maec.es) al menos 3 meses antes del inicio; solicitud en persona o con representante,
+        // al menos 2 meses antes (también RD 1155/2024, art. 36.1); con la autorización favorable, el consulado
+        // resuelve el visado en 1 mes como máximo (art. 36.4); si la estancia supera 180 días, TIE dentro del mes
+        // de llegar. No se muestra cuánto tarda la autorización: el RD (art. 36.3) da 7 días, la Hoja 1 dice
+        // 1 mes y un aviso del Consulado de Buenos Aires (15/12/2025), hasta 2 meses.
+        tramite: "Pedís turno por mail al Consulado General de España en Córdoba al menos 3 meses antes de que empiecen las clases, y presentás la solicitud en persona (o con alguien que te represente) con 2 meses de anticipación como mínimo. Si aprueban la autorización, el consulado resuelve el visado en 1 mes como máximo. Si la estancia supera 6 meses, al llegar tenés 1 mes para sacar la tarjeta de extranjero (TIE).",
         fuente: { texto: "Hoja 1 de Inclusión: autorización de estancia por estudios (noviembre de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/estancia-por-estudios" },
         // Vigencia: Hoja 1 (noviembre de 2025), que respalda los requisitos principales. Otras fuentes: Hoja 4 bis
         // (mayo de 2025), Hoja 20 (septiembre de 2025) y aviso del Consulado de Buenos Aires (15/12/2025).
