@@ -860,6 +860,10 @@ const DATOS = {
     { id: "practicas", nombre: "Prácticas", corto: "Prácticas",
       resumen: "Para recién recibidos con un convenio de prácticas en España.",
       reglas: [
+        // Hoja 21 de Inclusión (sept. 2025): no aplica a nacionales de la UE, el EEE o Suiza. Con pasaporte UE
+        // corresponde el registro como ciudadano/a de la UE (decisión del grupo: ocultarla, igual que en
+        // Tarjeta Azul, Altamente cualificado, Traslado, Nómada digital, Emprendedor/a, Cuenta propia e Investigador/a).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
         { si: { pregunta: "egreso", es: ["medio", "mas3"] }, resultado: "cierra", condicion: "edad_egreso",
           motivo: "Es para quienes se recibieron hace menos de 2 años o están estudiando." },
         // Hoja 21 de Inclusión (sept. 2025): título de educación superior (incluye FP de grado superior)
@@ -872,27 +876,44 @@ const DATOS = {
           motivo: "No permite reagrupar familiares: no podrías llevar a las personas a tu cargo." },
         { si: { pregunta: "practicas", es: ["interes"] }, resultado: "depende", condicion: "redes",
           motivo: "Se abre con un convenio de prácticas de una entidad española." },
+        // Hoja 21 de Inclusión (sept. 2025): los medios se piden solo sin contrato de trabajo (convenio de
+        // acogida): 100 % del IPREM por mes, o 50 % si el alojamiento está abonado por adelantado.
+        // Antes decía «Si las prácticas no son pagas»: un convenio con beca también pide medios.
         { si: [ { pregunta: "practicas", es: ["si", "interes"] }, { pregunta: "ahorros", es: ["bajo"] } ], resultado: "depende", condicion: "capital_economico",
-          motivo: "Si las prácticas no son pagas, vas a necesitar cómo sostenerte." } ],
+          motivo: "Si es con convenio y sin contrato de trabajo, tenés que demostrar {estudiante_medios} por cada mes de prácticas (la mitad si el alojamiento está pago)." } ],
       ficha: {
-        // «pasar a trabajo»: el RD 1155/2024 (art. 191) permite cambiar de residencia a residencia y trabajo
+        // Revisada el 24/10/2026 contra la Hoja 21 de Inclusión, «Autorización de residencia para prácticas»
+        // (última actualización: septiembre de 2025; cita la Directiva (UE) 2016/801, la DA 18.ª de la
+        // Ley 14/2013, el RD 1155/2024 y la Instrucción DGM 4/2018). No se pudieron leer la página del
+        // Consulado de Córdoba ni el BOE.
+        // «pasar a trabajo»: el RD 1155/2024 (art. 191) permitiría cambiar de residencia a residencia y trabajo
         // sin visado, pero con una oferta y los requisitos de cuenta ajena. Ni la Hoja 21 ni la Ley 14/2013
-        // lo prevén para prácticas en particular.
-        // Hoja 21 de Inclusión (sept. 2025): «título de educación superior» incluye la formación profesional
-        // de grado superior; con convenio (sin contrato) pide el 100 % del IPREM por mes; no permite
-        // reagrupar familiares.
-        que: "Un permiso para hacer prácticas con una entidad española. Al terminar, para quedarte a trabajar hace falta una oferta y cumplir los requisitos de cuenta ajena.",
-        // Ley 14/2013, disposición adicional 18.ª, y Consulado de Córdoba (oct. 2026): sirve un convenio
-        // de prácticas o un contrato de trabajo en prácticas. Además, las prácticas tienen que ser del
-        // mismo campo y nivel que tu título o tus estudios, y hay que tener seguro y recursos suficientes.
-        requisitos: ["Título de educación superior (incluye el técnico superior) obtenido hace menos de 2 años, o estar estudiando para obtenerlo", "Convenio o contrato de prácticas con una entidad española, en el mismo campo y nivel que tu título", "Si no hay contrato: medios de vida ({estudiante_medios}) y seguro médico"],
-        sirve: "Hacer una primera experiencia laboral en España.",
-        noPermite: "No permite reagrupar familiares.",
-        // Ley 14/2013, DA 18.ª: la entidad española pide la autorización en la Delegación o Subdelegación
-        // del Gobierno de la provincia de las prácticas (resuelve en 30 días); después, visado en el consulado.
-        tramite: "La entidad española pide la autorización en España; después, visado en el Consulado General de España en Córdoba.",
-        fuente: { texto: "Portal de inmigración, Gobierno de España", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // lo prevén para prácticas en particular. No se pudo leer el art. 191 en el BOE: queda [verificar].
+        que: "Un permiso para hacer prácticas en una empresa o institución de España, con un convenio o un contrato de trabajo en prácticas. Al terminar, para quedarte a trabajar hace falta una oferta y cumplir los requisitos de cuenta ajena [verificar].",
+        // Hoja 21 de Inclusión (sept. 2025): título de educación superior de los 2 años anteriores o estudios
+        // en curso; convenio de prácticas o contrato de trabajo en prácticas con una entidad pública o privada;
+        // mismo campo académico y nivel de cualificación; sin contrato, 100 % del IPREM por mes (50 % con
+        // alojamiento pagado por adelantado) y seguro médico; sin antecedentes penales de los últimos 5 años;
+        // no ser de la UE, el EEE ni Suiza. No pide edad.
+        requisitos: ["Título de educación superior (incluye el técnico superior) obtenido hace menos de 2 años, o estar estudiando para obtenerlo", "Convenio o contrato de prácticas con una entidad española, en el mismo campo y nivel que tu título", "Si es con convenio (sin contrato de trabajo): medios de {estudiante_medios}, o la mitad si el alojamiento está pago por adelantado, y seguro médico", "No tener antecedentes penales de los últimos 5 años", "No tener nacionalidad de un país de la UE"],
+        // Hoja 21 de Inclusión (sept. 2025): finalidad, «mejorar sus conocimientos, su práctica y su experiencia
+        // en un entorno profesional». Con convenio, dura lo que el convenio (máximo 12 meses) y se renueva una
+        // sola vez, sin superar 2 años en total; con contrato, lo que prevea el contrato.
+        // Antes decía «Hacer una primera experiencia laboral»: la Hoja no pide que sea la primera.
+        // No se muestra: la duración del visado (el Consulado de Bogotá da 6 meses con convenio y 1 año con
+        // contrato; falta confirmarlo en Córdoba).
+        sirve: "Vivir en España mientras hacés prácticas en tu campo, para sumar experiencia profesional. Con convenio, dura lo que el convenio (hasta 12 meses) y se puede renovar una vez, hasta 2 años en total. Con contrato, dura lo que el contrato.",
+        // Hoja 21 de Inclusión (sept. 2025): no prevé la reagrupación familiar (solo pueden seguir los familiares
+        // que ya acompañaban una estancia por estudios en España); mismo campo y nivel; con convenio, 2 años
+        // como máximo contando la renovación.
+        noPermite: "No permite reagrupar familiares: no podés llevar a las personas a tu cargo. Las prácticas tienen que ser de tu mismo campo y nivel de estudios. Con convenio, no pasa de 2 años en total.",
+        // Hoja 21 de Inclusión (sept. 2025): la presenta la entidad de acogida, solo en línea, por la sede
+        // electrónica Mercurio (Ministerio de Política Territorial); resolución en 30 días con silencio positivo;
+        // con residencia en el exterior, visado; TIE dentro del mes desde la entrada.
+        tramite: "La entidad que te recibe pide la autorización en línea en España. Resuelven en 30 días: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba. Al llegar, tenés 1 mes para sacar la tarjeta de extranjero (TIE).",
+        fuente: { texto: "Hoja 21 de Inclusión: autorización de residencia para prácticas (septiembre de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/21.-autorizacion-de-residencia-para-practicas" },
+        // Vigencia: Hoja 21 (septiembre de 2025), que respalda los requisitos principales.
+        vigencia: "Septiembre de 2025", verificar: false, relleno: false } },
 
     { id: "estudiante", nombre: "Estudiante", corto: "Estudios",
       resumen: "Para estudiar un máster u otro estudio superior.",
