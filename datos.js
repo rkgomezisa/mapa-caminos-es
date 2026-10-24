@@ -106,11 +106,10 @@ const DATOS = {
     },
     resultadosTitulo: "Tu mapa de vías",
     resultadosBajada: "Estas son todas las vías del mapa según lo que respondiste. Cuando una vía se cierra, lo que la cierra es una condición del entorno, no algo que te falte a vos.",
-    sinAbiertas: "Hoy no aparece ninguna vía abierta de forma directa. Eso habla de cómo están armadas las reglas y de las condiciones del entorno, no de vos. Mirá lo que está siempre disponible, más abajo.",
+    sinAbiertas: "Hoy no aparece ninguna vía abierta de forma directa. Eso habla de cómo están armadas las reglas y de las condiciones del entorno, no de vos.",
     tituloAbiertas: "Vías abiertas",
     tituloDepende: "Se abren si aparece…",
     tituloCerradas: "Vías que se cerraron (y por qué)",
-    tituloSiempre: "Siempre disponible",
     tituloNoInteresa: "Otras vías del mapa (dijiste que no te interesan por ahora)",
     tituloCondiciones: "Condiciones del entorno que pesaron en este recorrido",
     // Avisos de las fichas (el # se reemplaza por la cantidad)
@@ -1043,19 +1042,6 @@ const DATOS = {
         tramite: "Consulado General de España en Córdoba, si tu DNI tiene domicilio en Córdoba, Catamarca, La Rioja, Santiago del Estero, Tucumán, Salta o Jujuy. La documentación se envía en PDF a cog.cordoba.vis@maec.es. Hay {vyt_cupo} visados por año para todo el país, repartidos entre cinco consulados.",
         fuente: { texto: "Hoja informativa del Consulado General de España en Buenos Aires (abril de 2026)", url: "https://www.exteriores.gob.es/Consulados/buenosaires/es/ServiciosConsulares/Documents/Hoja%20informativa%20visado%20movilidad%20j%C3%B3venes%20Argentina%20V.%2005-03-2026.pdf" },
         vigencia: "Abril de 2026", verificar: false, relleno: false } }
-  ],
-
-  /* Hoja final: siempre visible */
-  siempre: [
-    { titulo: "Otros destinos",
-      texto: "España no es el único mapa. Argentina tiene acuerdos de Vacaciones y Trabajo con otros países, y cada país tiene sus propias vías.",
-      relleno: true },
-    { titulo: "Tu proyecto de vida en Córdoba",
-      texto: "Quedarte también es una elección legítima, con sus propias puertas: posgrados, trabajo remoto desde acá, proyectos colectivos. Elegir no se reduce a irse o quedarse.",
-      relleno: false },
-    { titulo: "Dónde pedir orientación",
-      texto: "Servicios de orientación vocacional y ocupacional de tu universidad. Consulado General de España en Córdoba para los trámites. Profesionales del derecho migratorio para casos concretos.",
-      relleno: true }
   ],
 
   /* Recorridos de ejemplo (personajes ficticios) */
