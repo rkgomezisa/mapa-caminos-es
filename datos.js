@@ -45,6 +45,9 @@ const DATOS = {
     hq_salario:            "41.356,36 €/año",
     // Nómada digital: ingreso mínimo y suplementos por familiar.
     // 200 % del SMI = 2.442 € × 14 pagas ÷ 12 (Consulado de Buenos Aires y UGE, 2026)
+    // Al 23/10/2026 ninguna fuente oficial leída da el monto en euros. Ojo: la hoja del Consulado de Bahía Blanca
+    // (2023) usa el 200 % de la paga mensual sin prorratear (con el SMI 2026 serían 2.442 €). Confirmar cuál usa
+    // el Consulado de Córdoba. No lleva [verificar] porque también aparece en la pregunta «remoto».
     nomada_ingreso:        "2.849 €/mes",
     nomada_familiar1:      "75 % del SMI",
     nomada_familiar_extra: "25 % del SMI",
@@ -622,30 +625,66 @@ const DATOS = {
     { id: "nomada", nombre: "Nómada digital", corto: "Nómada digital",
       resumen: "Vivir en España trabajando en remoto para empresas de afuera.",
       reglas: [
+        // FAQ de la UGE sobre teletrabajadores de carácter internacional (n.º 4): «No aplica a ciudadanos de la
+        // Unión Europea». Con pasaporte UE corresponde el registro como ciudadano/a de la UE (decisión del grupo:
+        // ocultarla, igual que en Tarjeta Azul, Altamente cualificado y Traslado).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        // Lo que pesa es tener trabajo remoto para afuera: depende del mercado de origen y del acceso a clientes
+        // o empresas del exterior (decisión del grupo: mantener «mercado» y nombrarlo en el motivo, como en Traslado).
         { si: { pregunta: "remoto", es: ["no"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre si trabajás en remoto para empresas o clientes de fuera de España, con ingresos demostrables de al menos {nomada_ingreso}." },
+          motivo: "Se abre si trabajás en remoto para empresas o clientes de fuera de España, con ingresos demostrables de al menos {nomada_ingreso}. Conseguir ese trabajo depende de tu mercado laboral y de los contactos con el exterior, no solo de vos." },
         { si: { pregunta: "remoto", es: ["informal"] }, resultado: "cierra", condicion: "informalidad",
           motivo: "Pide ingresos demostrables de al menos {nomada_ingreso}. Sin facturación formal no hay cómo acreditarlos." },
         { si: { pregunta: "remoto", es: ["formal_bajo"] }, resultado: "cierra", condicion: "capital_economico",
           motivo: "Pide ingresos demostrables de al menos {nomada_ingreso}, el 200 % del salario mínimo español." },
-        { si: [ { pregunta: "remoto", es: ["formal_bajo", "informal"] }, { pregunta: "cuidados", es: ["si"] } ], resultado: "cierra", condicion: "cuidados",
-          motivo: "Con personas a cargo el umbral sube: {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más." },
-        { si: [ { pregunta: "remoto", es: ["formal_alto"] }, { pregunta: "cuidados", es: ["si"] } ], resultado: "depende", condicion: "cuidados",
+        // UGE (documentación para titulares y FAQ n.º 19): 75 % del SMI por el primer familiar y 25 % por cada uno
+        // más. La vía contempla a la familia; lo que pesa es que el umbral sube (decisión del grupo: «capital
+        // económico» en lugar de «cuidados»).
+        { si: [ { pregunta: "remoto", es: ["formal_alto"] }, { pregunta: "cuidados", es: ["si"] } ], resultado: "depende", condicion: "capital_economico",
           motivo: "El umbral sube con cada familiar que viaje con vos: {nomada_familiar1} por el primero y {nomada_familiar_extra} por cada uno más. Se abre si tus ingresos cubren ese total." },
-        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide título universitario o de formación profesional, o 3 años de experiencia: se abre si podés acreditarlos." } ],
+        // FAQ de la UGE (n.º 17) y Consulado de Buenos Aires: pueden pedir visado la pareja, los hijos e hijas y
+        // los ascendientes a cargo, y pueden residir y trabajar sin restricciones.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden acompañarte y trabajar. Por cada familiar, el ingreso que te piden es mayor." },
+        // UGE (documentación para titulares) y Consulado de Buenos Aires: título universitario, de FP o de escuela
+        // de negocios, o 3 años de experiencia. Sin título, se abre con la experiencia.
+        { si: { pregunta: "formacion", es: ["universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide título universitario o de formación profesional, o 3 años de experiencia: se abre si podés acreditarlos." },
+        // UGE (documentación para titulares) y Consulado de Buenos Aires: 3 meses de relación previa con la empresa
+        // o los clientes, y empresa con al menos 1 año de actividad real y continuada.
+        { resultado: "advierte", condicion: "mercado",
+          motivo: "Te piden 3 meses o más trabajando con esa empresa o esos clientes, y que la empresa tenga al menos 1 año de actividad. Revisá que puedas acreditar las dos cosas." },
+        // Consulado de Buenos Aires: en profesiones reguladas hace falta homologar el título.
+        { si: { pregunta: "formacion", es: ["universitario", "tecnico"] }, resultado: "advierte", condicion: "formacion",
+          motivo: "Si tu profesión está regulada en España (por ejemplo, salud o abogacía), vas a necesitar homologar tu título. Es un trámite aparte y puede tardar." } ],
       ficha: {
+        // Revisada el 23/10/2026 contra: documentación de la UGE para teletrabajadores de carácter internacional
+        // (sin fecha); preguntas frecuentes de la UGE sobre nómadas digitales (sin fecha); página del Consulado de
+        // Buenos Aires «Visado de residencia para teletrabajo» (sin fecha); Criterio de gestión DGGM 2/2025
+        // (16/07/2025), leído en una copia del Colegio de Gestores de Alicante. No se pudieron leer: la página del
+        // mismo visado en el Consulado de Córdoba ni el art. 74 bis de la Ley 14/2013 en el BOE.
         que: "Un permiso para residir en España trabajando en remoto para empresas o clientes del exterior.",
-        // 20 %: solo para quien trabaja por su cuenta (Consulados de Córdoba y Buenos Aires, oct. 2026).
-        // En relación de dependencia, solo se puede trabajar para empresas de fuera de España.
-        // Título o 3 años de experiencia y seguro sin copagos: documentación de la UGE para teletrabajadores.
-        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "Si trabajás en relación de dependencia, solo para empresas de fuera de España. Si trabajás por tu cuenta, no más del 20 % de tu actividad para empresas españolas", "Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
-        sirve: "Vivir en España sin depender del mercado laboral español.",
-        noPermite: "Contenido provisorio.",
-        // En Córdoba se presenta en persona en el consulado (en Buenos Aires, en cambio, por BLS)
-        tramite: "Consulado General de España en Córdoba, en persona (Bv. Chacabuco 875). Si ya estás en España de forma legal, se pide en la Unidad de Grandes Empresas.",
-        fuente: { texto: "Consulado General de España en Córdoba, visado para teletrabajo (octubre de 2026)", url: "https://www.exteriores.gob.es/Consulados/cordoba/es/ServiciosConsulares/Paginas/index.aspx?scca=Visados&scco=Argentina&scd=129&scs=Visados+Nacionales+-+Visado+de+residencia+para+teletrabajo+%28n%C3%B3mada+digital%29" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // 20 %: solo para quien trabaja por su cuenta (Consulado de Buenos Aires y FAQ de la UGE n.º 14). En relación
+        // de dependencia, solo se puede trabajar para empresas de fuera de España.
+        // 3 meses, 1 año de actividad, título o 3 años de experiencia, seguro sin copagos ni carencias,
+        // antecedentes penales: documentación de la UGE. Homologación: Consulado de Buenos Aires. No UE: FAQ n.º 4.
+        // Montos: 200 % del SMI, más 75 % y 25 % por familiar (UGE y FAQ n.º 19).
+        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "Si trabajás en relación de dependencia, solo para empresas de fuera de España. Si trabajás por tu cuenta, no más del 20 % de tu actividad para empresas españolas", "Título universitario o de formación profesional, o 3 años de experiencia", "Título homologado, si tu profesión está regulada en España", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico sin copagos ni carencias (no sirve uno de viaje)", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        // Familia: FAQ de la UGE (n.º 17) y Consulado de Buenos Aires.
+        sirve: "Vivir en España sin depender del mercado laboral español. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo, y también pueden trabajar.",
+        // Visado de 1 año: Consulado de Buenos Aires y FAQ de la UGE (n.º 15). Autorización desde España «por el
+        // tiempo solicitado con el máximo de tres años»: Criterio DGGM 2/2025, leído en una copia no oficial, por
+        // eso va [verificar]. No se encontró en qué condiciones se renueva.
+        noPermite: "Si trabajás en relación de dependencia, no podés trabajar para empresas españolas. Si trabajás por tu cuenta, lo que hagas para empresas españolas no puede pasar del 20 % de tu actividad. No sirve para buscar trabajo en España. Es temporal: el visado dura 1 año y, desde España, podés pedir una autorización de hasta 3 años [verificar].",
+        // Córdoba: en persona en el consulado (dato de una revisión anterior; la página no se pudo volver a leer el
+        // 23/10/2026). Consulado de Buenos Aires: presencial, resuelve en 10 días y hay 1 mes para retirarlo.
+        // Desde España: UGE, con el visado en vigor, en los 60 días antes de que venza (FAQ de la UGE n.º 15).
+        tramite: "Consulado General de España en Córdoba, en persona (Bv. Chacabuco 875) [verificar]. Resuelve en 10 días. Si ya estás en España de forma legal, se pide en la Unidad de Grandes Empresas.",
+        fuente: { texto: "Unidad de Grandes Empresas: preguntas frecuentes sobre teletrabajo internacional, y Consulado de Buenos Aires", url: "https://bibliovirtual.inclusion.gob.es/documents/d/unidadgrandesempresas/nomadas-digitales-faqs-espanol" },
+        // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento oficial más reciente que se pudo leer
+        // (en copia). Las páginas de la UGE y del Consulado de Buenos Aires, que respaldan los requisitos, no tienen
+        // fecha. Si la página del Consulado de Córdoba tiene fecha, se usa esa.
+        vigencia: "Julio de 2025 [verificar]", verificar: false, relleno: false } },
 
     { id: "emprendedor", nombre: "Emprendedor/a", corto: "Emprendedor",
       resumen: "Para proyectos innovadores o escalables, con informe de ENISA.",

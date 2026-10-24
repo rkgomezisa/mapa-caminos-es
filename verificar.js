@@ -157,7 +157,7 @@ D.personas.forEach(p => {
    Si el grupo decide cambiar un recorrido a propósito, se actualiza acá. */
 const ESPERADO = {
   A: { // Valentina: casi todo abierto, muestra el peso de la herencia
-    abiertas: ["ue", "nomada", "vyt"],
+    abiertas: ["ue", "vyt"],
     minAbiertas: 3
   },
   B: { // Joaquín: informalidad cierra nómada digital; VyT depende de los ahorros
