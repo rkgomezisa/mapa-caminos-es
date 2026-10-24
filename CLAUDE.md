@@ -15,7 +15,7 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
 ## Enfoque (no negociable)
 
 - **Orientación crítica e interseccional.** Cuando una vía se cierra, se nombra la **condición del entorno** que la cierra (ascendencia europea, capital económico, informalidad laboral, tipo de formación, edad o tiempo desde el egreso, cargas de cuidado, redes, mercado laboral de destino). Nunca se presenta como un déficit de la persona.
-- **Mapa, no embudo.** La persona ve todas las vías: abiertas, "se abren si…", cerradas (y por qué), y "Siempre disponible". Quedarse en Córdoba se presenta como un proyecto de vida legítimo.
+- **Mapa, no embudo.** La persona ve todas las vías: abiertas, "se abren si…" y cerradas (y por qué). Quedarse en Córdoba se presenta como un proyecto de vida legítimo.
 - **Tono:** cálido, no culpabiliza. Voseo rioplatense ("tenés", "podés", "mirá"), lenguaje claro, frases cortas.
 - **Vacaciones y Trabajo** se presenta como una estancia para explorar, no como una vía para quedarse.
 
@@ -23,7 +23,7 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
 
 | Archivo | Rol |
 |---|---|
-| `datos.js` | Todo el contenido en `const DATOS = {...}`: cifras, textos, condiciones, preguntas, vías (con reglas y ficha), hoja final y personajes. Lo edita gente no técnica. |
+| `datos.js` | Todo el contenido en `const DATOS = {...}`: cifras, textos, condiciones, preguntas, vías (con reglas y ficha) y personajes. Lo edita gente no técnica. |
 | `index.html` | Estilos y lógica, sin contenido. Carga `datos.js` con `<script src>`; si falla, muestra un aviso con la línea del error. |
 | `verificar.js` | Valida `datos.js` y comprueba los tres recorridos de ejemplo. También corre en GitHub Actions. |
 | `README.md` | Guía para el grupo: editar desde la web de GitHub. |

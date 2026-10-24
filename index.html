@@ -215,15 +215,13 @@ html.proyeccion .paso-grid, .paso-grid.ancho { grid-template-columns: minmax(0, 
 .aviso.relleno { background: var(--off-bg); color: var(--off); border-color: var(--off); }
 /* marca de un dato puntual a verificar, dentro del texto de la ficha */
 .aviso-dato { display: inline-block; margin-left: 4px; padding: 0 6px; white-space: nowrap; vertical-align: baseline; }
+.cierre { margin: 0; padding: 4px 0 4px 14px; border-left: 4px solid var(--accent); font-size: 1.05rem; }
 .vacio { background: var(--surface); border: 1.5px dashed var(--line); border-radius: 8px; padding: 14px; color: var(--muted); }
 .banner { background: var(--always-bg); color: var(--ink); border: 1.5px solid var(--always); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
 .banner h2 { color: var(--always); }
 .condiciones { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .condiciones li { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-size: 0.92rem; }
 .condiciones .n { font-variant-numeric: tabular-nums; color: var(--muted); }
-.siempre { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
-.siempre li { background: var(--always-bg); border: 1.5px solid var(--always); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
-.siempre h3 { color: var(--always); }
 details { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 0 14px; }
 summary { cursor: pointer; padding-block: 12px; font-weight: 700; }
 details[open] { padding-bottom: 14px; }
@@ -259,7 +257,6 @@ html:has(dialog[open]) { overflow: hidden; }
 /* índice de resultados */
 .indice { display: flex; flex-wrap: wrap; gap: 8px; }
 .indice a { text-decoration: none; font-weight: 700; font-size: 0.92rem; padding: 8px 12px; border-radius: 6px; color: var(--c); background: var(--cbg); border: 1px solid var(--c); }
-.st-siempre { --c: var(--always); --cbg: var(--always-bg); }
 h2[tabindex="-1"]:focus { outline: none; }
 h2 { scroll-margin-top: 12px; }
 
@@ -299,7 +296,7 @@ h2 { scroll-margin-top: 12px; }
   .tarjeta { padding: 12px; gap: 6px; }
   .tarjeta-resumen, .tarjeta .motivo-texto, .tarjeta .nota { display: none; }
   .tarjeta .motivo { padding: 6px 8px; }
-  .tarjetas, .siempre { gap: 8px; }
+  .tarjetas { gap: 8px; }
   dialog { width: 100vw; max-width: 100vw; max-height: 88dvh; margin: auto 0 0; border-radius: 12px 12px 0 0; border-bottom: 0; }
   .ficha { padding: 16px 16px calc(20px + env(safe-area-inset-bottom, 0px)); }
   .ficha-cab { margin: -16px -16px 0; padding: 14px 16px 10px; }
@@ -313,7 +310,7 @@ h2 { scroll-margin-top: 12px; }
 @media print {
   body { background: #fff; }
   .top, .fila, .nav-pregunta, .indice, .ver-ficha, .respuestas .btn, dialog { display: none !important; }
-  .tarjeta, .siempre li, .panel, .banner { break-inside: avoid; }
+  .tarjeta, .panel, .banner { break-inside: avoid; }
   .pill, .chip, .motivo, .aviso { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.8em; word-break: break-all; }
 }
@@ -482,7 +479,6 @@ h2 { scroll-margin-top: 12px; }
           <div class="seccion-titulo"><h2 id="t-todas">${tx(D.textos.explorarTituloVias)}</h2><span class="cuenta">${D.vias.length}</span></div>
           <ul class="tarjetas">${tarjetas}</ul>
         </section>
-        ${siempreHTML()}
         <div class="fila">
           <button class="btn btn-primario" type="button" id="x-recorrido">${tx(D.textos.inicioOpciones.cuestionario.titulo)}</button>
           <button class="btn" type="button" id="x-volver">Volver al inicio</button>
@@ -634,14 +630,6 @@ h2 { scroll-margin-top: 12px; }
     </li>`;
   }
 
-  function siempreHTML() {
-    return `
-      <section class="seccion" aria-labelledby="t-si">
-        <h2 id="t-si">${tx(D.textos.tituloSiempre)}</h2>
-        <ul class="siempre">${D.siempre.map(s => `<li><h3>${tx(s.titulo)}</h3><p>${tx(s.texto)}</p>${s.relleno ? `<div class="avisos"><span class="aviso relleno">${esc(D.textos.avisoRelleno)}</span></div>` : ""}</li>`).join("")}</ul>
-      </section>`;
-  }
-
   function resultados() {
     const m = mapa(estado.resp);
     const por = k => m.filter(r => r.estado === k);
@@ -686,15 +674,14 @@ h2 { scroll-margin-top: 12px; }
           <a href="#t-ab" class="st-abierta"><span aria-hidden="true">${D.textos.estados.abierta.simbolo}</span> ${abiertas.length} abiertas</a>
           ${depende.length ? `<a href="#t-dep" class="st-depende"><span aria-hidden="true">${D.textos.estados.depende.simbolo}</span> ${depende.length} se abren si…</a>` : ""}
           <a href="#t-ce" class="st-cerrada"><span aria-hidden="true">${D.textos.estados.cerrada.simbolo}</span> ${cerradas.length} cerradas</a>
-          <a href="#t-si" class="st-siempre">Siempre disponible</a>
         </nav>
         ${condHTML}
         ${grupo("t-ab", D.textos.tituloAbiertas, abiertas, depende.length ? null : D.textos.sinAbiertas)}
         ${!abiertas.length && depende.length ? `<p class="vacio">${tx(D.textos.sinAbiertas)}</p>` : ""}
         ${depende.length ? grupo("t-dep", D.textos.tituloDepende, depende) : ""}
         ${grupo("t-ce", D.textos.tituloCerradas, cerradas, "Ninguna vía se cerró con estas respuestas.")}
-        ${siempreHTML()}
         ${noInt.length ? `<details><summary>${tx(D.textos.tituloNoInteresa)} (${noInt.length})</summary><ul class="tarjetas">${noInt.map(tarjetaHTML).join("")}</ul></details>` : ""}
+        ${D.textos.cierreResultados ? `<p class="cierre">${tx(D.textos.cierreResultados)}</p>` : ""}
         <div class="fila">
           <button class="btn btn-primario" type="button" id="r-reiniciar">Volver a empezar</button>
           ${p ? `<button class="btn" type="button" id="r-repetir">Ver el recorrido de ${esc(p.nombre)} otra vez</button>` : ""}

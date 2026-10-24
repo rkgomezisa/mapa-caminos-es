@@ -62,13 +62,13 @@ function evaluar(via, resp) {
 const mapa = resp => D.vias.map(v => evaluar(v, resp)).filter(r => r.estado !== "oculta");
 
 /* ---------- 2. coherencia ---------- */
-for (const k of ["cifras", "textos", "condiciones", "preguntas", "vias", "siempre", "personas"]) {
+for (const k of ["cifras", "textos", "condiciones", "preguntas", "vias", "personas"]) {
   if (!D[k]) error(`Falta la sección "${k}".`);
 }
 if (errores.length) terminar();
 
 // textos de las pantallas de inicio, ejemplos y explorar
-for (const k of ["advertenciaTitulo", "advertenciaCorta", "advertenciaEtiqueta", "avisoDato", "avisoDatos1", "avisoDatosN", "avisoFicha", "avisoRelleno", "inicioTitulo", "inicioBajada", "inicioPrivacidad", "ejemplosTitulo", "ejemplosBajada", "explorarTitulo", "explorarBajada", "explorarTituloVias", "explorarPesan", "explorarCierran", "explorarDependen"]) {
+for (const k of ["advertenciaTitulo", "advertenciaCorta", "advertenciaEtiqueta", "avisoDato", "avisoDatos1", "avisoDatosN", "avisoFicha", "avisoRelleno", "inicioTitulo", "inicioBajada", "inicioPrivacidad", "ejemplosTitulo", "ejemplosBajada", "explorarTitulo", "explorarBajada", "explorarTituloVias", "explorarPesan", "explorarCierran", "explorarDependen", "cierreResultados"]) {
   if (!D.textos[k]) error(`Falta el texto "${k}" en textos.`);
 }
 for (const k of ["cuestionario", "ejemplos", "explorar"]) {
@@ -165,7 +165,7 @@ const ESPERADO = {
     cerradaPor: { nomada: "informalidad", vyt: "capital_economico" },
     abiertaSiCambia: { cambio: { ahorros: "alto" }, via: "vyt" }
   },
-  C: { // Romina: se le cierra casi todo a la vez, llega a la hoja final.
+  C: { // Romina: se le cierra casi todo a la vez.
        // VyT se cierra por ahorros; tener un hijo a cargo aparece como advertencia (no puede viajar con él).
     maxAbiertas: 0,
     cerradaPor: { vyt: "capital_economico", ue: "ascendencia" },
