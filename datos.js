@@ -503,9 +503,10 @@ const DATOS = {
         noPermite: "No es un visado para buscar trabajo: sin un contrato u oferta de al menos 6 meses no se puede pedir. Dura hasta 3 años, o lo que dure el contrato más 3 meses. Si tu profesión está regulada en España, sin el título homologado no se puede pedir.",
         // Hoja 66 (mayo de 2025): se presenta por la sede electrónica de la UGE (la puede pedir el empleador o la
         // persona); resuelve en 20 días con silencio positivo; después, 1 mes para pedir el visado en persona en
-        // el consulado de la demarcación, que resuelve en 10 días. El Consulado de Córdoba lista este visado,
-        // pero no se pudo leer su página (en Buenos Aires se presenta por BLS): queda [verificar].
-        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba [verificar], que resuelve en 10 días.",
+        // el consulado de la demarcación, que resuelve en 10 días. Consulado de Córdoba, «Visado para trabajador
+        // altamente cualificado y para traslado intraempresarial» (sin fecha, leída el 23/10/2026): se presenta en
+        // persona, con cita pedida a cog.cordoba.vis@maec.es; resuelve en 10 días; 1 mes para retirarlo.
+        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
         fuente: { texto: "Unidad de Grandes Empresas: umbral salarial de la Tarjeta Azul (junio de 2026), y Hoja 66 de Inclusión (mayo de 2025)", url: "https://www.inclusion.gob.es/documents/d/unidadgrandesempresas/umbral-salarial.pdf" },
         // Vigencia: nota de la UGE (junio de 2026), el documento más reciente y el que respalda el requisito
         // que define la vía (el salario). La Hoja 66, que respalda el resto, es de mayo de 2025.
@@ -557,9 +558,10 @@ const DATOS = {
         noPermite: "No es un visado para buscar trabajo: sin un contrato no se puede pedir. Dura hasta 3 años, o lo que dure el contrato más 3 meses. No baja el salario exigido si te recibiste hace poco. Si tu profesión está regulada en España, sin el título homologado no se puede pedir.",
         // Hoja 66 (mayo de 2025): sede electrónica de la UGE (la pide el empleador o la persona); resuelve en 20
         // días con silencio positivo; después, 1 mes para pedir el visado en persona en el consulado de la
-        // demarcación, que resuelve en 10 días. En Buenos Aires se presenta en BLS; la página de Córdoba no se
-        // pudo leer: queda [verificar].
-        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba [verificar], que resuelve en 10 días.",
+        // demarcación, que resuelve en 10 días. Consulado de Córdoba (misma página, leída el 23/10/2026): en
+        // persona, con cita pedida a cog.cordoba.vis@maec.es. Art. 71.2 b) y 71.3 de la Ley 14/2013 (BOE,
+        // texto consolidado al 09/04/2025): nivel 1 del MECES o 3 años de experiencia; 3 años o contrato + 3 meses.
+        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
         fuente: { texto: "Hoja 66 de Inclusión (mayo de 2025) y Unidad de Grandes Empresas: umbral salarial (junio de 2026)", url: "https://www.inclusion.gob.es/web/migraciones/w/66.-autorizacion-inicial-de-residencia-y-trabajo-de-profesionales-altamente-cualificados" },
         // Vigencia: nota de la UGE (junio de 2026), el documento más reciente y el que respalda el salario. La
         // Hoja 66, que respalda el resto, es de mayo de 2025.
@@ -600,27 +602,28 @@ const DATOS = {
         // mismo visado en el Consulado de Córdoba, los arts. 73 a 76 de la Ley 14/2013 en el BOE (última
         // modificación: 09/04/2025) ni el PDF oficial del Criterio de gestión DGGM 2/2025.
         que: "Un permiso para que la empresa en la que ya trabajás te traslade a una sede o filial de su grupo en España. Hay una modalidad para puestos de dirección, especialistas y personas en formación, y otra nacional para otros casos.",
-        // Tríptico de la UGE: 3 meses de relación previa y continuada [verificar contra el art. 73 vigente];
+        // Art. 73.2 de la Ley 14/2013 (BOE, texto consolidado al 09/04/2025): 3 meses de relación previa y
+        // continuada con el grupo; titulación de nivel 1 del MECES o 3 años de experiencia. Tríptico de la UGE:
         // titulación superior o equivalente, o 3 años de experiencia; lo pide la empresa; seguro médico;
         // certificado de antecedentes penales; no ser de la UE, el EEE ni Suiza.
-        requisitos: ["3 meses o más trabajando en la empresa o el grupo [verificar]", "Título de educación superior o 3 años de experiencia profesional", "Que la empresa decida trasladarte y lo pida", "Seguro médico", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        requisitos: ["3 meses o más trabajando en la empresa o el grupo", "Título de educación superior o 3 años de experiencia profesional", "Que la empresa decida trasladarte y lo pida", "Seguro médico", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
         // Familia: tríptico de la UGE y Consulado de Buenos Aires. No se afirma la movilidad a otros países de la
         // UE (solo ICT‑UE, según el tríptico): falta confirmarla en la ley vigente.
         sirve: "Trabajar en la sede española de tu empresa durante el traslado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
         // Tríptico de la UGE: la autorización dura lo que el traslado, hasta 2 años renovables, con un máximo de
         // 3 años (directivos y especialistas) y 1 año (trabajadores en formación). El Criterio DGGM 2/2025
-        // (16/07/2025) la fijaría en la duración del traslado con los mismos topes (solo se leyó en un resumen no
-        // oficial): queda [verificar].
-        noPermite: "No la podés pedir por tu cuenta: la pide la empresa. No sirve para buscar trabajo ni para cambiar de empleador. Es temporal: dura lo que dure el traslado, hasta 3 años (1 año si es un puesto en formación) [verificar].",
+        // (16/07/2025, PDF oficial de la UGE) y el art. 73.3 de la Ley 14/2013 (BOE) confirman: lo que dure el
+        // traslado, hasta 3 años (directivos y especialistas) o 1 año (formación).
+        noPermite: "No la podés pedir por tu cuenta: la pide la empresa. No sirve para buscar trabajo ni para cambiar de empleador. Es temporal: dura lo que dure el traslado, hasta 3 años (1 año si es un puesto en formación).",
         // Tríptico de la UGE: la presenta la empresa de destino o la que traslada en la UGE; autorización en 20
         // días; visado en 10 días. Consulado de Buenos Aires: se presenta en BLS, resuelve en 10 días y hay 1 mes
-        // para retirarlo. La página de Córdoba no se pudo leer: queda [verificar].
-        tramite: "La empresa lo pide en la Unidad de Grandes Empresas, que resuelve en 20 días. Con la autorización, pedís el visado en el Consulado General de España en Córdoba [verificar], que resuelve en 10 días.",
+        // para retirarlo. Consulado de Córdoba (leída el 23/10/2026): en persona, con cita pedida por correo.
+        tramite: "La empresa lo pide en la Unidad de Grandes Empresas, que resuelve en 20 días. Con la autorización, pedís el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
         fuente: { texto: "Unidad de Grandes Empresas: tríptico «Traslado intraempresarial» y Consulado de Buenos Aires", url: "https://www.inclusion.gob.es/documents/1823432/1826080/triptico-traslado-empresarial-ESP.pdf/72ee37b3-6a4a-3722-2a88-70501ed4aef2?t=1664798332880" },
         // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento más reciente sobre la duración. No
-        // se pudo leer el PDF oficial, por eso va [verificar]. El tríptico de la UGE, que respalda el resto, no
+        // leído en el PDF oficial de la UGE el 23/10/2026. El tríptico de la UGE, que respalda el resto, no
         // tiene fecha (depósito legal de 2016).
-        vigencia: "Julio de 2025 [verificar]", verificar: false, relleno: false } },
+        vigencia: "Julio de 2025", verificar: false, relleno: false } },
 
     { id: "nomada", nombre: "Nómada digital", corto: "Nómada digital",
       resumen: "Vivir en España trabajando en remoto para empresas de afuera.",
@@ -673,18 +676,19 @@ const DATOS = {
         // Familia: FAQ de la UGE (n.º 17) y Consulado de Buenos Aires.
         sirve: "Vivir en España sin depender del mercado laboral español. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo, y también pueden trabajar.",
         // Visado de 1 año: Consulado de Buenos Aires y FAQ de la UGE (n.º 15). Autorización desde España «por el
-        // tiempo solicitado con el máximo de tres años»: Criterio DGGM 2/2025, leído en una copia no oficial, por
-        // eso va [verificar]. No se encontró en qué condiciones se renueva.
-        noPermite: "Si trabajás en relación de dependencia, no podés trabajar para empresas españolas. Si trabajás por tu cuenta, lo que hagas para empresas españolas no puede pasar del 20 % de tu actividad. No sirve para buscar trabajo en España. Es temporal: el visado dura 1 año y, desde España, podés pedir una autorización de hasta 3 años [verificar].",
-        // Córdoba: en persona en el consulado (dato de una revisión anterior; la página no se pudo volver a leer el
-        // 23/10/2026). Consulado de Buenos Aires: presencial, resuelve en 10 días y hay 1 mes para retirarlo.
+        // tiempo solicitado con el máximo de tres años»: Criterio DGGM 2/2025 (PDF oficial de la UGE) y art. 74
+        // quinquies de la Ley 14/2013 (BOE), que además permite renovarla por períodos de 2 años.
+        noPermite: "Si trabajás en relación de dependencia, no podés trabajar para empresas españolas. Si trabajás por tu cuenta, lo que hagas para empresas españolas no puede pasar del 20 % de tu actividad. No sirve para buscar trabajo en España. Es temporal: el visado dura 1 año y, desde España, podés pedir una autorización de hasta 3 años.",
+        // Consulado de Córdoba, «Visado de residencia para teletrabajo (nómada digital)» (sin fecha, leída el
+        // 23/10/2026): en persona en Bv. Chacabuco 875, resuelve en 10 días y hay 1 mes para retirarlo. No da
+        // el monto en euros: dice «mensualmente el 200 % del SMI».
         // Desde España: UGE, con el visado en vigor, en los 60 días antes de que venza (FAQ de la UGE n.º 15).
-        tramite: "Consulado General de España en Córdoba, en persona (Bv. Chacabuco 875) [verificar]. Resuelve en 10 días. Si ya estás en España de forma legal, se pide en la Unidad de Grandes Empresas.",
+        tramite: "Consulado General de España en Córdoba, en persona (Bv. Chacabuco 875). Resuelve en 10 días. Si ya estás en España de forma legal, se pide en la Unidad de Grandes Empresas.",
         fuente: { texto: "Unidad de Grandes Empresas: preguntas frecuentes sobre teletrabajo internacional, y Consulado de Buenos Aires", url: "https://bibliovirtual.inclusion.gob.es/documents/d/unidadgrandesempresas/nomadas-digitales-faqs-espanol" },
         // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento oficial más reciente que se pudo leer
-        // (en copia). Las páginas de la UGE y del Consulado de Buenos Aires, que respaldan los requisitos, no tienen
-        // fecha. Si la página del Consulado de Córdoba tiene fecha, se usa esa.
-        vigencia: "Julio de 2025 [verificar]", verificar: false, relleno: false } },
+        // (PDF oficial, leído el 23/10/2026). Las páginas de la UGE y de los Consulados de Buenos Aires y de
+        // Córdoba, que respaldan los requisitos, no tienen fecha.
+        vigencia: "Julio de 2025", verificar: false, relleno: false } },
 
     { id: "emprendedor", nombre: "Emprendedor/a", corto: "Emprendedor",
       resumen: "Para proyectos innovadores o escalables, con informe de ENISA.",
