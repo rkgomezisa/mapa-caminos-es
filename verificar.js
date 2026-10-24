@@ -68,7 +68,7 @@ for (const k of ["cifras", "textos", "condiciones", "preguntas", "vias", "person
 if (errores.length) terminar();
 
 // textos de las pantallas de inicio, ejemplos y explorar
-for (const k of ["advertenciaTitulo", "advertenciaCorta", "advertenciaEtiqueta", "avisoDato", "avisoDatos1", "avisoDatosN", "avisoFicha", "avisoRelleno", "inicioTitulo", "inicioBajada", "inicioPrivacidad", "ejemplosTitulo", "ejemplosBajada", "explorarTitulo", "explorarBajada", "explorarTituloVias", "explorarPesan", "explorarCierran", "explorarDependen"]) {
+for (const k of ["advertenciaTitulo", "advertenciaCorta", "advertenciaEtiqueta", "avisoDato", "avisoDatos1", "avisoDatosN", "avisoFicha", "avisoRelleno", "inicioTitulo", "inicioBajada", "inicioPrivacidad", "ejemplosTitulo", "ejemplosBajada", "explorarTitulo", "explorarBajada", "explorarTituloVias", "explorarPesan", "explorarCierran", "explorarDependen", "cierreResultados"]) {
   if (!D.textos[k]) error(`Falta el texto "${k}" en textos.`);
 }
 for (const k of ["cuestionario", "ejemplos", "explorar"]) {

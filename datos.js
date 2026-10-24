@@ -111,6 +111,8 @@ const DATOS = {
     tituloDepende: "Se abren si aparece…",
     tituloCerradas: "Vías que se cerraron (y por qué)",
     tituloNoInteresa: "Otras vías del mapa (dijiste que no te interesan por ahora)",
+    // Cierre del mapa de resultados: quedarse también es una opción
+    cierreResultados: "Ver estas vías no te obliga a elegir ninguna. Quedarte en Córdoba es una opción tan legítima como irte, no un plan B. Y elegir no se reduce a irse o quedarse: también podés tomarte tu tiempo, combinar caminos o volver a mirar el mapa más adelante.",
     tituloCondiciones: "Condiciones del entorno que pesaron en este recorrido",
     // Avisos de las fichas (el # se reemplaza por la cantidad)
     // Advertencias: algo para revisar antes de avanzar (no abren ni cierran la vía)

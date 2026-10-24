@@ -215,6 +215,7 @@ html.proyeccion .paso-grid, .paso-grid.ancho { grid-template-columns: minmax(0, 
 .aviso.relleno { background: var(--off-bg); color: var(--off); border-color: var(--off); }
 /* marca de un dato puntual a verificar, dentro del texto de la ficha */
 .aviso-dato { display: inline-block; margin-left: 4px; padding: 0 6px; white-space: nowrap; vertical-align: baseline; }
+.cierre { margin: 0; padding: 4px 0 4px 14px; border-left: 4px solid var(--accent); font-size: 1.05rem; }
 .vacio { background: var(--surface); border: 1.5px dashed var(--line); border-radius: 8px; padding: 14px; color: var(--muted); }
 .banner { background: var(--always-bg); color: var(--ink); border: 1.5px solid var(--always); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
 .banner h2 { color: var(--always); }
@@ -680,6 +681,7 @@ h2 { scroll-margin-top: 12px; }
         ${depende.length ? grupo("t-dep", D.textos.tituloDepende, depende) : ""}
         ${grupo("t-ce", D.textos.tituloCerradas, cerradas, "Ninguna vía se cerró con estas respuestas.")}
         ${noInt.length ? `<details><summary>${tx(D.textos.tituloNoInteresa)} (${noInt.length})</summary><ul class="tarjetas">${noInt.map(tarjetaHTML).join("")}</ul></details>` : ""}
+        ${D.textos.cierreResultados ? `<p class="cierre">${tx(D.textos.cierreResultados)}</p>` : ""}
         <div class="fila">
           <button class="btn btn-primario" type="button" id="r-reiniciar">Volver a empezar</button>
           ${p ? `<button class="btn" type="button" id="r-repetir">Ver el recorrido de ${esc(p.nombre)} otra vez</button>` : ""}
