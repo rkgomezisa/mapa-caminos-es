@@ -565,18 +565,59 @@ const DATOS = {
     { id: "traslado", nombre: "Traslado intraempresarial", corto: "Traslado",
       resumen: "Para quien ya trabaja en una empresa con filial en España.",
       reglas: [
+        // Tríptico de la UGE «Traslado intraempresarial. Ciudadanos no UE» (sin fecha; depósito legal de 2016):
+        // excluye a ciudadanos/as de la UE, el EEE y Suiza. Con pasaporte UE corresponde el registro como
+        // ciudadano/a de la UE (decisión del grupo: ocultarla, igual que en Tarjeta Azul y Altamente cualificado).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        // Tríptico de la UGE: 3 meses previos y continuados en la empresa o el grupo. Lo que pesa es trabajar en
+        // una empresa con sede en España, algo que depende del mercado laboral de origen y de que la empresa
+        // decida el traslado (decisión del grupo: mantener «mercado» y nombrarlo en el motivo).
         { si: { pregunta: "oferta", es: ["oferta", "no"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre si trabajás hace 3 meses o más en una empresa o grupo con filial en España." },
-        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide título o experiencia profesional: se abre si podés acreditarla." } ],
+          motivo: "Se abre si trabajás hace 3 meses o más en una empresa o grupo con sede en España, y si esa empresa decide trasladarte. Depende de qué empresas hay en tu mercado laboral, no solo de vos." },
+        // Tríptico de la UGE: titulación superior o equivalente, o al menos 3 años de experiencia profesional.
+        { si: { pregunta: "formacion", es: ["universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide un título de educación superior o 3 años de experiencia profesional: se abre si podés acreditarlos." },
+        // El tríptico dice «titulación superior o equivalente» sin aclarar si incluye al técnico superior.
+        { si: { pregunta: "formacion", es: ["tecnico"] }, resultado: "advierte", condicion: "formacion",
+          motivo: "No está claro si un título terciario cuenta como «titulación superior». Si no, vas a necesitar acreditar 3 años de experiencia. Consultalo con la empresa antes de avanzar." },
+        // Tríptico de la UGE y Consulado de Buenos Aires: pueden pedir visado la pareja (registrada o no), los
+        // hijos e hijas a cargo y los ascendientes a cargo, junto con la persona o después.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden pedir visado para acompañarte." },
+        // Tríptico de la UGE y página de la UGE «Trabajadores que efectúen movimientos intraempresariales»: la
+        // modalidad ICT‑UE es para directivos, especialistas y trabajadores en formación; la nacional, para otros
+        // casos (por ejemplo, la ejecución de un contrato de servicios).
+        { resultado: "advierte", condicion: "mercado",
+          motivo: "Hay dos modalidades: una para puestos de dirección, especialistas y personas en formación, y otra nacional para otros casos. Preguntale a tu empresa cuál corresponde a tu puesto: cambia cuánto dura el traslado." } ],
       ficha: {
-        que: "Un permiso para quienes su propia empresa traslada a una filial en España.",
-        requisitos: ["3 meses o más trabajando en el grupo empresarial", "Título o experiencia profesional"],
-        sirve: "Trabajar en la filial española de tu empresa.",
-        noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
-        fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: tríptico de la UGE «Traslado intraempresarial. Ciudadanos no UE» (sin
+        // fecha; NIPO 720-16-209-1, depósito legal M-26544-2016); página de la UGE «Trabajadores que efectúen
+        // movimientos intraempresariales» (sin fecha); página del Consulado de Buenos Aires «Visado para trabajador
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página del
+        // mismo visado en el Consulado de Córdoba, los arts. 73 a 76 de la Ley 14/2013 en el BOE (última
+        // modificación: 09/04/2025) ni el PDF oficial del Criterio de gestión DGGM 2/2025.
+        que: "Un permiso para que la empresa en la que ya trabajás te traslade a una sede o filial de su grupo en España. Hay una modalidad para puestos de dirección, especialistas y personas en formación, y otra nacional para otros casos.",
+        // Tríptico de la UGE: 3 meses de relación previa y continuada [verificar contra el art. 73 vigente];
+        // titulación superior o equivalente, o 3 años de experiencia; lo pide la empresa; seguro médico;
+        // certificado de antecedentes penales; no ser de la UE, el EEE ni Suiza.
+        requisitos: ["3 meses o más trabajando en la empresa o el grupo [verificar]", "Título de educación superior o 3 años de experiencia profesional", "Que la empresa decida trasladarte y lo pida", "Seguro médico", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        // Familia: tríptico de la UGE y Consulado de Buenos Aires. No se afirma la movilidad a otros países de la
+        // UE (solo ICT‑UE, según el tríptico): falta confirmarla en la ley vigente.
+        sirve: "Trabajar en la sede española de tu empresa durante el traslado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
+        // Tríptico de la UGE: la autorización dura lo que el traslado, hasta 2 años renovables, con un máximo de
+        // 3 años (directivos y especialistas) y 1 año (trabajadores en formación). El Criterio DGGM 2/2025
+        // (16/07/2025) la fijaría en la duración del traslado con los mismos topes (solo se leyó en un resumen no
+        // oficial): queda [verificar].
+        noPermite: "No la podés pedir por tu cuenta: la pide la empresa. No sirve para buscar trabajo ni para cambiar de empleador. Es temporal: dura lo que dure el traslado, hasta 3 años (1 año si es un puesto en formación) [verificar].",
+        // Tríptico de la UGE: la presenta la empresa de destino o la que traslada en la UGE; autorización en 20
+        // días; visado en 10 días. Consulado de Buenos Aires: se presenta en BLS, resuelve en 10 días y hay 1 mes
+        // para retirarlo. La página de Córdoba no se pudo leer: queda [verificar].
+        tramite: "La empresa lo pide en la Unidad de Grandes Empresas, que resuelve en 20 días. Con la autorización, pedís el visado en el Consulado General de España en Córdoba [verificar], que resuelve en 10 días.",
+        fuente: { texto: "Unidad de Grandes Empresas: tríptico «Traslado intraempresarial» y Consulado de Buenos Aires", url: "https://www.inclusion.gob.es/documents/1823432/1826080/triptico-traslado-empresarial-ESP.pdf/72ee37b3-6a4a-3722-2a88-70501ed4aef2?t=1664798332880" },
+        // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento más reciente sobre la duración. No
+        // se pudo leer el PDF oficial, por eso va [verificar]. El tríptico de la UGE, que respalda el resto, no
+        // tiene fecha (depósito legal de 2016).
+        vigencia: "Julio de 2025 [verificar]", verificar: false, relleno: false } },
 
     { id: "nomada", nombre: "Nómada digital", corto: "Nómada digital",
       resumen: "Vivir en España trabajando en remoto para empresas de afuera.",
