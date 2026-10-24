@@ -682,7 +682,7 @@ const DATOS = {
         // Visado de 1 año: Consulado de Buenos Aires y FAQ de la UGE (n.º 15). Autorización desde España «por el
         // tiempo solicitado con el máximo de tres años»: Criterio DGGM 2/2025 (PDF oficial de la UGE) y art. 74
         // quinquies de la Ley 14/2013 (BOE), que además permite renovarla por períodos de 2 años.
-        noPermite: "Si trabajás en relación de dependencia, no podés trabajar para empresas españolas. Si trabajás por tu cuenta, lo que hagas para empresas españolas no puede pasar del 20 % de tu actividad. No sirve para buscar trabajo en España. Es temporal: el visado dura 1 año y, desde España, podés pedir una autorización de hasta 3 años.",
+        noPermite: "Si trabajás en relación de dependencia, no podés trabajar para empresas españolas. Si trabajás por tu cuenta, lo que hagas para empresas españolas no puede pasar del 20 % de tu actividad. No sirve para buscar trabajo en España. Es temporal: el visado dura 1 año y, desde España, podés pedir una autorización de hasta 3 años, que se renueva por períodos de 2 años.",
         // Consulado de Córdoba, «Visado de residencia para teletrabajo (nómada digital)» (sin fecha, leída el
         // 23/10/2026): en persona en Bv. Chacabuco 875, resuelve en 10 días y hay 1 mes para retirarlo. No da
         // el monto en euros: dice «mensualmente el 200 % del SMI».
