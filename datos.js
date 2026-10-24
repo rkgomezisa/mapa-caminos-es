@@ -34,14 +34,21 @@ const DATOS = {
     // Fecha que aparece en el pie de todas las pantallas
     fecha_vigencia:        "21/10/2026",
     // Tarjeta Azul UE: salario mínimo general y reducido
-    // Nota informativa de la UGE «Umbral salarial 2026» (junio de 2026)
-    ta_salario:            "41.356,36 €/año",
+    // Nota informativa de la UGE «Umbral salarial 2026» (junio de 2026): 1,4 × 29.540,26 € (ganancia media
+    // anual del INE, publicada el 28/05/2026); el reducido es el 80 %. Base: Orden PJC/44/2026 (BOE 30/01/2026).
+    // La orden actualiza el umbral cada vez que el INE publica un dato nuevo: rige para solicitudes presentadas
+    // desde 1 mes después de la publicación (estas cifras, desde el 28/06/2026). Revisar cada junio.
+    ta_salario:           "41.356,36 €/año",
     ta_reducido:           "33.085,09 €/año",
     // Profesional altamente cualificado (vía nacional): umbral único, sin reducido.
-    // Misma nota de la UGE (junio de 2026)
+    // Misma nota de la UGE (junio de 2026), apartado «PAC nacional (art. 71.2.b)». La Orden PJC/44/2026 solo
+    // regula la Tarjeta Azul, pero la UGE actualiza este umbral en la misma nota. Revisar cada junio.
     hq_salario:            "41.356,36 €/año",
     // Nómada digital: ingreso mínimo y suplementos por familiar.
     // 200 % del SMI = 2.442 € × 14 pagas ÷ 12 (Consulado de Buenos Aires y UGE, 2026)
+    // Al 23/10/2026 ninguna fuente oficial leída da el monto en euros. Ojo: la hoja del Consulado de Bahía Blanca
+    // (2023) usa el 200 % de la paga mensual sin prorratear (con el SMI 2026 serían 2.442 €). Confirmar cuál usa
+    // el Consulado de Córdoba. No lleva [verificar] porque también aparece en la pregunta «remoto».
     nomada_ingreso:        "2.849 €/mes",
     nomada_familiar1:      "75 % del SMI",
     nomada_familiar_extra: "25 % del SMI",
@@ -449,83 +456,243 @@ const DATOS = {
     { id: "tarjeta_azul", nombre: "Tarjeta Azul UE", corto: "Tarjeta Azul",
       resumen: "Para empleos cualificados con un salario mínimo fijado.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {ta_salario}." },
-        // Hoja 66 de Inclusión (mayo de 2025): título superior de al menos 3 años, o 5 años de experiencia
-        // profesional (3 años, dentro de los últimos 7, para informática y telecomunicaciones).
+        // Hoja 66 de Inclusión (mayo de 2025): no la pueden pedir ciudadanos/as de la UE, el EEE ni Suiza.
+        // Con pasaporte UE corresponde el registro como ciudadano/a de la UE (decisión del grupo: ocultarla,
+        // igual que en «familiar» y «nietos»).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: ["mercado", "redes"],
+          motivo: "Se abre con una oferta de trabajo cualificado de al menos 6 meses y con un salario de al menos {ta_salario}." },
+        // Hoja 66 de Inclusión (mayo de 2025): título superior de al menos 3 años (nivel 2 del MECES), o 5 años
+        // de experiencia profesional equivalente (3 años, dentro de los últimos 7, para directivos y
+        // especialistas en tecnologías de la información y la comunicación).
         { si: { pregunta: "formacion", es: ["tecnico", "universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
           motivo: "Pide un título superior de al menos 3 años o 5 años de experiencia profesional en el área (3 en informática): se abre si podés acreditarlos." },
-        { si: { pregunta: "egreso", es: ["reciente", "medio"] }, resultado: "nota",
-          motivo: "Como te recibiste hace 3 años o menos, el salario mínimo exigido baja a {ta_reducido}." } ],
+        // Nota de la UGE (junio de 2026) y Hoja 66: umbral del 80 % para quien obtuvo la cualificación en los
+        // 3 años previos a la solicitud. Se muestra solo con título universitario: con otra formación, la
+        // cualificación se acredita con experiencia y el título no cuenta para esta rebaja.
+        { si: [ { pregunta: "egreso", es: ["reciente", "medio"] }, { pregunta: "formacion", es: ["universitario"] } ], resultado: "nota",
+          motivo: "Como te recibiste hace 3 años o menos, el salario mínimo exigido baja a {ta_reducido}." },
+        // Consulado de Buenos Aires, visado para trabajador altamente cualificado (sin fecha, consultado el
+        // 23/10/2026): pueden pedir visado el cónyuge o pareja registrada, los hijos e hijas a cargo y los
+        // ascendientes a cargo.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden pedir visado para acompañarte." },
+        // Hoja 66 de Inclusión (mayo de 2025): en profesiones reguladas, la cualificación tiene que estar
+        // reconocida (homologada) según la normativa del sector.
+        { resultado: "advierte", condicion: "formacion",
+          motivo: "Si tu profesión está regulada en España (por ejemplo, en salud, psicología, abogacía o algunas ingenierías), vas a necesitar el título homologado. Averiguá cuánto tarda antes de buscar la oferta." } ],
       ficha: {
-        que: "Un permiso europeo para trabajos cualificados.",
-        requisitos: ["Título superior de al menos 3 años, o 5 años de experiencia profesional (3 en informática)", "Contrato u oferta de al menos 6 meses", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos o si la ocupación es de difícil cobertura"],
-        sirve: "Trabajar en un puesto cualificado, con facilidades de movilidad dentro de la UE.",
-        noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
-        fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión (junio de 2026)", url: "https://www.inclusion.gob.es" },
-        vigencia: "Junio de 2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: nota de la UGE «Umbral salarial» (junio de 2026); Hoja 66 de Inclusión
+        // (última actualización: mayo de 2025); página del Consulado de Buenos Aires «Visado para trabajador
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página
+        // del mismo visado en el Consulado de Córdoba (aparece en el menú, sin contenido), el texto de la
+        // Ley 14/2013 en el BOE (art. 71 bis) ni la Directiva (UE) 2021/1883 en EUR-Lex.
+        // Hoja 66: es una de las dos modalidades de la autorización para profesionales altamente cualificados
+        // (la otra es la nacional, vía «hq»).
+        que: "Una autorización de residencia y trabajo, común a la Unión Europea, para puestos de alta cualificación.",
+        // Hoja 66 (mayo de 2025): cualificación, contrato de al menos 6 meses, homologación en profesiones
+        // reguladas, no ser de la UE, el EEE ni Suiza, seguro médico, recursos suficientes (sin monto fijo) y
+        // sin antecedentes penales. Nota de la UGE (junio de 2026): umbral reducido para ocupaciones de los
+        // grupos 1 y 2 de la CNO-2011 incluidas en el Catálogo de Ocupaciones de Difícil Cobertura (antes la
+        // ficha decía solo «difícil cobertura»; hoy el catálogo no tiene profesiones universitarias).
+        requisitos: ["Título superior de al menos 3 años, o 5 años de experiencia profesional (3 en los últimos 7 años, en informática)", "Contrato u oferta de al menos 6 meses", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos, o si tu ocupación es de alta cualificación y está en el Catálogo de Ocupaciones de Difícil Cobertura", "Si tu profesión está regulada en España, el título homologado", "Seguro médico y recursos suficientes para vos y tu familia", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        // Familia: Consulado de Buenos Aires y de Córdoba (art. 62.4 de la Ley 14/2013). Movilidad: Directiva (UE)
+        // 2021/1883 en EUR-Lex (leída el 23/10/2026), art. 20: hasta 90 días cada 180 en otro país sin otro permiso;
+        // art. 21: tras 12 meses, se puede pedir la Tarjeta Azul en otro país (con contrato de al menos 6 meses).
+        // Art. 17.6: los familiares tienen acceso al mercado laboral, sin límite temporal.
+        sirve: "Trabajar en un puesto cualificado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo, y también pueden trabajar. Facilita moverte a otro país de la UE.",
+        // Hoja 66 (mayo de 2025): la autorización dura 3 años o, si el contrato es más corto, lo que dure el
+        // contrato más 3 meses.
+        noPermite: "No es un visado para buscar trabajo: sin un contrato u oferta de al menos 6 meses no se puede pedir. Dura hasta 3 años, o lo que dure el contrato más 3 meses. Si tu profesión está regulada en España, sin el título homologado no se puede pedir.",
+        // Hoja 66 (mayo de 2025): se presenta por la sede electrónica de la UGE (la puede pedir el empleador o la
+        // persona); resuelve en 20 días con silencio positivo; después, 1 mes para pedir el visado en persona en
+        // el consulado de la demarcación, que resuelve en 10 días. Consulado de Córdoba, «Visado para trabajador
+        // altamente cualificado y para traslado intraempresarial» (sin fecha, leída el 23/10/2026): se presenta en
+        // persona, con cita pedida a cog.cordoba.vis@maec.es; resuelve en 10 días; 1 mes para retirarlo.
+        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
+        fuente: { texto: "Unidad de Grandes Empresas: umbral salarial de la Tarjeta Azul (junio de 2026), y Hoja 66 de Inclusión (mayo de 2025)", url: "https://www.inclusion.gob.es/documents/d/unidadgrandesempresas/umbral-salarial.pdf" },
+        // Vigencia: nota de la UGE (junio de 2026), el documento más reciente y el que respalda el requisito
+        // que define la vía (el salario). La Hoja 66, que respalda el resto, es de mayo de 2025.
+        vigencia: "Junio de 2026", verificar: false, relleno: false } },
 
     { id: "hq", nombre: "Profesional altamente cualificado", corto: "Altamente cualificado",
       resumen: "Vía nacional para puestos cualificados, sin umbral reducido.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
+        // Hoja 66 de Inclusión (mayo de 2025): no la pueden pedir ciudadanos/as de la UE, el EEE ni Suiza.
+        // Decisión del grupo: ocultarla con pasaporte UE, igual que en «tarjeta_azul», «familiar» y «nietos».
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: ["mercado", "redes"],
           motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {hq_salario}." },
-        // Hoja 66 de Inclusión (mayo de 2025): titulación de nivel superior o 3 años de experiencia equiparable.
-        { si: { pregunta: "formacion", es: ["tecnico", "universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide formación superior o 3 años de experiencia profesional equiparable: se abre si podés acreditarlos." } ],
+        // Hoja 66 de Inclusión (mayo de 2025): la modalidad nacional pide una titulación de al menos nivel 1 del
+        // MECES (en España, el técnico superior) o 3 años de experiencia equiparable. Por eso el título técnico
+        // superior o terciario ya no queda en «depende» (decisión del grupo); va como advertencia más abajo.
+        { si: { pregunta: "formacion", es: ["universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide un título de educación superior o 3 años de experiencia profesional equiparable: se abre si podés acreditarlos." },
+        // La Hoja 66 no dice si un título terciario argentino se reconoce como nivel 1 del MECES.
+        { si: { pregunta: "formacion", es: ["tecnico"] }, resultado: "advierte", condicion: "formacion",
+          motivo: "Esta vía acepta títulos de técnico superior. Antes de buscar la oferta, confirmá que tu título terciario se reconozca en España con ese nivel." },
+        // Consulado de Buenos Aires, visado para trabajador altamente cualificado (sin fecha, consultado el
+        // 23/10/2026): pueden pedir visado el cónyuge o pareja registrada, los hijos e hijas a cargo y los
+        // ascendientes a cargo.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden pedir visado para acompañarte." },
+        // Hoja 66 de Inclusión (mayo de 2025): en profesiones reguladas, la titulación tiene que estar homologada.
+        { resultado: "advierte", condicion: "formacion",
+          motivo: "Si tu profesión está regulada en España (por ejemplo, en salud, psicología, abogacía o algunas ingenierías), vas a necesitar el título homologado. Averiguá cuánto tarda antes de buscar la oferta." } ],
       ficha: {
-        que: "La vía nacional española para profesionales en puestos cualificados.",
-        requisitos: ["Oferta de un puesto cualificado", "Formación superior o 3 años de experiencia profesional", "Salario de al menos {hq_salario}", "Sin umbral reducido"],
-        sirve: "Trabajar en un puesto cualificado.",
-        noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
-        fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
-        vigencia: "Junio de 2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: nota de la UGE «Umbral salarial» (junio de 2026); Hoja 66 de Inclusión
+        // (última actualización: mayo de 2025); página del Consulado de Buenos Aires «Visado para trabajador
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página
+        // del mismo visado en el Consulado de Córdoba (aparece en el menú, sin contenido) ni el art. 71 de la
+        // Ley 14/2013 en el BOE.
+        // Hoja 66: es la otra modalidad de la autorización para profesionales altamente cualificados (la primera
+        // es la Tarjeta Azul UE). Pide menos formación, y la nota de la UGE dice que no tiene umbral reducido.
+        que: "La autorización nacional española para profesionales en puestos cualificados. Pide menos formación que la Tarjeta Azul, pero no tiene umbral reducido.",
+        // Hoja 66 (mayo de 2025): contrato firmado (sin duración mínima, a diferencia de la Tarjeta Azul),
+        // titulación de nivel 1 del MECES o 3 años de experiencia, homologación en profesiones reguladas, no ser de
+        // la UE, el EEE ni Suiza, seguro médico, recursos suficientes y sin antecedentes penales.
+        // Nota de la UGE (junio de 2026): umbral único de {hq_salario}, sin umbral reducido.
+        requisitos: ["Contrato de un puesto cualificado (sin duración mínima)", "Título de educación superior (alcanza con técnico superior; el reconocimiento del título terciario argentino con ese nivel [verificar]) o 3 años de experiencia profesional equiparable", "Salario de al menos {hq_salario}, sin umbral reducido", "Si tu profesión está regulada en España, el título homologado", "Seguro médico y recursos suficientes para vos y tu familia", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        // Familia: Consulado de Buenos Aires. No se afirma movilidad a otros países de la UE: la Hoja 66 no la
+        // menciona para esta modalidad.
+        sirve: "Trabajar en un puesto cualificado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
+        // Hoja 66 (mayo de 2025): la autorización dura 3 años o, si el contrato es más corto, lo que dure el
+        // contrato más 3 meses. Nota de la UGE (junio de 2026): sin umbral reducido.
+        noPermite: "No es un visado para buscar trabajo: sin un contrato no se puede pedir. Dura hasta 3 años, o lo que dure el contrato más 3 meses. No baja el salario exigido si te recibiste hace poco. Si tu profesión está regulada en España, sin el título homologado no se puede pedir.",
+        // Hoja 66 (mayo de 2025): sede electrónica de la UGE (la pide el empleador o la persona); resuelve en 20
+        // días con silencio positivo; después, 1 mes para pedir el visado en persona en el consulado de la
+        // demarcación, que resuelve en 10 días. Consulado de Córdoba (misma página, leída el 23/10/2026): en
+        // persona, con cita pedida a cog.cordoba.vis@maec.es. Art. 71.2 b) y 71.3 de la Ley 14/2013 (BOE,
+        // texto consolidado al 09/04/2025): nivel 1 del MECES o 3 años de experiencia; 3 años o contrato + 3 meses.
+        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
+        fuente: { texto: "Hoja 66 de Inclusión (mayo de 2025) y Unidad de Grandes Empresas: umbral salarial (junio de 2026)", url: "https://www.inclusion.gob.es/web/migraciones/w/66.-autorizacion-inicial-de-residencia-y-trabajo-de-profesionales-altamente-cualificados" },
+        // Vigencia: nota de la UGE (junio de 2026), el documento más reciente y el que respalda el salario. La
+        // Hoja 66, que respalda el resto, es de mayo de 2025.
+        vigencia: "Junio de 2026", verificar: false, relleno: false } },
 
     { id: "traslado", nombre: "Traslado intraempresarial", corto: "Traslado",
       resumen: "Para quien ya trabaja en una empresa con filial en España.",
       reglas: [
+        // Tríptico de la UGE «Traslado intraempresarial. Ciudadanos no UE» (sin fecha; depósito legal de 2016):
+        // excluye a ciudadanos/as de la UE, el EEE y Suiza. Con pasaporte UE corresponde el registro como
+        // ciudadano/a de la UE (decisión del grupo: ocultarla, igual que en Tarjeta Azul y Altamente cualificado).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        // Tríptico de la UGE: 3 meses previos y continuados en la empresa o el grupo. Lo que pesa es trabajar en
+        // una empresa con sede en España, algo que depende del mercado laboral de origen y de que la empresa
+        // decida el traslado (decisión del grupo: mantener «mercado» y nombrarlo en el motivo).
         { si: { pregunta: "oferta", es: ["oferta", "no"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre si trabajás hace 3 meses o más en una empresa o grupo con filial en España." },
-        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide título o experiencia profesional: se abre si podés acreditarla." } ],
+          motivo: "Se abre si trabajás hace 3 meses o más en una empresa o grupo con sede en España, y si esa empresa decide trasladarte. Depende de qué empresas hay en tu mercado laboral, no solo de vos." },
+        // Tríptico de la UGE: titulación superior o equivalente, o al menos 3 años de experiencia profesional.
+        { si: { pregunta: "formacion", es: ["universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide un título de educación superior o 3 años de experiencia profesional: se abre si podés acreditarlos." },
+        // Art. 73.2 b) de la Ley 14/2013 (BOE, texto consolidado al 09/04/2025): titulación de al menos nivel 1
+        // del MECES (en España, el técnico superior), igual que «hq». Falta confirmar el reconocimiento del título.
+        { si: { pregunta: "formacion", es: ["tecnico"] }, resultado: "advierte", condicion: "formacion",
+          motivo: "Esta vía acepta títulos de técnico superior. Antes de avanzar, confirmá que tu título terciario se reconozca en España con ese nivel." },
+        // Tríptico de la UGE y Consulado de Buenos Aires: pueden pedir visado la pareja (registrada o no), los
+        // hijos e hijas a cargo y los ascendientes a cargo, junto con la persona o después.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden pedir visado para acompañarte." },
+        // Tríptico de la UGE y página de la UGE «Trabajadores que efectúen movimientos intraempresariales»: la
+        // modalidad ICT‑UE es para directivos, especialistas y trabajadores en formación; la nacional, para otros
+        // casos (por ejemplo, la ejecución de un contrato de servicios).
+        { resultado: "advierte", condicion: "mercado",
+          motivo: "Hay dos modalidades: una para puestos de dirección, especialistas y personas en formación, y otra nacional para otros casos. Preguntale a tu empresa cuál corresponde a tu puesto: cambia cuánto dura el traslado." } ],
       ficha: {
-        que: "Un permiso para quienes su propia empresa traslada a una filial en España.",
-        requisitos: ["3 meses o más trabajando en el grupo empresarial", "Título o experiencia profesional"],
-        sirve: "Trabajar en la filial española de tu empresa.",
-        noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
-        fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: tríptico de la UGE «Traslado intraempresarial. Ciudadanos no UE» (sin
+        // fecha; NIPO 720-16-209-1, depósito legal M-26544-2016); página de la UGE «Trabajadores que efectúen
+        // movimientos intraempresariales» (sin fecha); página del Consulado de Buenos Aires «Visado para trabajador
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página del
+        // mismo visado en el Consulado de Córdoba, los arts. 73 a 76 de la Ley 14/2013 en el BOE (última
+        // modificación: 09/04/2025) ni el PDF oficial del Criterio de gestión DGGM 2/2025.
+        que: "Un permiso para que la empresa en la que ya trabajás te traslade a una sede o filial de su grupo en España. Hay una modalidad para puestos de dirección, especialistas y personas en formación, y otra nacional para otros casos.",
+        // Art. 73.2 de la Ley 14/2013 (BOE, texto consolidado al 09/04/2025): 3 meses de relación previa y
+        // continuada con el grupo; titulación de nivel 1 del MECES o 3 años de experiencia. Tríptico de la UGE:
+        // titulación superior o equivalente, o 3 años de experiencia; lo pide la empresa; seguro médico;
+        // certificado de antecedentes penales; no ser de la UE, el EEE ni Suiza.
+        requisitos: ["3 meses o más trabajando en la empresa o el grupo", "Título de educación superior o 3 años de experiencia profesional", "Que la empresa decida trasladarte y lo pida", "Seguro médico", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        // Familia: tríptico de la UGE y Consulado de Buenos Aires. No se afirma la movilidad a otros países de la
+        // UE (solo ICT‑UE, según el tríptico): falta confirmarla en la ley vigente.
+        sirve: "Trabajar en la sede española de tu empresa durante el traslado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
+        // Tríptico de la UGE: la autorización dura lo que el traslado, hasta 2 años renovables, con un máximo de
+        // 3 años (directivos y especialistas) y 1 año (trabajadores en formación). El Criterio DGGM 2/2025
+        // (16/07/2025, PDF oficial de la UGE) y el art. 73.3 de la Ley 14/2013 (BOE) confirman: lo que dure el
+        // traslado, hasta 3 años (directivos y especialistas) o 1 año (formación).
+        noPermite: "No la podés pedir por tu cuenta: la pide la empresa. No sirve para buscar trabajo ni para cambiar de empleador. Es temporal: dura lo que dure el traslado, hasta 3 años (1 año si es un puesto en formación).",
+        // Tríptico de la UGE: la presenta la empresa de destino o la que traslada en la UGE; autorización en 20
+        // días; visado en 10 días. Consulado de Buenos Aires: se presenta en BLS, resuelve en 10 días y hay 1 mes
+        // para retirarlo. Consulado de Córdoba (leída el 23/10/2026): en persona, con cita pedida por correo.
+        tramite: "La empresa lo pide en la Unidad de Grandes Empresas, que resuelve en 20 días. Con la autorización, pedís el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
+        fuente: { texto: "Unidad de Grandes Empresas: tríptico «Traslado intraempresarial» y Consulado de Buenos Aires", url: "https://www.inclusion.gob.es/documents/1823432/1826080/triptico-traslado-empresarial-ESP.pdf/72ee37b3-6a4a-3722-2a88-70501ed4aef2?t=1664798332880" },
+        // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento más reciente sobre la duración. No
+        // leído en el PDF oficial de la UGE el 23/10/2026. El tríptico de la UGE, que respalda el resto, no
+        // tiene fecha (depósito legal de 2016).
+        vigencia: "Julio de 2025", verificar: false, relleno: false } },
 
     { id: "nomada", nombre: "Nómada digital", corto: "Nómada digital",
       resumen: "Vivir en España trabajando en remoto para empresas de afuera.",
       reglas: [
+        // FAQ de la UGE sobre teletrabajadores de carácter internacional (n.º 4): «No aplica a ciudadanos de la
+        // Unión Europea». Con pasaporte UE corresponde el registro como ciudadano/a de la UE (decisión del grupo:
+        // ocultarla, igual que en Tarjeta Azul, Altamente cualificado y Traslado).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        // Lo que pesa es tener trabajo remoto para afuera: depende del mercado de origen y del acceso a clientes
+        // o empresas del exterior (decisión del grupo: mantener «mercado» y nombrarlo en el motivo, como en Traslado).
         { si: { pregunta: "remoto", es: ["no"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre si trabajás en remoto para empresas o clientes de fuera de España, con ingresos demostrables de al menos {nomada_ingreso}." },
+          motivo: "Se abre si trabajás en remoto para empresas o clientes de fuera de España, con ingresos demostrables de al menos {nomada_ingreso}. Conseguir ese trabajo depende de tu mercado laboral y de los contactos con el exterior, no solo de vos." },
         { si: { pregunta: "remoto", es: ["informal"] }, resultado: "cierra", condicion: "informalidad",
           motivo: "Pide ingresos demostrables de al menos {nomada_ingreso}. Sin facturación formal no hay cómo acreditarlos." },
         { si: { pregunta: "remoto", es: ["formal_bajo"] }, resultado: "cierra", condicion: "capital_economico",
           motivo: "Pide ingresos demostrables de al menos {nomada_ingreso}, el 200 % del salario mínimo español." },
-        { si: [ { pregunta: "remoto", es: ["formal_bajo", "informal"] }, { pregunta: "cuidados", es: ["si"] } ], resultado: "cierra", condicion: "cuidados",
-          motivo: "Con personas a cargo el umbral sube: {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más." },
-        { si: [ { pregunta: "remoto", es: ["formal_alto"] }, { pregunta: "cuidados", es: ["si"] } ], resultado: "depende", condicion: "cuidados",
+        // UGE (documentación para titulares y FAQ n.º 19): 75 % del SMI por el primer familiar y 25 % por cada uno
+        // más. La vía contempla a la familia; lo que pesa es que el umbral sube (decisión del grupo: «capital
+        // económico» en lugar de «cuidados»).
+        { si: [ { pregunta: "remoto", es: ["formal_alto"] }, { pregunta: "cuidados", es: ["si"] } ], resultado: "depende", condicion: "capital_economico",
           motivo: "El umbral sube con cada familiar que viaje con vos: {nomada_familiar1} por el primero y {nomada_familiar_extra} por cada uno más. Se abre si tus ingresos cubren ese total." },
-        { si: { pregunta: "formacion", es: ["otro"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide título universitario o de formación profesional, o 3 años de experiencia: se abre si podés acreditarlos." } ],
+        // FAQ de la UGE (n.º 17) y Consulado de Buenos Aires: pueden pedir visado la pareja, los hijos e hijas y
+        // los ascendientes a cargo, y pueden residir y trabajar sin restricciones.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden acompañarte y trabajar. Por cada familiar, el ingreso que te piden es mayor." },
+        // UGE (documentación para titulares) y Consulado de Buenos Aires: título universitario, de FP o de escuela
+        // de negocios, o 3 años de experiencia. Sin título, se abre con la experiencia.
+        { si: { pregunta: "formacion", es: ["universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide título universitario o de formación profesional, o 3 años de experiencia: se abre si podés acreditarlos." },
+        // UGE (documentación para titulares) y Consulado de Buenos Aires: 3 meses de relación previa con la empresa
+        // o los clientes, y empresa con al menos 1 año de actividad real y continuada.
+        { resultado: "advierte", condicion: "mercado",
+          motivo: "Te piden 3 meses o más trabajando con esa empresa o esos clientes, y que la empresa tenga al menos 1 año de actividad. Revisá que puedas acreditar las dos cosas." },
+        // Consulado de Buenos Aires: en profesiones reguladas hace falta homologar el título.
+        { si: { pregunta: "formacion", es: ["universitario", "tecnico"] }, resultado: "advierte", condicion: "formacion",
+          motivo: "Si tu profesión está regulada en España (por ejemplo, salud o abogacía), vas a necesitar homologar tu título. Es un trámite aparte y puede tardar." } ],
       ficha: {
+        // Revisada el 23/10/2026 contra: documentación de la UGE para teletrabajadores de carácter internacional
+        // (sin fecha); preguntas frecuentes de la UGE sobre nómadas digitales (sin fecha); página del Consulado de
+        // Buenos Aires «Visado de residencia para teletrabajo» (sin fecha); Criterio de gestión DGGM 2/2025
+        // (16/07/2025), leído en una copia del Colegio de Gestores de Alicante. No se pudieron leer: la página del
+        // mismo visado en el Consulado de Córdoba ni el art. 74 bis de la Ley 14/2013 en el BOE.
         que: "Un permiso para residir en España trabajando en remoto para empresas o clientes del exterior.",
-        // 20 %: solo para quien trabaja por su cuenta (Consulados de Córdoba y Buenos Aires, oct. 2026).
-        // En relación de dependencia, solo se puede trabajar para empresas de fuera de España.
-        // Título o 3 años de experiencia y seguro sin copagos: documentación de la UGE para teletrabajadores.
-        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "Si trabajás en relación de dependencia, solo para empresas de fuera de España. Si trabajás por tu cuenta, no más del 20 % de tu actividad para empresas españolas", "Título universitario o de formación profesional, o 3 años de experiencia", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más"],
-        sirve: "Vivir en España sin depender del mercado laboral español.",
-        noPermite: "Contenido provisorio.",
-        // En Córdoba se presenta en persona en el consulado (en Buenos Aires, en cambio, por BLS)
-        tramite: "Consulado General de España en Córdoba, en persona (Bv. Chacabuco 875). Si ya estás en España de forma legal, se pide en la Unidad de Grandes Empresas.",
-        fuente: { texto: "Consulado General de España en Córdoba, visado para teletrabajo (octubre de 2026)", url: "https://www.exteriores.gob.es/Consulados/cordoba/es/ServiciosConsulares/Paginas/index.aspx?scca=Visados&scco=Argentina&scd=129&scs=Visados+Nacionales+-+Visado+de+residencia+para+teletrabajo+%28n%C3%B3mada+digital%29" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // 20 %: solo para quien trabaja por su cuenta (Consulado de Buenos Aires y FAQ de la UGE n.º 14). En relación
+        // de dependencia, solo se puede trabajar para empresas de fuera de España.
+        // 3 meses, 1 año de actividad, título o 3 años de experiencia, seguro sin copagos ni carencias,
+        // antecedentes penales: documentación de la UGE. Homologación: Consulado de Buenos Aires. No UE: FAQ n.º 4.
+        // Montos: 200 % del SMI, más 75 % y 25 % por familiar (UGE y FAQ n.º 19).
+        requisitos: ["Relación laboral o comercial de 3 meses o más", "Empresa con 1 año o más de actividad", "Si trabajás en relación de dependencia, solo para empresas de fuera de España. Si trabajás por tu cuenta, no más del 20 % de tu actividad para empresas españolas", "Título universitario o de formación profesional, o 3 años de experiencia", "Título homologado, si tu profesión está regulada en España", "Ingresos demostrables de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico sin copagos ni carencias (no sirve uno de viaje)", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        // Familia: FAQ de la UGE (n.º 17) y Consulado de Buenos Aires.
+        sirve: "Vivir en España sin depender del mercado laboral español. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo, y también pueden trabajar.",
+        // Visado de 1 año: Consulado de Buenos Aires y FAQ de la UGE (n.º 15). Autorización desde España «por el
+        // tiempo solicitado con el máximo de tres años»: Criterio DGGM 2/2025 (PDF oficial de la UGE) y art. 74
+        // quinquies de la Ley 14/2013 (BOE), que además permite renovarla por períodos de 2 años.
+        noPermite: "Si trabajás en relación de dependencia, no podés trabajar para empresas españolas. Si trabajás por tu cuenta, lo que hagas para empresas españolas no puede pasar del 20 % de tu actividad. No sirve para buscar trabajo en España. Es temporal: el visado dura 1 año y, desde España, podés pedir una autorización de hasta 3 años, que se renueva por períodos de 2 años.",
+        // Consulado de Córdoba, «Visado de residencia para teletrabajo (nómada digital)» (sin fecha, leída el
+        // 23/10/2026): en persona en Bv. Chacabuco 875, resuelve en 10 días y hay 1 mes para retirarlo. No da
+        // el monto en euros: dice «mensualmente el 200 % del SMI».
+        // Desde España: UGE, con el visado en vigor, en los 60 días antes de que venza (FAQ de la UGE n.º 15).
+        tramite: "Consulado General de España en Córdoba, en persona (Bv. Chacabuco 875). Resuelve en 10 días. Si ya estás en España de forma legal, se pide en la Unidad de Grandes Empresas.",
+        fuente: { texto: "Unidad de Grandes Empresas: preguntas frecuentes sobre teletrabajo internacional, y Consulado de Buenos Aires", url: "https://bibliovirtual.inclusion.gob.es/documents/d/unidadgrandesempresas/nomadas-digitales-faqs-espanol" },
+        // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento oficial más reciente que se pudo leer
+        // (PDF oficial, leído el 23/10/2026). Las páginas de la UGE y de los Consulados de Buenos Aires y de
+        // Córdoba, que respaldan los requisitos, no tienen fecha.
+        vigencia: "Julio de 2025", verificar: false, relleno: false } },
 
     { id: "emprendedor", nombre: "Emprendedor/a", corto: "Emprendedor",
       resumen: "Para proyectos innovadores o escalables, con informe de ENISA.",
