@@ -511,19 +511,56 @@ const DATOS = {
     { id: "hq", nombre: "Profesional altamente cualificado", corto: "Altamente cualificado",
       resumen: "Vía nacional para puestos cualificados, sin umbral reducido.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
+        // Hoja 66 de Inclusión (mayo de 2025): no la pueden pedir ciudadanos/as de la UE, el EEE ni Suiza.
+        // Decisión del grupo: ocultarla con pasaporte UE, igual que en «tarjeta_azul», «familiar» y «nietos».
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: ["mercado", "redes"],
           motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {hq_salario}." },
-        // Hoja 66 de Inclusión (mayo de 2025): titulación de nivel superior o 3 años de experiencia equiparable.
-        { si: { pregunta: "formacion", es: ["tecnico", "universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
-          motivo: "Pide formación superior o 3 años de experiencia profesional equiparable: se abre si podés acreditarlos." } ],
+        // Hoja 66 de Inclusión (mayo de 2025): la modalidad nacional pide una titulación de al menos nivel 1 del
+        // MECES (en España, el técnico superior) o 3 años de experiencia equiparable. Por eso el título técnico
+        // superior o terciario ya no queda en «depende» (decisión del grupo); va como advertencia más abajo.
+        { si: { pregunta: "formacion", es: ["universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
+          motivo: "Pide un título de educación superior o 3 años de experiencia profesional equiparable: se abre si podés acreditarlos." },
+        // La Hoja 66 no dice si un título terciario argentino se reconoce como nivel 1 del MECES.
+        { si: { pregunta: "formacion", es: ["tecnico"] }, resultado: "advierte", condicion: "formacion",
+          motivo: "Esta vía acepta títulos de técnico superior. Antes de buscar la oferta, confirmá que tu título terciario se reconozca en España con ese nivel." },
+        // Consulado de Buenos Aires, visado para trabajador altamente cualificado (sin fecha, consultado el
+        // 23/10/2026): pueden pedir visado el cónyuge o pareja registrada, los hijos e hijas a cargo y los
+        // ascendientes a cargo.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden pedir visado para acompañarte." },
+        // Hoja 66 de Inclusión (mayo de 2025): en profesiones reguladas, la titulación tiene que estar homologada.
+        { resultado: "advierte", condicion: "formacion",
+          motivo: "Si tu profesión está regulada en España (por ejemplo, en salud, psicología, abogacía o algunas ingenierías), vas a necesitar el título homologado. Averiguá cuánto tarda antes de buscar la oferta." } ],
       ficha: {
-        que: "La vía nacional española para profesionales en puestos cualificados.",
-        requisitos: ["Oferta de un puesto cualificado", "Formación superior o 3 años de experiencia profesional", "Salario de al menos {hq_salario}", "Sin umbral reducido"],
-        sirve: "Trabajar en un puesto cualificado.",
-        noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
-        fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión", url: "https://www.inclusion.gob.es" },
-        vigencia: "Junio de 2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: nota de la UGE «Umbral salarial» (junio de 2026); Hoja 66 de Inclusión
+        // (última actualización: mayo de 2025); página del Consulado de Buenos Aires «Visado para trabajador
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página
+        // del mismo visado en el Consulado de Córdoba (aparece en el menú, sin contenido) ni el art. 71 de la
+        // Ley 14/2013 en el BOE.
+        // Hoja 66: es la otra modalidad de la autorización para profesionales altamente cualificados (la primera
+        // es la Tarjeta Azul UE). Pide menos formación, y la nota de la UGE dice que no tiene umbral reducido.
+        que: "La autorización nacional española para profesionales en puestos cualificados. Pide menos formación que la Tarjeta Azul, pero no tiene umbral reducido.",
+        // Hoja 66 (mayo de 2025): contrato firmado (sin duración mínima, a diferencia de la Tarjeta Azul),
+        // titulación de nivel 1 del MECES o 3 años de experiencia, homologación en profesiones reguladas, no ser de
+        // la UE, el EEE ni Suiza, seguro médico, recursos suficientes y sin antecedentes penales.
+        // Nota de la UGE (junio de 2026): umbral único de {hq_salario}, sin umbral reducido.
+        requisitos: ["Contrato de un puesto cualificado (sin duración mínima)", "Título de educación superior (alcanza con técnico superior; el reconocimiento del título terciario argentino con ese nivel [verificar]) o 3 años de experiencia profesional equiparable", "Salario de al menos {hq_salario}, sin umbral reducido", "Si tu profesión está regulada en España, el título homologado", "Seguro médico y recursos suficientes para vos y tu familia", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        // Familia: Consulado de Buenos Aires. No se afirma movilidad a otros países de la UE: la Hoja 66 no la
+        // menciona para esta modalidad.
+        sirve: "Trabajar en un puesto cualificado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
+        // Hoja 66 (mayo de 2025): la autorización dura 3 años o, si el contrato es más corto, lo que dure el
+        // contrato más 3 meses. Nota de la UGE (junio de 2026): sin umbral reducido.
+        noPermite: "No es un visado para buscar trabajo: sin un contrato no se puede pedir. Dura hasta 3 años, o lo que dure el contrato más 3 meses. No baja el salario exigido si te recibiste hace poco. Si tu profesión está regulada en España, sin el título homologado no se puede pedir.",
+        // Hoja 66 (mayo de 2025): sede electrónica de la UGE (la pide el empleador o la persona); resuelve en 20
+        // días con silencio positivo; después, 1 mes para pedir el visado en persona en el consulado de la
+        // demarcación, que resuelve en 10 días. En Buenos Aires se presenta en BLS; la página de Córdoba no se
+        // pudo leer: queda [verificar].
+        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba [verificar], que resuelve en 10 días.",
+        fuente: { texto: "Hoja 66 de Inclusión (mayo de 2025) y Unidad de Grandes Empresas: umbral salarial (junio de 2026)", url: "https://www.inclusion.gob.es/web/migraciones/w/66.-autorizacion-inicial-de-residencia-y-trabajo-de-profesionales-altamente-cualificados" },
+        // Vigencia: nota de la UGE (junio de 2026), el documento más reciente y el que respalda el salario. La
+        // Hoja 66, que respalda el resto, es de mayo de 2025.
+        vigencia: "Junio de 2026", verificar: false, relleno: false } },
 
     { id: "traslado", nombre: "Traslado intraempresarial", corto: "Traslado",
       resumen: "Para quien ya trabaja en una empresa con filial en España.",
