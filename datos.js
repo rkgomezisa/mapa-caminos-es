@@ -34,8 +34,11 @@ const DATOS = {
     // Fecha que aparece en el pie de todas las pantallas
     fecha_vigencia:        "21/10/2026",
     // Tarjeta Azul UE: salario mínimo general y reducido
-    // Nota informativa de la UGE «Umbral salarial 2026» (junio de 2026)
-    ta_salario:            "41.356,36 €/año",
+    // Nota informativa de la UGE «Umbral salarial 2026» (junio de 2026): 1,4 × 29.540,26 € (ganancia media
+    // anual del INE, publicada el 28/05/2026); el reducido es el 80 %. Base: Orden PJC/44/2026 (BOE 30/01/2026).
+    // La orden actualiza el umbral cada vez que el INE publica un dato nuevo: rige para solicitudes presentadas
+    // desde 1 mes después de la publicación (estas cifras, desde el 28/06/2026). Revisar cada junio.
+    ta_salario:           "41.356,36 €/año",
     ta_reducido:           "33.085,09 €/año",
     // Profesional altamente cualificado (vía nacional): umbral único, sin reducido.
     // Misma nota de la UGE (junio de 2026)
@@ -449,22 +452,61 @@ const DATOS = {
     { id: "tarjeta_azul", nombre: "Tarjeta Azul UE", corto: "Tarjeta Azul",
       resumen: "Para empleos cualificados con un salario mínimo fijado.",
       reglas: [
-        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: "mercado",
-          motivo: "Se abre con una oferta de trabajo cualificado con un salario de al menos {ta_salario}." },
-        // Hoja 66 de Inclusión (mayo de 2025): título superior de al menos 3 años, o 5 años de experiencia
-        // profesional (3 años, dentro de los últimos 7, para informática y telecomunicaciones).
+        // Hoja 66 de Inclusión (mayo de 2025): no la pueden pedir ciudadanos/as de la UE, el EEE ni Suiza.
+        // Con pasaporte UE corresponde el registro como ciudadano/a de la UE (decisión del grupo: ocultarla,
+        // igual que en «familiar» y «nietos»).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
+        { si: { pregunta: "oferta", es: ["no", "multinacional"] }, resultado: "depende", condicion: ["mercado", "redes"],
+          motivo: "Se abre con una oferta de trabajo cualificado de al menos 6 meses y con un salario de al menos {ta_salario}." },
+        // Hoja 66 de Inclusión (mayo de 2025): título superior de al menos 3 años (nivel 2 del MECES), o 5 años
+        // de experiencia profesional equivalente (3 años, dentro de los últimos 7, para directivos y
+        // especialistas en tecnologías de la información y la comunicación).
         { si: { pregunta: "formacion", es: ["tecnico", "universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
           motivo: "Pide un título superior de al menos 3 años o 5 años de experiencia profesional en el área (3 en informática): se abre si podés acreditarlos." },
-        { si: { pregunta: "egreso", es: ["reciente", "medio"] }, resultado: "nota",
-          motivo: "Como te recibiste hace 3 años o menos, el salario mínimo exigido baja a {ta_reducido}." } ],
+        // Nota de la UGE (junio de 2026) y Hoja 66: umbral del 80 % para quien obtuvo la cualificación en los
+        // 3 años previos a la solicitud. Se muestra solo con título universitario: con otra formación, la
+        // cualificación se acredita con experiencia y el título no cuenta para esta rebaja.
+        { si: [ { pregunta: "egreso", es: ["reciente", "medio"] }, { pregunta: "formacion", es: ["universitario"] } ], resultado: "nota",
+          motivo: "Como te recibiste hace 3 años o menos, el salario mínimo exigido baja a {ta_reducido}." },
+        // Consulado de Buenos Aires, visado para trabajador altamente cualificado (sin fecha, consultado el
+        // 23/10/2026): pueden pedir visado el cónyuge o pareja registrada, los hijos e hijas a cargo y los
+        // ascendientes a cargo.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden pedir visado para acompañarte." },
+        // Hoja 66 de Inclusión (mayo de 2025): en profesiones reguladas, la cualificación tiene que estar
+        // reconocida (homologada) según la normativa del sector.
+        { resultado: "advierte", condicion: "formacion",
+          motivo: "Si tu profesión está regulada en España (por ejemplo, en salud, psicología, abogacía o algunas ingenierías), vas a necesitar el título homologado. Averiguá cuánto tarda antes de buscar la oferta." } ],
       ficha: {
-        que: "Un permiso europeo para trabajos cualificados.",
-        requisitos: ["Título superior de al menos 3 años, o 5 años de experiencia profesional (3 en informática)", "Contrato u oferta de al menos 6 meses", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos o si la ocupación es de difícil cobertura"],
-        sirve: "Trabajar en un puesto cualificado, con facilidades de movilidad dentro de la UE.",
-        noPermite: "Contenido provisorio.",
-        tramite: "Unidad de Grandes Empresas, Ministerio de Inclusión.",
-        fuente: { texto: "Unidad de Grandes Empresas, Ministerio de Inclusión (junio de 2026)", url: "https://www.inclusion.gob.es" },
-        vigencia: "Junio de 2026", verificar: false, relleno: true } },
+        // Revisada el 23/10/2026 contra: nota de la UGE «Umbral salarial» (junio de 2026); Hoja 66 de Inclusión
+        // (última actualización: mayo de 2025); página del Consulado de Buenos Aires «Visado para trabajador
+        // altamente cualificado y para traslado intraempresarial» (sin fecha). No se pudieron leer: la página
+        // del mismo visado en el Consulado de Córdoba (aparece en el menú, sin contenido), el texto de la
+        // Ley 14/2013 en el BOE (art. 71 bis) ni la Directiva (UE) 2021/1883 en EUR-Lex.
+        // Hoja 66: es una de las dos modalidades de la autorización para profesionales altamente cualificados
+        // (la otra es la nacional, vía «hq»).
+        que: "Una autorización de residencia y trabajo, común a la Unión Europea, para puestos de alta cualificación.",
+        // Hoja 66 (mayo de 2025): cualificación, contrato de al menos 6 meses, homologación en profesiones
+        // reguladas, no ser de la UE, el EEE ni Suiza, seguro médico, recursos suficientes (sin monto fijo) y
+        // sin antecedentes penales. Nota de la UGE (junio de 2026): umbral reducido para ocupaciones de los
+        // grupos 1 y 2 de la CNO-2011 incluidas en el Catálogo de Ocupaciones de Difícil Cobertura (antes la
+        // ficha decía solo «difícil cobertura»; hoy el catálogo no tiene profesiones universitarias).
+        requisitos: ["Título superior de al menos 3 años, o 5 años de experiencia profesional (3 en los últimos 7 años, en informática)", "Contrato u oferta de al menos 6 meses", "Salario de al menos {ta_salario}", "Umbral reducido de {ta_reducido} si te titulaste hace 3 años o menos, o si tu ocupación es de alta cualificación y está en el Catálogo de Ocupaciones de Difícil Cobertura", "Si tu profesión está regulada en España, el título homologado", "Seguro médico y recursos suficientes para vos y tu familia", "No tener antecedentes penales", "No tener nacionalidad de un país de la UE"],
+        // Familia: Consulado de Buenos Aires. Movilidad a otros países de la UE: art. 71 bis.4 de la Ley 14/2013
+        // y Directiva 2021/1883, vistos solo en una transcripción no oficial (Iberley): queda [verificar].
+        sirve: "Trabajar en un puesto cualificado. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo. Facilita moverte a otro país de la UE [verificar].",
+        // Hoja 66 (mayo de 2025): la autorización dura 3 años o, si el contrato es más corto, lo que dure el
+        // contrato más 3 meses.
+        noPermite: "No es un visado para buscar trabajo: sin un contrato u oferta de al menos 6 meses no se puede pedir. Dura hasta 3 años, o lo que dure el contrato más 3 meses. Si tu profesión está regulada en España, sin el título homologado no se puede pedir.",
+        // Hoja 66 (mayo de 2025): se presenta por la sede electrónica de la UGE (la puede pedir el empleador o la
+        // persona); resuelve en 20 días con silencio positivo; después, 1 mes para pedir el visado en persona en
+        // el consulado de la demarcación, que resuelve en 10 días. El Consulado de Córdoba lista este visado,
+        // pero no se pudo leer su página (en Buenos Aires se presenta por BLS): queda [verificar].
+        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba [verificar], que resuelve en 10 días.",
+        fuente: { texto: "Unidad de Grandes Empresas: umbral salarial de la Tarjeta Azul (junio de 2026), y Hoja 66 de Inclusión (mayo de 2025)", url: "https://www.inclusion.gob.es/documents/d/unidadgrandesempresas/umbral-salarial.pdf" },
+        // Vigencia: nota de la UGE (junio de 2026), el documento más reciente y el que respalda el requisito
+        // que define la vía (el salario). La Hoja 66, que respalda el resto, es de mayo de 2025.
+        vigencia: "Junio de 2026", verificar: false, relleno: false } },
 
     { id: "hq", nombre: "Profesional altamente cualificado", corto: "Altamente cualificado",
       resumen: "Vía nacional para puestos cualificados, sin umbral reducido.",
