@@ -584,9 +584,10 @@ const DATOS = {
         // Tríptico de la UGE: titulación superior o equivalente, o al menos 3 años de experiencia profesional.
         { si: { pregunta: "formacion", es: ["universidad2", "otro"] }, resultado: "depende", condicion: "formacion",
           motivo: "Pide un título de educación superior o 3 años de experiencia profesional: se abre si podés acreditarlos." },
-        // El tríptico dice «titulación superior o equivalente» sin aclarar si incluye al técnico superior.
+        // Art. 73.2 b) de la Ley 14/2013 (BOE, texto consolidado al 09/04/2025): titulación de al menos nivel 1
+        // del MECES (en España, el técnico superior), igual que «hq». Falta confirmar el reconocimiento del título.
         { si: { pregunta: "formacion", es: ["tecnico"] }, resultado: "advierte", condicion: "formacion",
-          motivo: "No está claro si un título terciario cuenta como «titulación superior». Si no, vas a necesitar acreditar 3 años de experiencia. Consultalo con la empresa antes de avanzar." },
+          motivo: "Esta vía acepta títulos de técnico superior. Antes de avanzar, confirmá que tu título terciario se reconozca en España con ese nivel." },
         // Tríptico de la UGE y Consulado de Buenos Aires: pueden pedir visado la pareja (registrada o no), los
         // hijos e hijas a cargo y los ascendientes a cargo, junto con la persona o después.
         { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
