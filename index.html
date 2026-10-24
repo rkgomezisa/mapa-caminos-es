@@ -634,7 +634,6 @@ h2 { scroll-margin-top: 12px; }
     const m = mapa(estado.resp);
     const por = k => m.filter(r => r.estado === k);
     const abiertas = por("abierta"), depende = por("depende"), cerradas = por("cerrada"), noInt = por("noInteresa");
-    const faltan = D.preguntas.some(q => estado.resp[q.id] === undefined);
     const p = estado.persona;
 
     const conteo = {};
@@ -646,10 +645,11 @@ h2 { scroll-margin-top: 12px; }
           `<li><strong>${esc(nombreCond(c))}</strong> <span class="n">cierra ${n} ${n === 1 ? "vía" : "vías"}</span></li>`).join("")}</ul>
       </section>` : "";
 
-    const banner = estado.resp.pasaporte === "espanol" ? `
+    const sinVisado = estado.resp.pasaporte === "espanol";
+    const banner = sinVisado ? `
       <div class="banner" role="note">
         <h2>${tx(D.atajos.espanol.titulo)}</h2><p>${tx(D.atajos.espanol.texto)}</p>
-        ${faltan ? `<div class="fila"><button class="btn" type="button" id="seguir">Ver el mapa completo igual</button></div>` : ""}
+        <div class="fila"><button class="btn" type="button" id="explorar-todas">Explorar todas las vías</button></div>
       </div>` : "";
 
     const titulo = p ? `Mapa de ${esc(p.nombre)}${estado.modificado ? " (con cambios)" : ""}` : tx(D.textos.resultadosTitulo);
@@ -667,10 +667,10 @@ h2 { scroll-margin-top: 12px; }
     render(`
       <div class="pila">
         <h1>${titulo}</h1>
-        <p class="bajada">${tx(D.textos.resultadosBajada)}</p>
+        ${sinVisado ? "" : `<p class="bajada">${tx(D.textos.resultadosBajada)}</p>`}
         ${banner}
         <details><summary>Tus respuestas (podés cambiar cualquiera)</summary><dl class="respuestas">${resp}</dl></details>
-        <nav class="indice" aria-label="Ir a una sección">
+        ${sinVisado ? "" : `<nav class="indice" aria-label="Ir a una sección">
           <a href="#t-ab" class="st-abierta"><span aria-hidden="true">${D.textos.estados.abierta.simbolo}</span> ${abiertas.length} abiertas</a>
           ${depende.length ? `<a href="#t-dep" class="st-depende"><span aria-hidden="true">${D.textos.estados.depende.simbolo}</span> ${depende.length} se abren si…</a>` : ""}
           <a href="#t-ce" class="st-cerrada"><span aria-hidden="true">${D.textos.estados.cerrada.simbolo}</span> ${cerradas.length} cerradas</a>
@@ -680,7 +680,7 @@ h2 { scroll-margin-top: 12px; }
         ${!abiertas.length && depende.length ? `<p class="vacio">${tx(D.textos.sinAbiertas)}</p>` : ""}
         ${depende.length ? grupo("t-dep", D.textos.tituloDepende, depende) : ""}
         ${grupo("t-ce", D.textos.tituloCerradas, cerradas, "Ninguna vía se cerró con estas respuestas.")}
-        ${noInt.length ? `<details><summary>${tx(D.textos.tituloNoInteresa)} (${noInt.length})</summary><ul class="tarjetas">${noInt.map(tarjetaHTML).join("")}</ul></details>` : ""}
+        ${noInt.length ? `<details><summary>${tx(D.textos.tituloNoInteresa)} (${noInt.length})</summary><ul class="tarjetas">${noInt.map(tarjetaHTML).join("")}</ul></details>` : ""}`}
         ${D.textos.cierreResultados ? `<p class="cierre">${tx(D.textos.cierreResultados)}</p>` : ""}
         <div class="fila">
           <button class="btn btn-primario" type="button" id="r-reiniciar">Volver a empezar</button>
@@ -698,8 +698,8 @@ h2 { scroll-margin-top: 12px; }
       estado.idx = D.preguntas.findIndex(q => q.id === b.dataset.cambiar);
       estado.volver = true; preguntaPropia();
     });
-    const seguir = main.querySelector("#seguir");
-    if (seguir) seguir.onclick = () => { estado.idx = D.preguntas.findIndex(q => estado.resp[q.id] === undefined); preguntaPropia(); };
+    const expl = main.querySelector("#explorar-todas");
+    if (expl) expl.onclick = explorar;
     main.querySelector("#r-reiniciar").onclick = inicio;
     const rep = main.querySelector("#r-repetir");
     if (rep) rep.onclick = () => iniciarPersona(p.id);
