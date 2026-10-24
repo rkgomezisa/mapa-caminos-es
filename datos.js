@@ -44,7 +44,8 @@ const DATOS = {
     // Misma nota de la UGE (junio de 2026), apartado «PAC nacional (art. 71.2.b)». La Orden PJC/44/2026 solo
     // regula la Tarjeta Azul, pero la UGE actualiza este umbral en la misma nota. Revisar cada junio.
     hq_salario:            "41.356,36 €/año",
-    // Nómada digital: ingreso mínimo y suplementos por familiar.
+    // Nómada digital y Emprendedor/a: ingreso o medios mínimos y suplementos por familiar.
+    // Para Emprendedor, la Instrucción DGM 1/2023 (3.ª) usa la misma fórmula: «mensualmente el 200 % del SMI».
     // 200 % del SMI = 2.442 € × 14 pagas ÷ 12 (Consulado de Buenos Aires y UGE, 2026)
     // Al 23/10/2026 ninguna fuente oficial leída da el monto en euros. Ojo: la hoja del Consulado de Bahía Blanca
     // (2023) usa el 200 % de la paga mensual sin prorratear (con el SMI 2026 serían 2.442 €). Confirmar cuál usa
@@ -697,24 +698,61 @@ const DATOS = {
     { id: "emprendedor", nombre: "Emprendedor/a", corto: "Emprendedor",
       resumen: "Para proyectos innovadores o escalables, con informe de ENISA.",
       reglas: [
+        // Instrucciones de la UGE para la solicitud de emprendedores (sin fecha): es para personas que no son
+        // ciudadanas de la UE. Con pasaporte UE corresponde el registro como ciudadano/a de la UE (decisión del
+        // grupo: ocultarla, igual que en Tarjeta Azul, Altamente cualificado, Traslado y Nómada digital).
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
         { si: { pregunta: "propia", es: ["no"] }, resultado: "noInteresa" },
         { si: { pregunta: "propia", es: ["innovador"] }, resultado: "depende", condicion: "innovacion",
           motivo: "Se abre con un informe favorable de ENISA sobre tu proyecto." },
         { si: { pregunta: "propia", es: ["negocio"] }, resultado: "depende", condicion: "innovacion",
-          motivo: "Es para proyectos innovadores o escalables. Para un negocio tradicional, mirá la vía de cuenta propia." } ],
+          motivo: "Es para proyectos innovadores o escalables. Para un negocio tradicional, mirá la vía de cuenta propia." },
+        // Instrucción DGM 1/2023 (03/04/2023), 3.ª: medios que representen «mensualmente el 200 % del SMI», más
+        // 75 % del SMI por el primer familiar y 25 % por cada uno más; hay que acreditar que son propios, lícitos
+        // y disponibles. La página de la UGE aclara que no hay inversión mínima. La pregunta de ahorros no mide
+        // este monto, por eso es una advertencia y no un cierre.
+        { resultado: "advierte", condicion: ["capital_economico", "informalidad"],
+          motivo: "No pide una inversión mínima, pero sí medios económicos de al menos {nomada_ingreso} por mes, y más por cada familiar. Tenés que poder demostrar que ese dinero es tuyo y de origen legal. Revisá que puedas acreditarlo." },
+        // Instrucciones de la UGE para la solicitud de emprendedores: se presenta en la sede electrónica con
+        // Cl@ve o certificado digital.
+        { resultado: "advierte", condicion: "redes",
+          motivo: "La solicitud se presenta en línea y hace falta Cl@ve o un certificado digital español. Desde Argentina, revisá cómo vas a conseguirlo o quién puede presentarla por vos." },
+        // Familia: Consulado de España en Londres, «Visado para emprendedor» (29/04/2026): pareja, hijos e hijas
+        // (también mayores a cargo) y ascendientes a cargo. Ley 28/2022, preámbulo (BOE 22/12/2022): pueden ir
+        // desde el principio o después. Monto: Instrucción DGM 1/2023, 3.ª. Si pueden trabajar: no confirmado.
+        { si: { pregunta: "cuidados", es: ["si"] }, resultado: "nota", condicion: "cuidados",
+          motivo: "Esta vía contempla a la familia: tu pareja, tus hijos e hijas y otros familiares a cargo pueden acompañarte, desde el principio o después. Por cada familiar, los medios económicos que te piden son mayores." } ],
       ficha: {
-        // «3 años»: la autorización dura 3 años y se renueva por 2 (Ley 14/2013, art. 69.1).
-        // El visado del consulado dura 1 año. Informe de ENISA: Ley 14/2013, art. 70.1.
+        // Revisada el 23/10/2026 contra: página «Emprendedores» de la UGE (sin fecha); «Instrucciones para realizar
+        // una solicitud de la autorización de emprendedores» de la UGE (sin fecha, ~2023); Instrucción DGM 1/2023
+        // (03/04/2023), leída en una copia de mentorday.es; Criterio de gestión DGGM 2/2025 (16/07/2025), leído en
+        // una copia del Colegio de Gestores de Alicante; Consulado de Londres, «Visado para emprendedor» (29/04/2026).
+        // No se pudieron leer: la página del visado en el Consulado de Córdoba (figura en el menú, sin contenido),
+        // la de Buenos Aires, ni los arts. 61 a 70 de la Ley 14/2013 en el BOE.
+        // «3 años»: «vigencia única de tres años (artículo 69.1)», Criterio DGGM 2/2025. La renovación por 2 años
+        // y el visado de 1 año (este último, según Londres) no se confirmaron para Argentina: no se muestran.
         que: "Un permiso de 3 años para desarrollar un proyecto emprendedor en España.",
-        requisitos: ["Proyecto innovador o escalable", "Informe favorable de ENISA"],
-        sirve: "Emprender en España durante 3 años.",
-        noPermite: "Contenido provisorio.",
-        // No es una cosa o la otra: la autorización se pide en la Unidad de Grandes Empresas (que pide el
-        // informe a ENISA) y, ya concedida, el visado en el consulado (Ley 14/2013, art. 70.1; Consulado
-        // de Córdoba, oct. 2026).
-        tramite: "Primero se pide la autorización en la Unidad de Grandes Empresas, que le pide el informe a ENISA. Con la autorización, visado en el Consulado General de España en Córdoba.",
-        fuente: { texto: "ENISA, Gobierno de España", url: "https://www.enisa.es" },
-        vigencia: "21/10/2026", verificar: false, relleno: true } },
+        // Proyecto: «innovadora y/o tenga especial interés económico para España» (UGE e Instrucción DGM 1/2023,
+        // 7.1); la escalabilidad es el criterio con que ENISA mide ese interés (7.3). Informe de ENISA: perfil,
+        // plan de negocio y valor añadido (UGE). Medios y seguro: Instrucción DGM 1/2023, 3.ª y 5.ª. Antecedentes:
+        // instrucciones de la UGE (desde el exterior, el certificado se presenta en el consulado). Mayor de 18:
+        // página de la UGE. No UE: instrucciones de la UGE.
+        requisitos: ["Proyecto innovador o de especial interés económico para España (por ejemplo, escalable)", "Informe favorable de ENISA sobre tu perfil, tu plan de negocio y lo que aporta a la economía española", "Medios económicos de al menos {nomada_ingreso} por mes (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico público o privado con una aseguradora que opere en España (no sirve uno de viaje)", "No tener antecedentes penales", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
+        // Sin inversión mínima ni creación de empleo: página de la UGE. Familia: Consulado de Londres (29/04/2026).
+        sirve: "Desarrollar tu proyecto en España durante 3 años. No pide un monto mínimo de inversión ni crear empleo. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
+        // Negocio tradicional: corresponde a cuenta propia (RD 1155/2024). Informe favorable: UGE. 3 años: Criterio
+        // DGGM 2/2025.
+        noPermite: "No sirve para un negocio o servicio tradicional: para eso está la vía de trabajo por cuenta propia. Sin informe favorable de ENISA no se concede. Es temporal: la autorización dura 3 años.",
+        // Instrucciones de la UGE: se presenta en su sede electrónica (Cl@ve o certificado digital); los datos del
+        // proyecto se cargan en la web de ENISA. Instrucción DGM 1/2023, 7.7: la UGE pide el informe a ENISA, que
+        // tiene 10 días hábiles. Visado después de la autorización: Consulado de Londres (29/04/2026) pide la
+        // autorización de la UGE. Córdoba ofrece el visado (figura en su menú de visados nacionales).
+        tramite: "Se pide en línea a la Unidad de Grandes Empresas, con certificado digital. Ella le pide el informe a ENISA, donde cargás los datos del proyecto. Con la autorización, pedís el visado en el Consulado General de España en Córdoba.",
+        fuente: { texto: "Unidad de Grandes Empresas: Emprendedores", url: "https://www.inclusion.gob.es/web/unidadgrandesempresas/emprendedores" },
+        // Vigencia: Instrucción DGM 1/2023 (03/04/2023), el documento que respalda los requisitos principales.
+        // Otras fuentes: Criterio DGGM 2/2025 (julio de 2025, duración) y Consulado de Londres (abril de 2026,
+        // familia y visado). Las páginas de la UGE no tienen fecha.
+        vigencia: "Abril de 2023", verificar: false, relleno: false } },
 
     { id: "cuenta_propia", nombre: "Trabajo por cuenta propia", corto: "Cuenta propia",
       resumen: "Para trabajar de forma autónoma con un plan de negocio.",
