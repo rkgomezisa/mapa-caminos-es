@@ -106,6 +106,10 @@ const DATOS = {
     },
     resultadosTitulo: "Tu mapa de vías",
     resultadosBajada: "Estas son todas las vías del mapa según lo que respondiste. Cuando una vía se cierra, lo que la cierra es una condición del entorno, no algo que te falte a vos.",
+    // Recorridos de ejemplo: se muestra cuando las preguntas que faltan ya no cambian el mapa del personaje
+    // Recorridos de ejemplo: antecede la lista de vías que una respuesta saca del mapa
+    ejemploOcultas: "Dejan de aplicar en su caso",
+    ejemploSinMasCambios: "Las preguntas que siguen ya no cambian su mapa, así que el recorrido termina acá.",
     sinAbiertas: "Hoy no aparece ninguna vía abierta de forma directa. Eso habla de cómo están armadas las reglas y de las condiciones del entorno, no de vos.",
     tituloAbiertas: "Vías abiertas",
     tituloDepende: "Se abren si aparece…",

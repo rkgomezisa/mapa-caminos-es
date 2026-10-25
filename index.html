@@ -554,8 +554,16 @@ h2 { scroll-margin-top: 12px; }
       return `<li class="chip st-${r.estado}${cambio ? " cambio" : ""}"><span aria-hidden="true">${D.textos.estados[r.estado].simbolo}</span>${esc(r.via.corto)}<span class="sr"> (${esc(D.textos.estados[r.estado].etiqueta)})</span>${cambio ? `<span class="nuevo">cambió</span>` : ""}</li>`;
     }).join("")}</ul>`;
   }
+  // Último paso que cambia algo en el mapa del personaje: los siguientes se saltean.
+  function ultimoPasoConCambios(p) {
+    const firma = k => mapa(respHasta(p, k)).map(r => r.via.id + ":" + r.estado + ":" + r.advertencias.length).join("|");
+    let ultimo = 1;
+    for (let k = 1; k <= D.preguntas.length; k++) if (firma(k) !== firma(k - 1)) ultimo = k;
+    return ultimo;
+  }
   function pasoPersona() {
-    const p = estado.persona, total = D.preguntas.length, k = estado.paso;
+    const p = estado.persona, total = ultimoPasoConCambios(p), k = estado.paso;
+    const finAnticipado = k === total && total < D.preguntas.length;
     const actual = mapa(respHasta(p, k));
     const cabecera = `<p class="progreso-texto"><span class="etiqueta-bloque">Recorrido ${esc(p.id)}: ${esc(p.nombre)}, ${esc(p.edad)}</span><span class="mono">${k === 0 ? "Inicio" : `Paso ${k} de ${total}`}</span></p>`;
     const mapaPanel = prev => `<section class="panel" aria-labelledby="t-mm"><h2 id="t-mm">El mapa de ${esc(p.nombre)}</h2>${miniMapaHTML(actual, prev)}</section>`;
@@ -573,6 +581,10 @@ h2 { scroll-margin-top: 12px; }
       const previo = mapa(respHasta(p, k - 1));
       const prevE = {}; previo.forEach(r => prevE[r.via.id] = r);
       const cambios = actual.filter(r => !prevE[r.via.id] || prevE[r.via.id].estado !== r.estado);
+      // vías que estaban en el mapa y con esta respuesta dejan de aplicar (se ocultan)
+      const ocultas = previo.filter(r => !actual.some(a => a.via.id === r.via.id));
+      const lineaOcultas = ocultas.length
+        ? `<p>${tx(D.textos.ejemploOcultas || "Dejan de aplicar en su caso")}: ${ocultas.map(r => esc(r.via.corto)).join(", ")}.</p>` : "";
       const ops = q.opciones.map(o => `
         <li><button class="opcion" type="button" disabled aria-pressed="${p.resp[q.id] === o.valor}">
           <span class="marca-op" aria-hidden="true"></span><span>${tx(o.texto)}</span>
@@ -580,7 +592,7 @@ h2 { scroll-margin-top: 12px; }
       // vías que no cambian de estado pero suman una advertencia con esta respuesta
       const nuevasAdv = actual.filter(r => !cambios.includes(r) && r.estado !== "cerrada" && r.estado !== "noInteresa"
         && r.advertencias.length > (prevE[r.via.id]?.advertencias.length || 0));
-      const listaCambios = cambios.length || nuevasAdv.length
+      const listaCambios = lineaOcultas + (cambios.length || nuevasAdv.length
         ? `<ul class="cambios">${cambios.map(r => {
             const g = r.cierres[0] || r.depende[0];
             const porque = g ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
@@ -590,13 +602,13 @@ h2 { scroll-margin-top: 12px; }
             const porque = lista(g.condicion).length ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
             return `<li><span class="aviso"><span aria-hidden="true">⚠ </span>${esc(D.textos.advertenciaEtiqueta)}</span> <span><strong>${esc(r.via.nombre)}</strong>${porque}</span></li>`;
           }).join("")}</ul>`
-        : `<p class="ayuda">Esta respuesta no cambia el mapa.</p>`;
+        : ocultas.length ? "" : `<p class="ayuda">Esta respuesta no cambia el mapa.</p>`);
       const nota = p.notas && p.notas[q.id] ? `<p>${tx(p.notas[q.id])}</p>` : "";
       cuerpo = `
         <div class="pila">
           <h1>${tx(q.texto)}</h1>
           <ul class="opciones atenuar" role="list">${ops}</ul>
-          <div class="narracion">${nota}<h2 class="sr">Qué cambió</h2>${listaCambios}</div>
+          <div class="narracion">${nota}<h2 class="sr">Qué cambió</h2>${listaCambios}${finAnticipado && D.textos.ejemploSinMasCambios ? `<p class="ayuda">${tx(D.textos.ejemploSinMasCambios)}</p>` : ""}</div>
         </div>`;
       render(`<div class="pila">${cabecera}<div class="paso-grid">${cuerpo}${mapaPanel(previo)}</div>${navPersona(k, total)}</div>`);
     }
