@@ -106,6 +106,10 @@ const DATOS = {
     },
     resultadosTitulo: "Tu mapa de vías",
     resultadosBajada: "Estas son todas las vías del mapa según lo que respondiste. Cuando una vía se cierra, lo que la cierra es una condición del entorno, no algo que te falte a vos.",
+    // Recorridos de ejemplo: se muestra cuando las preguntas que faltan ya no cambian el mapa del personaje
+    // Recorridos de ejemplo: antecede la lista de vías que una respuesta saca del mapa
+    ejemploOcultas: "Dejan de aplicar en su caso",
+    ejemploSinMasCambios: "Las preguntas que siguen ya no cambian su mapa, así que el recorrido termina acá.",
     sinAbiertas: "Hoy no aparece ninguna vía abierta de forma directa. Eso habla de cómo están armadas las reglas y de las condiciones del entorno, no de vos.",
     tituloAbiertas: "Vías abiertas",
     tituloDepende: "Se abren si aparece…",
@@ -397,6 +401,8 @@ const DATOS = {
     { id: "cuenta_ajena", nombre: "Trabajo por cuenta ajena", corto: "Cuenta ajena",
       resumen: "Trabajar en relación de dependencia para un empleador en España.",
       reglas: [
+        // Con pasaporte español o de otro país de la UE se trabaja sin visado: la vía no aplica.
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
         // Catálogo de Ocupaciones de Difícil Cobertura del 3.er trimestre de 2026 (Resolución del SEPE del
         // 3/8/2026, BOE-A-2026-18504, 2/9/2026): 27 ocupaciones, de marina mercante, deportes y oficios
         // (carpintería metálica, electricidad, grúas). Ninguna pide título universitario. Lo publica el SEPE
@@ -1006,6 +1012,8 @@ const DATOS = {
     { id: "vyt", nombre: "Vacaciones y Trabajo", corto: "Vacaciones y Trabajo",
       resumen: "Una estancia de hasta 12 meses para explorar, no para quedarse.",
       reglas: [
+        // Con pasaporte español o de otro país de la UE no hace falta este programa: la vía no aplica.
+        { si: { pregunta: "pasaporte", es: ["espanol", "ue"] }, resultado: "oculta" },
         { si: { pregunta: "edad", es: ["mas35"] }, resultado: "cierra", condicion: "edad_egreso",
           motivo: "Es para personas de 18 a 35 años." },
         { si: { pregunta: "formacion", es: ["otro"] }, resultado: "cierra", condicion: "formacion",
@@ -1050,7 +1058,7 @@ const DATOS = {
   personas: [
     { id: "A", nombre: "Valentina", edad: 27,
       descripcion: "Ingeniera en sistemas. Tiene ciudadanía italiana por su abuelo. Trabaja en remoto para una empresa de afuera.",
-      clave: "Muestra el peso de la herencia: casi todo le queda abierto.",
+      clave: "Muestra el peso de la herencia: con su pasaporte europeo no necesita ningún visado.",
       resp: { pasaporte: "ue", ascendencia: "no", edad: "hasta35", formacion: "universitario", egreso: "medio", cuidados: "no", ahorros: "alto", oferta: "no", remoto: "formal_alto", propia: "no", investigar: "interes", practicas: "no", estudiar: "si" },
       notas: {
         pasaporte: "Su abuelo italiano le dejó una puerta que no depende de ningún visado.",

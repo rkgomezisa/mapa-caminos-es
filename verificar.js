@@ -156,10 +156,10 @@ D.personas.forEach(p => {
    Lo que cada personaje tiene que mostrar, según la consigna del TP.
    Si el grupo decide cambiar un recorrido a propósito, se actualiza acá. */
 const ESPERADO = {
-  A: { // Valentina: casi todo abierto, muestra el peso de la herencia.
-       // Con pasaporte UE se ocultan las vías que excluyen a la UE (también Estudiante): le quedan ue y vyt.
-    abiertas: ["ue", "vyt"],
-    minAbiertas: 2
+  A: { // Valentina: muestra el peso de la herencia.
+       // Con pasaporte UE se ocultan todas las vías con visado (también Cuenta ajena y VyT): le queda solo ue.
+    abiertas: ["ue"],
+    minAbiertas: 1
   },
   B: { // Joaquín: informalidad cierra nómada digital; VyT depende de los ahorros
     cerradaPor: { nomada: "informalidad", vyt: "capital_economico" },
