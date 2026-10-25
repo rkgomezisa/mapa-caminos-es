@@ -75,6 +75,11 @@ for (const k of ["cuestionario", "ejemplos", "explorar"]) {
   const o = D.textos.inicioOpciones?.[k];
   if (!o?.titulo || !o?.texto) error(`Falta la opción "${k}" (con titulo y texto) en textos.inicioOpciones.`);
 }
+for (const k of ["abierta", "depende", "cerrada", "noInteresa"]) {
+  const e = D.textos.estados?.[k];
+  if (!e?.simbolo || !e?.etiqueta || !e?.cuenta1 || !e?.cuentaN) error(`Falta el estado "${k}" (con simbolo, etiqueta, cuenta1 y cuentaN) en textos.estados.`);
+  else if (!e.cuentaN.includes("#")) error(`textos.estados.${k}.cuentaN tiene que llevar # donde va la cantidad.`);
+}
 
 const preguntas = Object.fromEntries(D.preguntas.map(q => [q.id, q]));
 const valores = id => (preguntas[id]?.opciones || []).map(o => o.valor);

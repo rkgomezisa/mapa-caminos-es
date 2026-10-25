@@ -98,17 +98,19 @@ const DATOS = {
     explorarCierran: "Condiciones del entorno que pueden cerrarla",
     explorarDependen: "Puede depender de",
     bloques: { perfil: "Tu situación", puertas: "Puertas posibles" },
+    // Estados de cada vía. etiqueta: lo que dice la tarjeta.
+    // cuenta1 y cuentaN: lo que dicen los contadores (el # se reemplaza por la cantidad)
     estados: {
-      abierta:    { simbolo: "✓", etiqueta: "Abierta" },
-      depende:    { simbolo: "◐", etiqueta: "Se abre si…" },
-      cerrada:    { simbolo: "✕", etiqueta: "Cerrada" },
-      noInteresa: { simbolo: "○", etiqueta: "Fuera de tu búsqueda" }
+      abierta:    { simbolo: "✓", etiqueta: "Abierta",              cuenta1: "1 vía abierta",              cuentaN: "# vías abiertas" },
+      depende:    { simbolo: "◐", etiqueta: "Se abre si…",          cuenta1: "1 vía se abre si…",          cuentaN: "# vías se abren si…" },
+      cerrada:    { simbolo: "✕", etiqueta: "Cerrada",              cuenta1: "1 vía cerrada",              cuentaN: "# vías cerradas" },
+      noInteresa: { simbolo: "○", etiqueta: "Fuera de tu búsqueda", cuenta1: "1 vía fuera de tu búsqueda", cuentaN: "# vías fuera de tu búsqueda" }
     },
     resultadosTitulo: "Tu mapa de vías",
     resultadosBajada: "Estas son todas las vías del mapa según lo que respondiste. Cuando una vía se cierra, lo que la cierra es una condición del entorno, no algo que te falte a vos.",
-    // Recorridos de ejemplo: se muestra cuando las preguntas que faltan ya no cambian el mapa del personaje
     // Recorridos de ejemplo: antecede la lista de vías que una respuesta saca del mapa
     ejemploOcultas: "Dejan de aplicar en su caso",
+    // Recorridos de ejemplo: se muestra cuando las preguntas que faltan ya no cambian el mapa del personaje
     ejemploSinMasCambios: "Las preguntas que siguen ya no cambian su mapa, así que el recorrido termina acá.",
     sinAbiertas: "Hoy no aparece ninguna vía abierta de forma directa. Eso habla de cómo están armadas las reglas y de las condiciones del entorno, no de vos.",
     tituloAbiertas: "Vías abiertas",
@@ -116,7 +118,7 @@ const DATOS = {
     tituloCerradas: "Vías que se cerraron (y por qué)",
     tituloNoInteresa: "Otras vías del mapa (dijiste que no te interesan por ahora)",
     // Cierre del mapa de resultados: quedarse también es una opción
-    cierreResultados: "Ver estas vías no te obliga a elegir ninguna. Quedarte en Córdoba es una opción tan legítima como irte, no un plan B. Y elegir no se reduce a irse o quedarse: también podés tomarte tu tiempo, combinar caminos o volver a mirar el mapa más adelante.",
+    cierreResultados: "Ver las vías del mapa no te obliga a elegir ninguna. Quedarte en Córdoba es una opción tan legítima como irte, no un plan B. Y elegir no se reduce a irse o quedarse: también podés tomarte tu tiempo, combinar caminos o volver a mirar el mapa más adelante.",
     tituloCondiciones: "Condiciones del entorno que pesaron en este recorrido",
     // Avisos de las fichas (el # se reemplaza por la cantidad)
     // Advertencias: algo para revisar antes de avanzar (no abren ni cierran la vía)
@@ -723,7 +725,7 @@ const DATOS = {
         // y disponibles. La página de la UGE aclara que no hay inversión mínima. La pregunta de ahorros no mide
         // este monto, por eso es una advertencia y no un cierre.
         { resultado: "advierte", condicion: ["capital_economico", "informalidad"],
-          motivo: "No pide una inversión mínima, pero sí medios económicos de al menos {nomada_ingreso} por mes, y más por cada familiar. Tenés que poder demostrar que ese dinero es tuyo y de origen legal. Revisá que puedas acreditarlo." },
+          motivo: "No pide una inversión mínima, pero sí medios económicos de al menos {nomada_ingreso}, y más por cada familiar. Tenés que poder demostrar que ese dinero es tuyo y de origen legal. Revisá que puedas acreditarlo." },
         // Instrucciones de la UGE para la solicitud de emprendedores: se presenta en la sede electrónica con
         // Cl@ve o certificado digital.
         { resultado: "advierte", condicion: "redes",
@@ -750,7 +752,7 @@ const DATOS = {
         // Consulado de Córdoba y Ley 14/2013, art. 62.3.c: certificado de los países de residencia de los últimos
         // 2 años, más una declaración responsable de 5. Mayor de 18: página de la UGE y Ley 14/2013, art. 62.3.b.
         // No UE: instrucciones de la UGE y Ley 14/2013, art. 61.2.
-        requisitos: ["Proyecto innovador o de especial interés económico para España (por ejemplo, escalable)", "Informe favorable de ENISA sobre tu perfil, tu plan de negocio y lo que aporta a la economía española", "Medios económicos de al menos {nomada_ingreso} por mes (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico público o privado con una aseguradora que opere en España (no sirve uno de viaje)", "No tener antecedentes penales de los últimos 2 años", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
+        requisitos: ["Proyecto innovador o de especial interés económico para España (por ejemplo, escalable)", "Informe favorable de ENISA sobre tu perfil, tu plan de negocio y lo que aporta a la economía española", "Medios económicos de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico público o privado con una aseguradora que opere en España (no sirve uno de viaje)", "No tener antecedentes penales de los últimos 2 años", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
         // Sin inversión mínima ni creación de empleo: página de la UGE. Familia: Consulado de Londres (29/04/2026).
         sirve: "Desarrollar tu proyecto en España durante 3 años. No pide un monto mínimo de inversión ni crear empleo. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
         // Negocio tradicional: corresponde a cuenta propia (RD 1155/2024). Informe favorable: UGE y Ley 14/2013,
