@@ -32,7 +32,7 @@ const DATOS = {
 
   cifras: {
     // Fecha que aparece en el pie de todas las pantallas
-    fecha_vigencia:        "21/10/2026",
+    fecha_vigencia:        "26/10/2026",
     // Tarjeta Azul UE: salario mínimo general y reducido
     // Nota informativa de la UGE «Umbral salarial 2026» (junio de 2026): 1,4 × 29.540,26 € (ganancia media
     // anual del INE, publicada el 28/05/2026); el reducido es el 80 %. Base: Orden PJC/44/2026 (BOE 30/01/2026).
@@ -959,8 +959,13 @@ const DATOS = {
         // Hoja 1 de Inclusión (nov. 2025) y Consulado de Buenos Aires: 100 % del IPREM (600 €) por mes de
         // estudio, o por 12 meses si el curso dura más de un año. La matrícula no cuenta. Se acredita con
         // ahorros, beca, ingresos regulares o el compromiso de un familiar. Un programa corto pide menos de 7.200 €.
+        // Hoja 1 (nov. 2025) nombra los medios «provenientes de familiares» (en la prórroga).
+        // Escribano: solo lo dice el Consulado de Buenos Aires, «Visado de estudios» (leída el 26/10/2026): si los
+        // fondos son de un familiar, se suma un «compromiso de sostenimiento económico» firmado ante escribano y la
+        // prueba del parentesco. El Consulado de Córdoba (leída el 26/10/2026) no lo menciona: pide que «el
+        // solicitante (o su representante legal)» tenga los medios. Por eso queda [verificar].
         { si: { pregunta: "ahorros", es: ["bajo"] }, resultado: "depende", condicion: "capital_economico",
-          motivo: "Se abre si podés demostrar {estudiante_medios} de estudio (hasta 12 meses), con ahorros, una beca o ingresos regulares. Aparte está el costo de la matrícula." },
+          motivo: "Se abre si podés demostrar {estudiante_medios} de estudio (hasta 12 meses), con ahorros, una beca, ingresos regulares o el apoyo de un familiar que se compromete ante escribano [verificar]. Aparte está el costo de la matrícula." },
         { si: { pregunta: "estudiar", es: ["no"] }, resultado: "noInteresa" },
         // Hoja 1 de Inclusión (nov. 2025): los familiares pueden ir con la persona que estudia (solo estudios
         // superiores), pero «no están autorizados para trabajar». Los medios suben 75 % del IPREM por el primer
@@ -973,7 +978,17 @@ const DATOS = {
         // por cuenta ajena o propia «sin necesidad de solicitar visado», con los requisitos de esa autorización
         // (para cuenta ajena, sin la situación nacional de empleo).
         { si: { pregunta: "estudiar", es: ["si"] }, resultado: "nota",
-          motivo: "Te permite trabajar hasta {estudiante_horas}. Al terminar, si conseguís un trabajo o armás un proyecto propio que cumpla los requisitos, podés pasar a una autorización de residencia y trabajo sin salir de España." } ],
+          motivo: "Te permite trabajar hasta {estudiante_horas}. Al terminar, si conseguís un trabajo o armás un proyecto propio que cumpla los requisitos, podés pasar a una autorización de residencia y trabajo sin salir de España." },
+        // Las dos advertencias que siguen salen de testimonios de personas que fueron con este visado
+        // (recogidos por el grupo en octubre de 2026). No hay fuente oficial: por eso son «advierte».
+        // Plazos: los oficiales (turno 3 meses antes, solicitud 2 meses antes) no incluyen elegir el estudio
+        // ni conseguir la admisión; un testimonio cuenta cerca de un año en total.
+        { resultado: "advierte",
+          motivo: "Empezá con tiempo: elegir el estudio, conseguir la admisión y juntar los papeles puede llevar muchos meses, antes de los plazos del consulado." },
+        // La universidad puede pedir el título de grado apostillado para la admisión (testimonio). Las hojas
+        // oficiales del visado no piden el título: solo el certificado de admisión.
+        { resultado: "advierte", condicion: "formacion",
+          motivo: "Para admitirte, la universidad puede pedirte el título de grado apostillado. Consultalo con ella antes de iniciar el trámite." } ],
       ficha: {
         // Revisada el 24/10/2026 contra la Hoja 1 de Inclusión, «Autorización de estancia de larga duración por
         // estudios» (última actualización: noviembre de 2025; cita la Directiva (UE) 2016/801, la LO 4/2000 y el
@@ -987,7 +1002,14 @@ const DATOS = {
         // no cuenta); seguro de una entidad autorizada en España; si la estancia supera 6 meses, sin antecedentes
         // penales de los últimos 5 años y certificado médico; no ser de la UE, el EEE ni Suiza.
         // Consulado de Buenos Aires: el seguro, sin copagos ni carencias; no sirven los de viaje ni de tarjeta.
-        requisitos: ["Admisión en un estudio superior a tiempo completo (de grado, máster, título propio o técnico superior), con la matrícula pagada", "Medios de al menos {estudiante_medios} de estudio (hasta 12 meses), sin contar la matrícula; más 75 % del IPREM por el primer familiar y 50 % por cada uno más (menos si el alojamiento está pago)", "Seguro médico de una aseguradora autorizada en España, sin copagos ni carencias (no sirve uno de viaje)", "Si la estancia supera 6 meses: no tener antecedentes penales de los últimos 5 años y presentar un certificado médico", "No tener nacionalidad de un país de la UE"],
+        // Apostilla: Consulado de Córdoba, «Visado de estudios» (sin fecha, leída el 26/10/2026): «Todos los
+        // documentos extranjeros deben presentarse legalizados o apostillados». También Hoja 1 (nov. 2025).
+        // Certificado médico: la Hoja 1 lo pide si la estancia supera 6 meses, pero el Consulado de Córdoba
+        // (leída el 26/10/2026) pone el límite de 180 días solo en los antecedentes penales y pide el certificado
+        // médico sin condición. Las fuentes no coinciden: por eso queda [verificar].
+        // Pasaporte (al menos 1 año de validez, 2 páginas en blanco, expedido hace menos de 10 años) y prueba de
+        // residencia en la demarcación: Consulado de Córdoba (leída el 26/10/2026).
+        requisitos: ["Admisión en un estudio superior a tiempo completo (de grado, máster, título propio o técnico superior), con la matrícula pagada", "Medios de al menos {estudiante_medios} de estudio (hasta 12 meses), sin contar la matrícula; más 75 % del IPREM por el primer familiar y 50 % por cada uno más (menos si el alojamiento está pago)", "Seguro médico de una aseguradora autorizada en España, sin copagos ni carencias (no sirve uno de viaje)", "Si la estancia supera 6 meses: no tener antecedentes penales de los últimos 5 años y presentar un certificado médico [verificar]", "Los documentos argentinos, como los antecedentes penales y el certificado médico, con la apostilla", "Pasaporte con al menos 1 año de vigencia y 2 páginas en blanco, emitido hace menos de 10 años", "Comprobante de que vivís en la zona del Consulado de Córdoba", "No tener nacionalidad de un país de la UE"],
         // Hoja 1 (nov. 2025): dura lo que los estudios; se prorroga hasta 2 veces; familiares, solo en estudios
         // superiores. Trabajo: 30 h por semana, sin pedir otro permiso si es compatible con los estudios (nota de
         // prensa de Inclusión del 19/11/2024 y Hoja 4 bis, mayo de 2025).
@@ -998,7 +1020,11 @@ const DATOS = {
         // Hoja 4 bis (mayo de 2025): no superar las 30 horas y que sea compatible con los estudios.
         // Hoja 1 (nov. 2025) y RD 1155/2024, art. 56.6: los familiares no están autorizados para trabajar.
         // Consulado de Buenos Aires: el doctorado se pide con el visado de investigación.
-        noPermite: "No permite trabajar más de {estudiante_horas} ni en algo que no sea compatible con tus estudios. Tu familia puede acompañarte, pero no puede trabajar. No sirve para un doctorado: para eso está la vía de investigación.",
+        // Nacionalidad: el Código Civil (art. 22.3) pide «residencia legal», y la estancia por estudios no es
+        // residencia (Audiencia Nacional, 19/09/2016, rec. 148/2014, según idibe.org). Hay una proposición de
+        // ley de Sumar para que cuente (BOCG Congreso, serie B, n.º 274-1, 14/11/2025), en trámite. No se leyó
+        // una fuente oficial que lo diga en forma directa: por eso queda [verificar].
+        noPermite: "No permite trabajar más de {estudiante_horas} ni en algo que no sea compatible con tus estudios. Tu familia puede acompañarte, pero no puede trabajar. No sirve para un doctorado: para eso está la vía de investigación. El tiempo como estudiante no cuenta como residencia para pedir la nacionalidad española [verificar]: empieza a contar cuando pasás a una autorización de residencia.",
         // Consulado de Córdoba, «Visado de estudios» (sin fecha, leída el 24/10/2026): turno por mail
         // (cog.cordoba.vis@maec.es) al menos 3 meses antes del inicio; solicitud en persona o con representante,
         // al menos 2 meses antes (también RD 1155/2024, art. 36.1); con la autorización favorable, el consulado
