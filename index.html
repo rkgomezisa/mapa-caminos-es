@@ -399,8 +399,13 @@ h2 { scroll-margin-top: 12px; }
     if (f.relleno) a.push(`<span class="aviso relleno">${esc(D.textos.avisoRelleno)}</span>`);
     return a.length ? `<div class="avisos">${a.join("")}</div>` : "";
   }
+  // "Mercado laboral de destino y Redes"; con tres o más: "A, B y C"
+  function unirConds(c) {
+    const n = lista(c).map(nombreCond);
+    return n.length > 1 ? n.slice(0, -1).join(", ") + " y " + n[n.length - 1] : n.join("");
+  }
   function motivoHTML(g, prefijo) {
-    const conds = lista(g.condicion).map(nombreCond).join(" + ");
+    const conds = unirConds(g.condicion);
     return `<li class="motivo">${prefijo} <strong>${esc(conds)}</strong><span class="motivo-texto">. ${tx(g.motivo)}</span></li>`;
   }
   function render(html) {
@@ -600,11 +605,11 @@ h2 { scroll-margin-top: 12px; }
       const listaCambios = lineaOcultas + (cambios.length || nuevasAdv.length
         ? `<ul class="cambios">${cambios.map(r => {
             const g = r.cierres[0] || r.depende[0];
-            const porque = g ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
+            const porque = g ? `: ${esc(unirConds(g.condicion))}` : "";
             return `<li>${pillHTML(r.estado)} <span><strong>${esc(r.via.nombre)}</strong>${porque}</span></li>`;
           }).join("")}${nuevasAdv.map(r => {
             const g = r.advertencias[r.advertencias.length - 1];
-            const porque = lista(g.condicion).length ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
+            const porque = lista(g.condicion).length ? `: ${esc(unirConds(g.condicion))}` : "";
             return `<li><span class="aviso"><span aria-hidden="true">⚠ </span>${esc(D.textos.advertenciaEtiqueta)}</span> <span><strong>${esc(r.via.nombre)}</strong>${porque}</span></li>`;
           }).join("")}</ul>`
         : ocultas.length ? "" : `<p class="ayuda">Esta respuesta no cambia el mapa.</p>`);
