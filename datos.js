@@ -98,25 +98,27 @@ const DATOS = {
     explorarCierran: "Condiciones del entorno que pueden cerrarla",
     explorarDependen: "Puede depender de",
     bloques: { perfil: "Tu situación", puertas: "Puertas posibles" },
+    // Estados de cada vía. etiqueta: lo que dice la tarjeta.
+    // cuenta1 y cuentaN: lo que dicen los contadores (el # se reemplaza por la cantidad)
     estados: {
-      abierta:    { simbolo: "✓", etiqueta: "Abierta" },
-      depende:    { simbolo: "◐", etiqueta: "Se abre si…" },
-      cerrada:    { simbolo: "✕", etiqueta: "Cerrada" },
-      noInteresa: { simbolo: "○", etiqueta: "Fuera de tu búsqueda" }
+      abierta:    { simbolo: "✓", etiqueta: "Abierta",              cuenta1: "1 vía abierta",              cuentaN: "# vías abiertas" },
+      depende:    { simbolo: "◐", etiqueta: "Puede abrirse",        cuenta1: "1 vía puede abrirse",        cuentaN: "# vías pueden abrirse" },
+      cerrada:    { simbolo: "✕", etiqueta: "Cerrada",              cuenta1: "1 vía cerrada",              cuentaN: "# vías cerradas" },
+      noInteresa: { simbolo: "○", etiqueta: "Fuera de tu búsqueda", cuenta1: "1 vía fuera de tu búsqueda", cuentaN: "# vías fuera de tu búsqueda" }
     },
     resultadosTitulo: "Tu mapa de vías",
     resultadosBajada: "Estas son todas las vías del mapa según lo que respondiste. Cuando una vía se cierra, lo que la cierra es una condición del entorno, no algo que te falte a vos.",
-    // Recorridos de ejemplo: se muestra cuando las preguntas que faltan ya no cambian el mapa del personaje
     // Recorridos de ejemplo: antecede la lista de vías que una respuesta saca del mapa
     ejemploOcultas: "Dejan de aplicar en su caso",
+    // Recorridos de ejemplo: se muestra cuando las preguntas que faltan ya no cambian el mapa del personaje
     ejemploSinMasCambios: "Las preguntas que siguen ya no cambian su mapa, así que el recorrido termina acá.",
     sinAbiertas: "Hoy no aparece ninguna vía abierta de forma directa. Eso habla de cómo están armadas las reglas y de las condiciones del entorno, no de vos.",
     tituloAbiertas: "Vías abiertas",
-    tituloDepende: "Se abren si aparece…",
+    tituloDepende: "Vías que pueden abrirse (y qué hace falta)",
     tituloCerradas: "Vías que se cerraron (y por qué)",
     tituloNoInteresa: "Otras vías del mapa (dijiste que no te interesan por ahora)",
     // Cierre del mapa de resultados: quedarse también es una opción
-    cierreResultados: "Ver estas vías no te obliga a elegir ninguna. Quedarte en Córdoba es una opción tan legítima como irte, no un plan B. Y elegir no se reduce a irse o quedarse: también podés tomarte tu tiempo, combinar caminos o volver a mirar el mapa más adelante.",
+    cierreResultados: "Ver las vías del mapa no te obliga a elegir ninguna. Quedarte en Córdoba es una opción tan legítima como irte, no un plan B. Y elegir no se reduce a irse o quedarse: también podés tomarte tu tiempo, combinar caminos o volver a mirar el mapa más adelante.",
     tituloCondiciones: "Condiciones del entorno que pesaron en este recorrido",
     // Avisos de las fichas (el # se reemplaza por la cantidad)
     // Advertencias: algo para revisar antes de avanzar (no abren ni cierran la vía)
@@ -455,7 +457,7 @@ const DATOS = {
         // presentación personal con cita pedida por correo electrónico, resuelve en 1 mes, el visado vale
         // 365 días si la autorización dura más de 6 meses. El consulado dice que el alta en la Seguridad Social
         // es dentro de 3 días desde la entrada; el art. 73.1 del RD 1155/2024 dice 3 meses: va como advertencia.
-        tramite: "El empleador lo pide en la oficina de extranjería de la provincia del trabajo. Si en 3 meses no contestan, se entiende denegado. Con la autorización, tenés 1 mes para pedir el visado en persona en el Consulado General de España en Córdoba, con cita que se pide por correo electrónico. El consulado resuelve en 1 mes.",
+        tramite: "El empleador lo pide en la oficina de extranjería de la provincia del trabajo. Si en 3 meses no contestan, se entiende denegado. Con la autorización, tenés 1 mes para pedir el visado en persona en el Consulado General de España en Córdoba, con turno que se pide por mail. El consulado resuelve en 1 mes.",
         fuente: { texto: "Hoja informativa 12 del Ministerio de Inclusión (mayo de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/autorizacion-inicial-de-residencia-temporal-y-trabajo-por-cuenta-ajena-hi-16-" },
         // Vigencia: Hoja 12 (mayo de 2025), que respalda los requisitos principales. El catálogo citado en
         // las reglas es del 3.er trimestre de 2026.
@@ -518,7 +520,7 @@ const DATOS = {
         // el consulado de la demarcación, que resuelve en 10 días. Consulado de Córdoba, «Visado para trabajador
         // altamente cualificado y para traslado intraempresarial» (sin fecha, leída el 23/10/2026): se presenta en
         // persona, con cita pedida a cog.cordoba.vis@maec.es; resuelve en 10 días; 1 mes para retirarlo.
-        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
+        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba (en persona, con turno que se pide por mail), que resuelve en 10 días.",
         fuente: { texto: "Unidad de Grandes Empresas: umbral salarial de la Tarjeta Azul (junio de 2026), y Hoja 66 de Inclusión (mayo de 2025)", url: "https://www.inclusion.gob.es/documents/d/unidadgrandesempresas/umbral-salarial.pdf" },
         // Vigencia: nota de la UGE (junio de 2026), el documento más reciente y el que respalda el requisito
         // que define la vía (el salario). La Hoja 66, que respalda el resto, es de mayo de 2025.
@@ -574,7 +576,7 @@ const DATOS = {
         // demarcación, que resuelve en 10 días. Consulado de Córdoba (misma página, leída el 23/10/2026): en
         // persona, con cita pedida a cog.cordoba.vis@maec.es. Art. 71.2 b) y 71.3 de la Ley 14/2013 (BOE,
         // texto consolidado al 09/04/2025): nivel 1 del MECES o 3 años de experiencia; 3 años o contrato + 3 meses.
-        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
+        tramite: "Lo pide el empleador o vos, por internet, en la Unidad de Grandes Empresas. Resuelve en 20 días y, si no contestan, se entiende aprobado. Con la autorización, tenés 1 mes para pedir el visado en el Consulado General de España en Córdoba (en persona, con turno que se pide por mail), que resuelve en 10 días.",
         fuente: { texto: "Hoja 66 de Inclusión (mayo de 2025) y Unidad de Grandes Empresas: umbral salarial (junio de 2026)", url: "https://www.inclusion.gob.es/web/migraciones/w/66.-autorizacion-inicial-de-residencia-y-trabajo-de-profesionales-altamente-cualificados" },
         // Vigencia: nota de la UGE (junio de 2026), el documento más reciente y el que respalda el salario. La
         // Hoja 66, que respalda el resto, es de mayo de 2025.
@@ -607,7 +609,7 @@ const DATOS = {
         // modalidad ICT‑UE es para directivos, especialistas y trabajadores en formación; la nacional, para otros
         // casos (por ejemplo, la ejecución de un contrato de servicios).
         { resultado: "advierte", condicion: "mercado",
-          motivo: "Hay dos modalidades: una para puestos de dirección, especialistas y personas en formación, y otra nacional para otros casos. Preguntale a tu empresa cuál corresponde a tu puesto: cambia cuánto dura el traslado." } ],
+          motivo: "Preguntale a tu empresa en cuál de las dos modalidades entra tu puesto: cambia cuánto dura el traslado." } ],
       ficha: {
         // Revisada el 23/10/2026 contra: tríptico de la UGE «Traslado intraempresarial. Ciudadanos no UE» (sin
         // fecha; NIPO 720-16-209-1, depósito legal M-26544-2016); página de la UGE «Trabajadores que efectúen
@@ -632,7 +634,7 @@ const DATOS = {
         // Tríptico de la UGE: la presenta la empresa de destino o la que traslada en la UGE; autorización en 20
         // días; visado en 10 días. Consulado de Buenos Aires: se presenta en BLS, resuelve en 10 días y hay 1 mes
         // para retirarlo. Consulado de Córdoba (leída el 23/10/2026): en persona, con cita pedida por correo.
-        tramite: "La empresa lo pide en la Unidad de Grandes Empresas, que resuelve en 20 días. Con la autorización, pedís el visado en el Consulado General de España en Córdoba (en persona, con cita que se pide por correo electrónico), que resuelve en 10 días.",
+        tramite: "La empresa lo pide en la Unidad de Grandes Empresas, que resuelve en 20 días. Con la autorización, pedís el visado en el Consulado General de España en Córdoba (en persona, con turno que se pide por mail), que resuelve en 10 días.",
         fuente: { texto: "Unidad de Grandes Empresas: tríptico «Traslado intraempresarial» y Consulado de Buenos Aires", url: "https://www.inclusion.gob.es/documents/1823432/1826080/triptico-traslado-empresarial-ESP.pdf/72ee37b3-6a4a-3722-2a88-70501ed4aef2?t=1664798332880" },
         // Vigencia: Criterio de gestión DGGM 2/2025 (16/07/2025), el documento más reciente sobre la duración
         // (PDF oficial de la UGE, leído el 24/10/2026). El tríptico de la UGE, que respalda el resto, no tiene
@@ -723,7 +725,7 @@ const DATOS = {
         // y disponibles. La página de la UGE aclara que no hay inversión mínima. La pregunta de ahorros no mide
         // este monto, por eso es una advertencia y no un cierre.
         { resultado: "advierte", condicion: ["capital_economico", "informalidad"],
-          motivo: "No pide una inversión mínima, pero sí medios económicos de al menos {nomada_ingreso} por mes, y más por cada familiar. Tenés que poder demostrar que ese dinero es tuyo y de origen legal. Revisá que puedas acreditarlo." },
+          motivo: "No pide una inversión mínima, pero sí medios económicos de al menos {nomada_ingreso}, y más por cada familiar. Tenés que poder demostrar que ese dinero es tuyo y de origen legal. Revisá que puedas acreditarlo." },
         // Instrucciones de la UGE para la solicitud de emprendedores: se presenta en la sede electrónica con
         // Cl@ve o certificado digital.
         { resultado: "advierte", condicion: "redes",
@@ -750,7 +752,7 @@ const DATOS = {
         // Consulado de Córdoba y Ley 14/2013, art. 62.3.c: certificado de los países de residencia de los últimos
         // 2 años, más una declaración responsable de 5. Mayor de 18: página de la UGE y Ley 14/2013, art. 62.3.b.
         // No UE: instrucciones de la UGE y Ley 14/2013, art. 61.2.
-        requisitos: ["Proyecto innovador o de especial interés económico para España (por ejemplo, escalable)", "Informe favorable de ENISA sobre tu perfil, tu plan de negocio y lo que aporta a la economía española", "Medios económicos de al menos {nomada_ingreso} por mes (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico público o privado con una aseguradora que opere en España (no sirve uno de viaje)", "No tener antecedentes penales de los últimos 2 años", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
+        requisitos: ["Proyecto innovador o de especial interés económico para España (por ejemplo, escalable)", "Informe favorable de ENISA sobre tu perfil, tu plan de negocio y lo que aporta a la economía española", "Medios económicos de al menos {nomada_ingreso} (el 200 % del salario mínimo español), más {nomada_familiar1} por el primer familiar y {nomada_familiar_extra} por cada uno más", "Seguro médico público o privado con una aseguradora que opere en España (no sirve uno de viaje)", "No tener antecedentes penales de los últimos 2 años", "Ser mayor de 18 años", "No tener nacionalidad de un país de la UE"],
         // Sin inversión mínima ni creación de empleo: página de la UGE. Familia: Consulado de Londres (29/04/2026).
         sirve: "Desarrollar tu proyecto en España durante 3 años. No pide un monto mínimo de inversión ni crear empleo. Pueden acompañarte tu pareja, tus hijos e hijas y otros familiares a cargo.",
         // Negocio tradicional: corresponde a cuenta propia (RD 1155/2024). Informe favorable: UGE y Ley 14/2013,
@@ -761,7 +763,7 @@ const DATOS = {
         // tiene 10 días hábiles (también Ley 14/2013, art. 70.1). Visado después de la autorización: Consulado de
         // Córdoba (sin fecha, leída el 24/10/2026): pide copia de la autorización de la UGE; en persona, con cita
         // por mail (cog.cordoba.vis@maec.es); resuelve en 10 días; visado de 1 año.
-        tramite: "Se pide en línea a la Unidad de Grandes Empresas, con certificado digital. Ella le pide el informe a ENISA, donde cargás los datos del proyecto. Con la autorización, pedís el visado en el Consulado General de España en Córdoba: en persona, con cita que se pide por mail. Resuelve en 10 días.",
+        tramite: "Se pide en línea a la Unidad de Grandes Empresas, con certificado digital. Ella le pide el informe a ENISA, donde cargás los datos del proyecto. Con la autorización, pedís el visado en el Consulado General de España en Córdoba: en persona, con turno que se pide por mail. Resuelve en 10 días.",
         fuente: { texto: "Unidad de Grandes Empresas: Emprendedores", url: "https://www.inclusion.gob.es/web/unidadgrandesempresas/emprendedores" },
         // Vigencia: Instrucción DGM 1/2023 (03/04/2023), el documento que respalda los requisitos principales.
         // Otras fuentes: Criterio DGGM 2/2025 (julio de 2025, duración) y Consulado de Londres (abril de 2026,
@@ -876,7 +878,7 @@ const DATOS = {
         // ante la UGE; resolución en 20 días hábiles con silencio positivo. Visado: Consulado de Córdoba,
         // «Visado de investigador» (sin fecha, leída el 24/10/2026): con la autorización de la UGE, en persona,
         // con cita por mail (cog.cordoba.vis@maec.es); resuelve en 10 días; incluye a quienes hacen un doctorado.
-        tramite: "La entidad que te recibe pide la autorización en línea a la Unidad de Grandes Empresas. Si hacés un doctorado sin contrato, la podés pedir vos. Resuelven en 20 días hábiles: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba: en persona, con cita que se pide por mail. Resuelve en 10 días.",
+        tramite: "La entidad que te recibe pide la autorización en línea a la Unidad de Grandes Empresas. Si hacés un doctorado sin contrato, la podés pedir vos. Resuelven en 20 días hábiles: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba: en persona, con turno que se pide por mail. Resuelve en 10 días.",
         fuente: { texto: "Hoja 68 de Inclusión: autorización de residencia temporal y trabajo para investigación (agosto de 2026)", url: "https://www.inclusion.gob.es/web/migraciones/w/68.-autorizacion-de-residencia-temporal-y-trabajo-para-investigacion" },
         // Vigencia: Hoja 68 (agosto de 2026), que respalda los requisitos principales. Otra fuente: noticia del
         // Consulado de Buenos Aires del 4/10/2026 (doctorado como investigación).
@@ -898,7 +900,7 @@ const DATOS = {
         { si: { pregunta: "practicas", es: ["no"] }, resultado: "noInteresa" },
         // Hoja 21 de Inclusión (sept. 2025): «Esta autorización no prevé la reagrupación familiar».
         { si: { pregunta: "cuidados", es: ["si"] }, resultado: "advierte", condicion: "cuidados",
-          motivo: "No permite reagrupar familiares: no podrías llevar a las personas a tu cargo." },
+          motivo: "Si tenés personas a tu cargo, esta vía no te deja llevarlas: pensá antes cómo queda resuelto su cuidado." },
         { si: { pregunta: "practicas", es: ["interes"] }, resultado: "depende", condicion: "redes",
           motivo: "Se abre con un convenio de prácticas de una entidad española." },
         // Hoja 21 de Inclusión (sept. 2025): los medios se piden solo sin contrato de trabajo (convenio de
@@ -941,7 +943,7 @@ const DATOS = {
         // (cog.cordoba.vis@maec.es); resuelve en 10 días. TIE: el visado ya acredita la residencia y, si las
         // prácticas duran más de 6 meses, se puede pedir la TIE (Córdoba; Ley 14/2013, DA 18.ª, apartado 7:
         // «podrán solicitar»). Antes decía «tenés 1 mes para sacar la TIE», como si fuera obligatorio.
-        tramite: "La entidad que te recibe pide la autorización en línea en España. Resuelven en 30 días: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba: en persona, con cita que se pide por mail. Resuelve en 10 días. Si las prácticas duran más de 6 meses, ya en España podés sacar la tarjeta de extranjero (TIE).",
+        tramite: "La entidad que te recibe pide la autorización en línea en España. Resuelven en 30 días: si no contestan, se entiende concedida. Después, pedís el visado en el Consulado General de España en Córdoba: en persona, con turno que se pide por mail. Resuelve en 10 días. Si las prácticas duran más de 6 meses, ya en España podés sacar la tarjeta de extranjero (TIE).",
         fuente: { texto: "Hoja 21 de Inclusión: autorización de residencia para prácticas (septiembre de 2025)", url: "https://www.inclusion.gob.es/web/migraciones/w/21.-autorizacion-de-residencia-para-practicas" },
         // Vigencia: Hoja 21 (septiembre de 2025), que respalda los requisitos principales.
         vigencia: "Septiembre de 2025", verificar: false, relleno: false } },

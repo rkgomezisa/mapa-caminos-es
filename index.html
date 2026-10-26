@@ -399,8 +399,13 @@ h2 { scroll-margin-top: 12px; }
     if (f.relleno) a.push(`<span class="aviso relleno">${esc(D.textos.avisoRelleno)}</span>`);
     return a.length ? `<div class="avisos">${a.join("")}</div>` : "";
   }
+  // "Mercado laboral de destino y Redes"; con tres o más: "A, B y C"
+  function unirConds(c) {
+    const n = lista(c).map(nombreCond);
+    return n.length > 1 ? n.slice(0, -1).join(", ") + " y " + n[n.length - 1] : n.join("");
+  }
   function motivoHTML(g, prefijo) {
-    const conds = lista(g.condicion).map(nombreCond).join(" + ");
+    const conds = unirConds(g.condicion);
     return `<li class="motivo">${prefijo} <strong>${esc(conds)}</strong><span class="motivo-texto">. ${tx(g.motivo)}</span></li>`;
   }
   function render(html) {
@@ -490,11 +495,16 @@ h2 { scroll-margin-top: 12px; }
   }
 
   /* ---------- recorrido propio ---------- */
+  // "1 vía abierta", "14 vías abiertas": singular o plural según la cantidad
+  function cuentaEstado(k, n) {
+    const e = D.textos.estados[k];
+    return n === 1 ? e.cuenta1 : e.cuentaN.replace("#", n);
+  }
   function contadorHTML(resp) {
     const m = mapa(resp), c = {};
     m.forEach(r => c[r.estado] = (c[r.estado] || 0) + 1);
     return `<p class="contador"><span>Tu mapa hasta ahora:</span>${ORDEN.filter(k => c[k]).map(k =>
-      `<span class="cuenta-estado st-${k}"><span aria-hidden="true">${D.textos.estados[k].simbolo}</span> ${c[k]} ${esc(D.textos.estados[k].etiqueta.toLowerCase())}</span>`).join("")}</p>`;
+      `<span class="cuenta-estado st-${k}"><span aria-hidden="true">${D.textos.estados[k].simbolo}</span> ${esc(cuentaEstado(k, c[k]))}</span>`).join("")}</p>`;
   }
 
   function preguntaPropia() {
@@ -595,11 +605,11 @@ h2 { scroll-margin-top: 12px; }
       const listaCambios = lineaOcultas + (cambios.length || nuevasAdv.length
         ? `<ul class="cambios">${cambios.map(r => {
             const g = r.cierres[0] || r.depende[0];
-            const porque = g ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
+            const porque = g ? `: ${esc(unirConds(g.condicion))}` : "";
             return `<li>${pillHTML(r.estado)} <span><strong>${esc(r.via.nombre)}</strong>${porque}</span></li>`;
           }).join("")}${nuevasAdv.map(r => {
             const g = r.advertencias[r.advertencias.length - 1];
-            const porque = lista(g.condicion).length ? `: ${esc(lista(g.condicion).map(nombreCond).join(" + "))}` : "";
+            const porque = lista(g.condicion).length ? `: ${esc(unirConds(g.condicion))}` : "";
             return `<li><span class="aviso"><span aria-hidden="true">⚠ </span>${esc(D.textos.advertenciaEtiqueta)}</span> <span><strong>${esc(r.via.nombre)}</strong>${porque}</span></li>`;
           }).join("")}</ul>`
         : ocultas.length ? "" : `<p class="ayuda">Esta respuesta no cambia el mapa.</p>`);
@@ -683,9 +693,9 @@ h2 { scroll-margin-top: 12px; }
         ${banner}
         <details><summary>Tus respuestas (podés cambiar cualquiera)</summary><dl class="respuestas">${resp}</dl></details>
         ${sinVisado ? "" : `<nav class="indice" aria-label="Ir a una sección">
-          <a href="#t-ab" class="st-abierta"><span aria-hidden="true">${D.textos.estados.abierta.simbolo}</span> ${abiertas.length} abiertas</a>
-          ${depende.length ? `<a href="#t-dep" class="st-depende"><span aria-hidden="true">${D.textos.estados.depende.simbolo}</span> ${depende.length} se abren si…</a>` : ""}
-          <a href="#t-ce" class="st-cerrada"><span aria-hidden="true">${D.textos.estados.cerrada.simbolo}</span> ${cerradas.length} cerradas</a>
+          <a href="#t-ab" class="st-abierta"><span aria-hidden="true">${D.textos.estados.abierta.simbolo}</span> ${esc(cuentaEstado("abierta", abiertas.length))}</a>
+          ${depende.length ? `<a href="#t-dep" class="st-depende"><span aria-hidden="true">${D.textos.estados.depende.simbolo}</span> ${esc(cuentaEstado("depende", depende.length))}</a>` : ""}
+          <a href="#t-ce" class="st-cerrada"><span aria-hidden="true">${D.textos.estados.cerrada.simbolo}</span> ${esc(cuentaEstado("cerrada", cerradas.length))}</a>
         </nav>
         ${condHTML}
         ${grupo("t-ab", D.textos.tituloAbiertas, abiertas, depende.length ? null : D.textos.sinAbiertas)}

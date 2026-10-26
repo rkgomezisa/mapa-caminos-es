@@ -15,7 +15,7 @@ Recurso de información ocupacional (TP N.º 3, Cátedra de Orientación Vocacio
 ## Enfoque (no negociable)
 
 - **Orientación crítica e interseccional.** Cuando una vía se cierra, se nombra la **condición del entorno** que la cierra (ascendencia europea, capital económico, informalidad laboral, tipo de formación, edad o tiempo desde el egreso, cargas de cuidado, redes, mercado laboral de destino). Nunca se presenta como un déficit de la persona.
-- **Mapa, no embudo.** La persona ve todas las vías: abiertas, "se abren si…" y cerradas (y por qué). Quedarse en Córdoba se presenta como un proyecto de vida legítimo.
+- **Mapa, no embudo.** La persona ve todas las vías: abiertas, "pueden abrirse" y cerradas (y por qué). Quedarse en Córdoba se presenta como un proyecto de vida legítimo.
 - **Tono:** cálido, no culpabiliza. Voseo rioplatense ("tenés", "podés", "mirá"), lenguaje claro, frases cortas.
 - **Vacaciones y Trabajo** se presenta como una estancia para explorar, no como una vía para quedarse.
 
